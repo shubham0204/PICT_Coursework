@@ -1,6 +1,3 @@
-# Assignment 1
-# Author: Shubham Panchal
-
 """
 Problem Statement
 
