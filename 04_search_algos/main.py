@@ -1,7 +1,6 @@
 
 from measure_time import measure_execution_time
 from student import StudentData
-from student import Student
 
 database = StudentData()
 database.populate( 100 )
@@ -13,7 +12,7 @@ database.populate( 100 )
 # database.display()
 
 print( "For searching a student ...")
-search_student = Student.create_student()
+search_student = int( input( "Enter roll number for searching : "))
 
 index = database.search_linear( search_student )
 print( index )

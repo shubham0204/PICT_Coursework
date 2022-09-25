@@ -1,18 +1,18 @@
 
 from student import StudentData
-from student import Student
 
 while True:
     database = StudentData()
     N = int( input( "Enter number of students : " ) )
     for i in range( N ):
         print( "For student {} ->".format( i + 1 ) )
-        database.add_student( Student.create_student() )
+        database.add_student( int( input( "Enter roll number : " ) ) )
 
+    database.selection_sort()
     database.display()
 
     print( "For searching a student ...")
-    search_student = Student.create_student()
+    search_student = int( input( "Enter roll number for searching : "))
 
     print(
         """
