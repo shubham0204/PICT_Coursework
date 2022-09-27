@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class Student {
@@ -8,7 +9,8 @@ private:
 	string name ;
 
 	int studentClass ;
-	static int rollNumber ;
+	int studentRollNumber ; 
+	static int count ;
 	char division ;
 
 	string dateOfBirth ;
@@ -23,7 +25,8 @@ public:
 	Student(){
 		name = "" ;
 		studentClass = 0 ;
-		rollNumber += 1 ;
+		count += 1 ;
+		studentRollNumber = count ; 
 		division = '0' ;
 		dateOfBirth = "" ;
 		bloodGroup = "" ;
@@ -36,7 +39,8 @@ public:
 	Student( Student& copyStudent ) {
 		name = copyStudent.name ;
 		studentClass = copyStudent.studentClass ;
-		rollNumber += 1 ; // Roll number is not copied
+		studentRollNumber = copyStudent.studentRollNumber ; 
+		count += 1 ; // Roll number is not copied
 		division = copyStudent.division ;
 		bloodGroup = copyStudent.bloodGroup ;
 		contactAddress = copyStudent.contactAddress ;
@@ -47,12 +51,12 @@ public:
 	// Destructor
 	~Student() {
 		cout << "Student object " << name << " destructed" << endl ;
-		rollNumber -= 1 ;
+		count -= 1 ;
 	}
 
 	// Static method to get count of students
 	static int getCount() {
-		return rollNumber ;
+		return count ;
 	}
 
 	// Creating Student object dynamically with a static method
@@ -65,11 +69,6 @@ public:
 		cout << name_ << endl ;
 		newStudent -> name = name_ ;
 
-		cout << "Enter student roll number : " << endl ;
-		int rollNumber_ ;
-		cin >> rollNumber_ ;
-		newStudent -> rollNumber = rollNumber_ ;
-
 		return newStudent ;
 	}
 
@@ -77,37 +76,54 @@ public:
 		delete deleteStudent ;
 	}
 
-
 	friend void print( Student& student ) ;
+	friend void printDatabase( vector<Student*> db ) ; 
 
 };
 
 void print( Student& student ) {
 	cout << "Name : " << student.name << endl ;
-	cout << "Roll number : " << student.rollNumber << endl ;
+	cout << "Roll number : " << student.studentRollNumber << endl ;
+}
+
+void printDatabase( vector<Student*> db ) {
+    cout << "----------------------" << endl ; 
+	for( Student* student : db ) {
+		cout << "Name : " << student -> name << endl ; 
+		cout << "Roll number : " << student -> studentRollNumber << endl ; 
+	}
+	cout << "----------------------" << endl ; 
 }
 
 
-int Student::rollNumber = 0 ;
+int Student::count = 0 ;
 
 int main() {
 
-	int numStudents ;
-	cout << "Enter total number of students : " << endl ;
-	cin >> numStudents ;
-	// Array of pointers, to store pointer to each dynamically allocated object of Student
-	Student* database[ numStudents ] ;
+	vector<Student*> database ; 
 
-	for( int i = 0 ; i < numStudents ; i++ ) {
-		database[ i ] = Student::createStudentEntry() ;
-		print( *(database[i]) ) ;
+	while ( true ) {
+		cout << " Choose an operation : " << endl ; 
+		cout << "1 -> Enter student data " << endl ; 
+		cout << "2 -> Delete student " << endl ; 
+		cout << "0 -> Exit " << endl ; 
+		int option ; 
+		cin >> option ; 
+		if( option == 1 ) {
+			database.push_back( Student::createStudentEntry() );
+			printDatabase( database ) ; 
+		} 
+		else if( option == 2 ) {
+			cout << "Enter roll number " << endl ; 
+			int index ;
+			cin >> index ;
+			database.erase( database.begin() + index - 1 ) ; 
+			printDatabase( database ) ;
+		} 
+		else if( option == 0 ) {
+			break ; 
+		}
 	}
-
-	for( int i = 0 ; i < numStudents - 1 ; i++ ) {
-		Student::deleteStudentEntry( database[ i ] ) ;
-	}
-
-	cout << Student::getCount() << endl ;
-
+	
 	return 0;
 }
