@@ -65,7 +65,6 @@ public:
 		cout << "Enter student name : " << endl ;
 		string name_ ;
 		cin >> name_ ;
-		cout << name_ << endl ;
 		newStudent -> name = name_ ;
         newStudent -> studentRollNumber = 89 ;
 		return newStudent ;
@@ -129,7 +128,7 @@ int main() {
 		int option ; 
 		try {
 			cin >> option ;
-			if( option != 1 && option != 0 && option != 2 ) {
+			if( option != 1 && option != 0 && option != 2 && option != 3 ) {
 				throw option ;
 			}
 		}
