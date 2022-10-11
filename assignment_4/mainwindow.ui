@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QLabel" name="drawingArea">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>30</y>
+      <x>0</x>
+      <y>0</y>
       <width>500</width>
       <height>500</height>
      </rect>
@@ -27,29 +27,58 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QLabel" name="points_info">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>30</y>
-      <width>181</width>
-      <height>51</height>
+      <x>560</x>
+      <y>250</y>
+      <width>171</width>
+      <height>231</height>
      </rect>
     </property>
     <property name="text">
-     <string>Draw Polygon</string>
+     <string/>
     </property>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>26</height>
-    </rect>
-   </property>
+   <widget class="QSpinBox" name="numVerticesSelector">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>30</y>
+      <width>211</width>
+      <height>51</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="startButton">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>100</y>
+      <width>211</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Start Polygon Drawing</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="startFillButton">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>170</y>
+      <width>211</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Start Polygon Filling</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
