@@ -39,7 +39,6 @@ void MainWindow::mousePressEvent( QMouseEvent* event )  {
     int posY = ui -> drawingArea -> pos().y() ;
     if( x > posX && x < (posX + 500) && y > posY && y < ( posY + 500 ) ) {
         ui -> points_info -> setText( QString( "Inside" ) ) ;
-        std::cout << numPolygonVertices << std::endl ;
         // Clicked inside the drawing area
         vertices.push_back( QPoint( x , y ) ) ;
         if( vertices.size() >= 2 ) {
@@ -68,49 +67,28 @@ void MainWindow::on_startButton_clicked() {
     }
 }
 
-void MainWindow::fillScanline( QPoint p1 , QPoint p2 ) {
-    for( int x = p1.x() ; x <= p2.x() ; x++ ) {
-        plotPoint( x , p1.y() ) ;
-    }
-}
-
-
 void MainWindow::fillPolygon() {
-    cout << "Y Min" << edgeTable.getYMin() << endl ;
-    cout << "Y Max" << edgeTable.getYMax() << endl ;
     for( int y = edgeTable.getYMin() ; y < edgeTable.getYMax() ; y++ ) {
         vector<Edge> activeEdges = edgeTable.markActiveEdges( y ) ;
-        // cout << "Active Edges size " << activeEdges.size() << endl ;
         vector<QPoint> intersectionPoints ;
         for( Edge activeEdge : activeEdges ) {
             intersectionPoints.push_back( edgeTable.getIntersectionPoint( y , activeEdge ) ) ;
-            QPoint p = edgeTable.getIntersectionPoint( y , activeEdge ) ;
-            cout << " Int x " << p.x() << endl ;
-            cout << " Int y " << p.y() << endl ;
         }
-        if( intersectionPoints.size() % 2 ==0 ) {
-            cout << "TRUE" << endl ;
+        if( intersectionPoints.size() % 2 == 0 ) {
             int i = 0;
             while( i < intersectionPoints.size() ) {
-                for( int x = intersectionPoints[i].x() ; x <= intersectionPoints[i+1].x() ; x++ ) {
-                    plotPoint( x , y ) ;
-                    cout << "Y Max reached " << y << endl ;
-                }
+                drawLineDDA( intersectionPoints[i] , intersectionPoints[i+1] , 255 , 0 , 0 ) ;
                 i += 2 ;
             }
         }
         else {
             continue;
         }
-        // for( int i = 0 ; i < intersectionPoints.size() - 2 ; i += 2 ) {
-            // std::cout << "Int " << intersectionPoints[i].x() << " " << intersectionPoints[i+1].x()  << endl ;
-            //fillScanline( intersectionPoints[i] , intersectionPoints[i+1] ) ;
-        // }
-        // fillScanline( intersectionPoints[0] , intersectionPoints[1] ) ;
     }
-    cout << "Y Min" << edgeTable.getYMin() << endl ;
-    cout << "Y Max" << edgeTable.getYMax() << endl ;
     ui -> drawingArea -> setPixmap( QPixmap::fromImage( img ) ) ;
+}
+
+void MainWindow::delay() {
 }
 
 void MainWindow::fillEdgeTable() {
@@ -132,7 +110,7 @@ void MainWindow::drawPolygon( vector<QPoint> points ) {
 }
 
 
-void MainWindow::drawLineDDA( QPoint p1 , QPoint p2 ) {
+void MainWindow::drawLineDDA( QPoint p1 , QPoint p2 , int r , int g , int b ) {
     float x1 , x2 , y1 , y2 ;
     x1 = p1.x() ;
     y1 = p1.y() ;
@@ -151,9 +129,9 @@ void MainWindow::drawLineDDA( QPoint p1 , QPoint p2 ) {
     float y_inc = dy / step ;
     float x = x1 ;
     float y = y1 ;
-    plotPoint( x1 , y1 ) ;
+    plotPoint( x1 , y1 , r , g , b ) ;
     for( int i = 0 ; i < step ; i++ ){
-        plotPoint( x , y ) ;
+        plotPoint( x , y , r , g , b ) ;
         x = x + x_inc ;
         y = y + y_inc ;
     }
@@ -161,8 +139,8 @@ void MainWindow::drawLineDDA( QPoint p1 , QPoint p2 ) {
 }
 
 // Plot the given point in the drawing area
-void MainWindow::plotPoint( int x , int y ) {
-    img.setPixel( x , y, qRgb( 0 , 0 , 0 ) ) ;
+void MainWindow::plotPoint( int x , int y , int r , int g , int b ) {
+    img.setPixel( x , y, qRgb( r , g , b ) ) ;
 }
 
 // Set color of all pixels in drawing area to WHITE

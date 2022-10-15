@@ -18,14 +18,16 @@ public:
     ~MainWindow();
 
 private slots:
+
     void setupDrawingArea() ;
-    void plotPoint( int x , int y ) ;
-    void drawLineDDA( QPoint p1 , QPoint p2 ) ;
+    void plotPoint( int x , int y , int = 0 , int = 0 , int = 0 ) ;
+    void drawLineDDA( QPoint p1 , QPoint p2 , int = 0 , int = 0 , int = 0 ) ;
     void drawPolygon( vector<QPoint> points ) ;
-    void fillScanline( QPoint p1 , QPoint p2 ) ;
 
     void fillPolygon() ;
     void fillEdgeTable() ;
+
+    void delay() ;
 
     void mousePressEvent( QMouseEvent* event ) ;
     void on_startButton_clicked();
