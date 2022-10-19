@@ -27,7 +27,7 @@ private slots:
     void fillPolygon() ;
     void fillEdgeTable() ;
 
-    void delay() ;
+    void delay( QPoint p1 , QPoint p2 ) ;
 
     void mousePressEvent( QMouseEvent* event ) ;
     void on_startButton_clicked();

@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <QMouseEvent>
+#include <QTimer>
 #include "edge.h"
 using namespace std ;
 
@@ -68,27 +69,30 @@ void MainWindow::on_startButton_clicked() {
 }
 
 void MainWindow::fillPolygon() {
-    for( int y = edgeTable.getYMin() ; y < edgeTable.getYMax() ; y++ ) {
+    for( int y = edgeTable.getYMin() ; y <= edgeTable.getYMax() ; y++ ) {
         vector<Edge> activeEdges = edgeTable.markActiveEdges( y ) ;
-        vector<QPoint> intersectionPoints ;
+        vector<int> intersectionPoints ;
         for( Edge activeEdge : activeEdges ) {
             intersectionPoints.push_back( edgeTable.getIntersectionPoint( y , activeEdge ) ) ;
         }
+        // EdgeTable::sortPoints( intersectionPoints ) ;
+        sort( intersectionPoints.begin() , intersectionPoints.end() ) ;
         if( intersectionPoints.size() % 2 == 0 ) {
             int i = 0;
             while( i < intersectionPoints.size() ) {
-                drawLineDDA( intersectionPoints[i] , intersectionPoints[i+1] , 255 , 0 , 0 ) ;
+                QPoint p1( intersectionPoints[i] , y ) ;
+                QPoint p2( intersectionPoints[i+1] , y ) ;
+                // delay( p1 , p2 ) ;
+                drawLineDDA( p1 , p2 , 255 , 0 , 0 ) ;
                 i += 2 ;
             }
-        }
-        else {
-            continue;
         }
     }
     ui -> drawingArea -> setPixmap( QPixmap::fromImage( img ) ) ;
 }
 
-void MainWindow::delay() {
+void MainWindow::delay( QPoint p1 , QPoint p2 ) {
+    QTimer::singleShot( 1000 , [this, p1, p2]() { drawLineDDA( p1 , p2 , 255 , 0 , 0 ) ; } );
 }
 
 void MainWindow::fillEdgeTable() {

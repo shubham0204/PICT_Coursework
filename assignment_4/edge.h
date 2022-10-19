@@ -34,7 +34,9 @@ public:
     int getYMax() ;
     std::vector<Edge> markActiveEdges( int currentY ) ;
     void print() ;
-    QPoint getIntersectionPoint( int currentY , Edge activeEdge ) ;
+    int getIntersectionPoint( int currentY , Edge activeEdge ) ;
+
+    static vector<QPoint> sortPoints( vector<int>& points ) ;
 
 };
 
