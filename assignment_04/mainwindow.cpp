@@ -39,7 +39,6 @@ void MainWindow::mousePressEvent( QMouseEvent* event )  {
     int posX = ui -> drawingArea -> pos().x() ;
     int posY = ui -> drawingArea -> pos().y() ;
     if( x > posX && x < (posX + 500) && y > posY && y < ( posY + 500 ) ) {
-        ui -> points_info -> setText( QString( "Inside" ) ) ;
         // Clicked inside the drawing area
         vertices.push_back( QPoint( x , y ) ) ;
         if( vertices.size() >= 2 ) {
@@ -82,7 +81,23 @@ void MainWindow::fillPolygon() {
             while( i < intersectionPoints.size() ) {
                 QPoint p1( intersectionPoints[i] , y ) ;
                 QPoint p2( intersectionPoints[i+1] , y ) ;
-                // delay( p1 , p2 ) ;
+                drawLineDDA( p1 , p2 , 255 , 0 , 0 ) ;
+                i += 2 ;
+            }
+        }
+        else {
+            int size = intersectionPoints.size() ;
+            int i = 0 ;
+            int end = size ;
+            if( intersectionPoints[0] == intersectionPoints[1] ) {
+                i = 1 ;
+            }
+            else if( intersectionPoints[size-1] == intersectionPoints[size-2] ) {
+                end = size - 1 ;
+            }
+            while( i < end ) {
+                QPoint p1( intersectionPoints[i] , y ) ;
+                QPoint p2( intersectionPoints[i+1] , y ) ;
                 drawLineDDA( p1 , p2 , 255 , 0 , 0 ) ;
                 i += 2 ;
             }
@@ -152,8 +167,3 @@ void MainWindow::setupDrawingArea() {
     img.fill( Qt::white ) ;
     ui -> drawingArea -> setPixmap( QPixmap::fromImage( img ) ) ;
 }
-
-
-
-
-
