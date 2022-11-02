@@ -1,96 +1,74 @@
 #include <iostream>
 #include <fstream>
 #include <ios>
-#include <vector>
-
 using namespace std ;
 
-class Student {
+class FileManager {
 
 private:
-    string name ;
-    string division ;
-    static int rollNumber ;
+    string filename ;
+    fstream inputStream ;
+    fstream outputStream ;
+    int maxCharsInText ;
 
 public:
 
-    Student() {
-        name = "" ;
-        division = "" ;
+    FileManager( string filename ) {
+        this -> filename = filename ;
+        cout << "Enter number of characters in data: " ; cin >> maxCharsInText ;
     }
 
-    Student( string name , string division ) {
-        this -> name = name ;
-        this -> division = division ;
-        rollNumber += 1 ;
+    void printData() {
+        char text[ maxCharsInText ] ;
+        inputStream.open( filename , ios::in ) ;
+        inputStream.read( &text[0] , sizeof( text ) ) ;
+        inputStream.close() ;
+        cout << text << "\n" ;
     }
 
-    friend class StudentDatabase ;
+    void newData() {
+        char text[ maxCharsInText ] ;
+        cin.getline( &text[0] , sizeof( text ) , 'x' ) ;
+        outputStream.open( filename , ios::out ) ;
+        outputStream.write( &text[0] , sizeof( text ) ) ;
+        outputStream.close() ;
+    }
+
+    void appendData() {
+        char text[ maxCharsInText ] ;
+        cin.getline( &text[0] , sizeof( text ) , 'x' ) ;
+        outputStream.open( filename , ios::app ) ;
+        outputStream.write( &text[0] , sizeof( text ) ) ;
+        outputStream.close() ;
+    }
 
 };
 
-class StudentDatabase {
-
-private:
-    string dataFilename ;
-    Student* data ;
-    int numStudents ;
-
-    void readData() {
-        fstream fileInputStream( dataFilename , ios::in ) ;
-        int counter = 0 ;
-        while( fileInputStream.eof() ){
-            fileInputStream >> data[ counter ].name ;
-            fileInputStream >> data[ counter ].division ;
-            fileInputStream >> data[ counter ].rollNumber ;
-            counter += 1 ;
-        }
-        fileInputStream.close() ;
-    }
-
-    void writeData() {
-        fstream fileOutputStream( dataFilename , ios::out ) ;
-        int counter = 0 ;
-        while( fileOutputStream.eof() ){
-            fileOutputStream << data[ counter ].name ;
-            fileOutputStream << data[ counter ].division ;
-            fileOutputStream << data[ counter ].rollNumber ;
-            counter += 1 ;
-        }
-        fileOutputStream.close() ;
-    }
-
-public:
-
-    StudentDatabase( string& dataFilename , int& numStudents ) {
-        this -> dataFilename = dataFilename ;
-        this -> numStudents = numStudents ;
-        this -> data = new Student[ numStudents ] ;
-    }
-
-
-
-
-
-
-};
-
-int Student::rollNumber = 21100 ;
 
 int main() {
 
-    fstream fileStream( "sample.txt" , ios::in ) ;
+    FileManager manager( "file.txt" ) ;
 
-    ofstream outputStream( "sample.txt" ) ;
-    outputStream << "Hello World" ;
-    outputStream.close() ;
-
-    ifstream inputStream( "sample.txt" ) ;
-    string contents ;
-    inputStream >> contents ;
-    inputStream.close() ;
-
-    cout << contents ;
+    while( true ) {
+        int option ;
+        cout << "Enter option: " << "\n" ;
+        cout << "1 -> Print data" << "\n" ;
+        cout << "2 -> Enter new data" << "\n" ;
+        cout << "3 -> Append data" << "\n" ;
+        cin >> option ;
+        if( option == 1 ) {
+            manager.printData() ;
+        }
+        else if( option == 2 ) {
+            manager.newData() ;
+        }
+        else if( option == 3 ) {
+            manager.appendData() ;
+        }
+        else {
+            break;
+        }
+    }
 
     return 0 ;
 }
