@@ -19,11 +19,12 @@ public:
     }
 
     void printData() {
-        char text[ maxCharsInText ] ;
         inputStream.open( filename , ios::in ) ;
-        inputStream.read( &text[0] , sizeof( text ) ) ;
+        char text[ maxCharsInText ] ;
+        while( inputStream.read( &text[0] , sizeof( text ) ) ) {
+            cout << text ;
+        }
         inputStream.close() ;
-        cout << text << "\n" ;
     }
 
     void newData() {

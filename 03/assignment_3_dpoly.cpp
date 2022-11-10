@@ -34,8 +34,7 @@ public:
 
 	// Will be called by subclasses to print basic details of each publication
 	virtual void printPublication() {
-		cout << "Base called " << endl ;
-	}
+	} ;
 
 };
 

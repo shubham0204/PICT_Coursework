@@ -70,6 +70,19 @@ public:
 		return multiply( other ) ;
 	}
 
+	friend ostream& operator<< ( ostream& out , Complex& object ) {
+		out << "( " << object.real << " )" << " + ( " <<  object.imgnry << "i )" << endl ;
+		return out ; 
+	}
+
+	friend istream& operator>> ( istream& in , Complex& object ) {
+		cout << "Enter real part for "  << endl ;
+		in >> object.real ;
+		cout << "Enter imaginary part " << endl ;
+		in >> object.imgnry ;
+		return in ; 
+	}
+
 };
 
 void Complex::print() {
@@ -88,7 +101,7 @@ int main() {
 	Complex c2( 1.0 , 2.0 ) ;
 
 	Complex c3 ;
-	c3.read( "c3" );
+	cin >> c3 ; 
 
 	cout << " Complex numbers " << endl ;
 
@@ -102,6 +115,7 @@ int main() {
 	Complex sum2 = c1 + c2 ;
 	sum.print() ;
 	sum2.print() ;
+	cout << sum2 ; 
 
 	cout << " Difference " << endl ;
 
