@@ -11,6 +11,11 @@ bool isPointSelected ;
 QPoint prevPoint ;
 vector<Line> lines ;
 
+int TOP = 8 ;
+int BOTTOM = 4 ;
+int RIGHT = 2 ;
+int LEFT = 1 ;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -96,12 +101,15 @@ void MainWindow::on_clip_button_clicked() {
     float y_min = ( float ) y ;
     float y_max = ( float ) y + h ;
 
+    // Reinitialize the `img` to remove all contents
     img = QImage( 500 , 500 , QImage::Format_RGB888 ) ;
     setupDrawingArea() ;
     drawRect( x , y , w , h ) ;
     ui -> drawingArea -> setPixmap( QPixmap::fromImage( img ) ) ;
 
+    // Iterate through each line
     for( Line line : lines ) {
+        // Call this method to initialize region codes and intersection points
         line.initializePositionCodes( x_min , y_min , x_max , y_max ) ;
         int code1 = line.code1 ;
         int code2 = line.code2 ;
@@ -117,88 +125,102 @@ void MainWindow::on_clip_button_clicked() {
                 int x2 = 0 ;
                 int y2 = 0 ;
 
-                if( x_min <= line.x_a && x_max >= line.x_a ) {
-                    x1 = line.x_a ;
-                    y1 = y_max ;
-                    if( x_min <= line.x_b && x_max >= line.x_b ){
-                        x2 = line.x_b ;
-                        y2 = y_min ;
+                if( code1 == 0 || code2 == 0 ) {
+                    // Line intersects one boundary only
+                    // Determine only one intersection point
+                    int codeOut ; // Code of the point that lies outside the clipping window
+                    if( code1 == 0 ) {
+                        // First point inside, second point inside
+                        codeOut = code2 ;
+                        x1 = line.x1 ;
+                        y1 = line.y1 ;
                     }
-                    else if( y_min <= line.y_a && y_max >= line.y_a ) {
-                        x2 = x_min ;
-                        y2 = line.y_a ;
+                    else {
+                        // Second point inside, first point outside
+                        codeOut = code1 ;
+                        x1 = line.x2 ;
+                        y1 = line.y2 ;
                     }
-                    else if( y_min <= line.y_b && y_max >= line.y_b ){
-                        x2 = x_max ;
-                        y2 = line.y_b ;
-                    }
-                }
-                else if( x_min <= line.x_b && x_max >= line.x_b ){
-                    x1 = line.x_b ;
-                    y1 = y_min ;
-                    if( x_min <= line.x_a && x_max >= line.x_a ) {
-                        x2 = line.x_a ;
+                    if( (codeOut & TOP) == TOP ) {
+                        // Top Boundary
+                        x2 = line.x_TOP ;
                         y2 = y_max ;
                     }
-                    else if( y_min <= line.y_a && y_max >= line.y_a ) {
-                        x2 = x_min ;
-                        y2 = line.y_a ;
-                    }
-                    else if( y_min <= line.y_b && y_max >= line.y_b ){
-                        x2 = x_max ;
-                        y2 = line.y_b ;
-                    }
-                }
-                else if( y_min <= line.y_a && y_max >= line.y_a ) {
-                    x1 = x_min ;
-                    y1 = line.y_a ;
-                    if( x_min <= line.x_a && x_max >= line.x_a ) {
-                        x2 = line.x_a ;
-                        y2 = y_max ;
-                    }
-                    else if( x_min <= line.x_b && x_max >= line.x_b ){
-                        x2 = line.x_b ;
+                    else if( (codeOut & BOTTOM) == BOTTOM ) {
+                        // Bottom
+                        x2 = line.x_BOTTOM ;
                         y2 = y_min ;
                     }
-                    else if( y_min <= line.y_b && y_max >= line.y_b ){
+                    else if( (codeOut & RIGHT) == RIGHT ) {
+                        // Right
                         x2 = x_max ;
-                        y2 = line.y_b ;
+                        y2 = line.y_RIGHT ;
                     }
-                }
-                else if( y_min <= line.y_b && y_max >= line.y_b ){
-                    x1 = x_max ;
-                    y1 = line.y_b ;
-                    if( x_min <= line.x_a && x_max >= line.x_a ) {
-                        x2 = line.x_a ;
-                        y2 = y_max ;
-                    }
-                    else if( x_min <= line.x_b && x_max >= line.x_b ){
-                        x2 = line.x_b ;
-                        y2 = y_min ;
-                    }
-                    else if( y_min <= line.y_a && y_max >= line.y_a ) {
+                    else if( (codeOut & LEFT) == LEFT ) {
+                        // Left
                         x2 = x_min ;
-                        y2 = line.y_a ;
+                        y2 = line.y_LEFT ;
                     }
                 }
+                else {
+                    // Line intersects two boundaries
+                    // Determine two intersection points
 
-                if( code1 == 0 ) {
-                    x1 = line.x1 ;
-                    y1 = line.y1 ;
-                }
-                else if( code2 == 0 ) {
-                    x2 = line.x2 ;
-                    y2 = line.y2 ;
-                }
+                    // Determine 1st intersection point ( x1 , y1 )
+                    if( (code1 & TOP) == TOP ) {
+                        // Top Boundary
+                        x1 = line.x_TOP ;
+                        y1 = y_max ;
+                    }
+                    else if( (code1 & BOTTOM) == BOTTOM ) {
+                        // BOttom
+                        x1 = line.x_BOTTOM ;
+                        y1 = y_min ;
+                    }
+                    else if( (code1 & RIGHT) == RIGHT ) {
+                        // Right
+                        x1 = x_max ;
+                        y1 = line.y_RIGHT ;
+                    }
+                    else if( (code1 & LEFT) == LEFT ) {
+                        // Left
+                        x1 = x_min ;
+                        y1 = line.y_LEFT ;
+                    }
 
+                    // Determine 2nd intersection point ( x2 , y2 )
+                    if( (code2 & TOP) == TOP ) {
+                        // Top Boundary
+                        x2 = line.x_TOP ;
+                        y2 = y_max ;
+                    }
+                    else if( (code2 & BOTTOM) == BOTTOM ) {
+                        // Bottom
+                        x2 = line.x_BOTTOM ;
+                        y2 = y_min ;
+                    }
+                    else if( (code2 & RIGHT) == RIGHT ) {
+                        // Right
+                        x2 = x_max ;
+                        y2 = line.y_RIGHT ;
+                    }
+                    else if( (code2 & LEFT) == LEFT ) {
+                        // Left
+                        x2 = x_min ;
+                        y2 = line.y_LEFT ;
+                    }
+
+                }
                 drawLineDDA( x1 , y1 , x2 , y2 ) ;
             }
         }
+        // If line is completely outside, we'll not draw it
     }
 
 }
 
 void MainWindow::on_draw_button_clicked() {
+    // Draw clipping window
     int x = ui -> x -> toPlainText().toInt() ;
     int y = ui -> y -> toPlainText().toInt() ;
     int w = ui -> w -> toPlainText().toInt() ;

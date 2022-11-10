@@ -74,7 +74,6 @@ void MainWindow::fillPolygon() {
         for( Edge activeEdge : activeEdges ) {
             intersectionPoints.push_back( edgeTable.getIntersectionPoint( y , activeEdge ) ) ;
         }
-        // EdgeTable::sortPoints( intersectionPoints ) ;
         sort( intersectionPoints.begin() , intersectionPoints.end() ) ;
         if( intersectionPoints.size() % 2 == 0 ) {
             int i = 0;

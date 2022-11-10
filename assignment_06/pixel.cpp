@@ -22,7 +22,7 @@ void Pixel::on_draw_a_button_clicked() {
     float radius = ui -> x_two -> toPlainText().toFloat() ;
     setupDrawingArea() ;
     float triangleSideLength = drawTriangleInCircle( QPoint( x , y ) , radius ) ;
-    float circleRadius = triangleSideLength / ( 2 * sqrt(3) ) ;
+    float circleRadius = triangleSideLength / ( sqrt(3) ) ;
     drawBresenhamCircle( QPoint( x , y ) , circleRadius ) ;
 
     ui -> label -> setPixmap( QPixmap::fromImage( img ) ) ;

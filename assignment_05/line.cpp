@@ -1,96 +1,90 @@
 #include <cmath>
 
+
+// class that stores data of each line drawn, like,
+// region codes, y_min, y_max, slope, slope inverse
 class Line {
 
 private:
 
+    int TOP = 8 ;    // 1000
+    int BOTTOM = 4 ; // 0100
+    int RIGHT = 2 ;  // 0010
+    int LEFT = 1 ;   // 0001
 
     float slope = 0.0f ;
     float slopeInv = 0.0f ;
 
+    // Compute region code of point ( x , y ) given bounds of the clipping window
     int getRegionCode( float x_min , float y_min , float x_max , float y_max ,
                        float x , float y  ) {
         int code = 0;
-        if( x > x_max && y > y_max ) {
-            code = 10 ; // 1010
+        // TBRL codes
+        // If none of the below conditions are satisfied, the code remains 0000 ( completely inside the clipping
+        // window )
+        if( x > x_max ) {
+            // Change 'R' bit from 0 to 1
+            code |= RIGHT ;
         }
-        else if( x > x_max && y <= y_max && y >= y_min ) {
-            code = 2 ; // 0010 // Right
+        else if( x < x_min ) {
+            // Change 'L' bit from 0 to 1
+            code |= LEFT ;
         }
-        else if( x > x_max && y < y_min ) {
-            code = 6 ; // 0110
+        if( y > y_max ) {
+            // Change 'T' bit from 0 to 1
+            code |= TOP ;
         }
-        else if( x < x_min && y > y_max ) {
-            code = 9 ; // 1001
-        }
-        else if( x < x_min && y <= y_max && y >= y_min ) {
-            code = 1 ; // 0001 // Left
-        }
-        else if( x < x_min && y < y_min ) {
-            code = 5 ; // 0101
-        }
-        else if( x >= x_min && x <= x_max && y > y_max ) {
-            code = 8 ; // 1000 // Top
-        }
-        else if( x >= x_min && x <= x_max && y <= y_max && y >= y_min ) {
-            code = 0 ; // 0000
-        }
-        else if( x >= x_min && x <= x_max && y < y_min ) {
-            code = 4 ; // 0100 // Bottom
+        else if( y < y_min ) {
+            // Change 'B' bit from 0 to 1
+            code |= BOTTOM ;
         }
         return code ;
     }
 
 public:
 
+    // Coordinates of first point
     float x1 ;
     float y1 ;
+
+    // Coordinates of second point
     float x2 ;
     float y2 ;
 
-    int x_a ;
-    int x_b ;
-    int y_a ;
-    int y_b ;
-    /*/
+    int x_TOP ;    // X-coordinate of intersection with TOP of clipping window
+    int x_BOTTOM ; // X-coordinate of intersection with BOTTOM of clipping window
+    int y_LEFT ;   // Y-coordinate of intersection with LEFT of clipping window
+    int y_RIGHT ;  // Y-coordinate of intersection with RIGHT of clipping window
 
-    float x_min ;
-    float x_max ;
-    float y_min ;
-    float y_max ;
-    */
+    int code1 ; // Region code for point ( x1 , y1 )
+    int code2 ; // Region code for point ( x2 , y2 )
 
-    int code1 ;
-    int code2 ;
 
     Line( float x1_ , float y1_ , float x2_ , float y2_ ) {
         x1 = x1_ ;
         y1 = y1_ ;
         x2 = x2_ ;
         y2 = y2_ ;
+        // Calculate slope and its inverse in the constructor
         slope = ( y2 - y1 ) / ( x2 - x1 ) ;
         slopeInv = 1.0f / slope ;
-        /*
-        x_min = std::min( x1 , x2 ) ;
-        x_max = std::max( x1 , x2 ) ;
-        y_min = std::min( y1 , y2 ) ;
-        y_max = std::max( y1 , y2 ) ;
-        */
     }
 
 
+    // Initialize region codes for ( x1 , y1 ) and ( x2 , y2 )
+    // along with intersection points
     void initializePositionCodes( float x_min , float y_min , float x_max , float y_max ) {
+
         code1 = getRegionCode( x_min , y_min , x_max , y_max , x1 , y1 ) ;
         code2 = getRegionCode( x_min , y_min , x_max , y_max , x2 , y2 ) ;
 
-        x_a = (int) x1 + ( slopeInv * ( y_max - y1 ) ) ;
-        x_b = (int) x1 + ( slopeInv * ( y_min - y1 ) ) ;
-        y_a = (int) y1 + ( slope * ( x_min - x1 ) ) ;
-        y_b = (int) y1 + ( slope * ( x_max - x1 ) ) ;
-    }
+        // For x coordinates, use x = x1 + ( y - y1 ) * ( 1 / m )
+        x_TOP = (int) x1 + ( slopeInv * ( y_max - y1 ) ) ;
+        x_BOTTOM = (int) x1 + ( slopeInv * ( y_min - y1 ) ) ;
 
-    void checkConditions() {
-
+        // For y coordinates, use y = y1 + ( x - y1 ) * ( m )
+        y_LEFT = (int) y1 + ( slope * ( x_min - x1 ) ) ;
+        y_RIGHT = (int) y1 + ( slope * ( x_max - x1 ) ) ;
     }
     
 };

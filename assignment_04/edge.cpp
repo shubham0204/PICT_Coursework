@@ -42,22 +42,6 @@ int EdgeTable::getYMax() {
     return yMax ;
 }
 
-std::vector<QPoint> EdgeTable::sortPoints( vector<int>& points ) {
-    /*/
-    for( int i = 0 ; i < points.size() ; i++ ) {
-        for( int j = i ; j > 0 ; j-- ) {
-            if( points[ j ].x() < points[ j - 1 ].x() ) {
-                QPoint temp = points[ j ] ;
-                points[ j ] = points[ j - 1 ] ;
-                points[ j - 1 ] = temp ;
-            }
-        }
-    }
-    */
-
-
-}
-
 std::vector<Edge> EdgeTable::markActiveEdges( int currentY ) {
     std::vector<Edge> activeEdges ;
     for( Edge polygonEdge : edges ) {
@@ -66,12 +50,6 @@ std::vector<Edge> EdgeTable::markActiveEdges( int currentY ) {
         }
     }
     return activeEdges ;
-}
-
-void EdgeTable::print() {
-    for( Edge edge : edges ) {
-        cout << edge.x1 << " " << edge.y1 << " " << edge.slopeInverse << " " << endl ;
-    }
 }
 
 int EdgeTable::getIntersectionPoint( int currentY , Edge activeEdge ) {
