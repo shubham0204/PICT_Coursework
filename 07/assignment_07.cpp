@@ -24,6 +24,7 @@ public:
         while( inputStream.read( &text[0] , sizeof( text ) ) ) {
             cout << text ;
         }
+        cout << "\n" ;
         inputStream.close() ;
     }
 
@@ -40,6 +41,16 @@ public:
         cin.getline( &text[0] , sizeof( text ) , 'x' ) ;
         outputStream.open( filename , ios::app ) ;
         outputStream.write( &text[0] , sizeof( text ) ) ;
+        outputStream.close() ;
+    }
+
+
+    void insert() {
+        char text[ 10 ] ;
+        cin.getline( &text[0] , sizeof( text ) , 'x' ) ;
+        outputStream.open( filename , ios::out ) ;
+        outputStream.seekp( 5 ) ;
+        outputStream.write( "Ja" , 2 ) ;
         outputStream.close() ;
     }
 
@@ -65,6 +76,9 @@ int main() {
         }
         else if( option == 3 ) {
             manager.appendData() ;
+        }
+        else if( option == 4 ) {
+            manager.insert() ;
         }
         else {
             break;

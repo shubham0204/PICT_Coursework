@@ -31,7 +31,6 @@ public:
         inputStream.read( (char*)&studentInfo , sizeof( studentInfo ) ) ;
         inputStream.close() ;
         cout << studentInfo.name << endl ;
-
     }
 
 } ;
@@ -39,7 +38,7 @@ public:
 int main()  {
 
     StudentInfo student ;
-    cout << "Enter valie s" << endl ;
+    cout << "Enter student details" << endl ;
     cin.getline( student.name , sizeof( student.name ) ) ;
     cin.getline( student.division , sizeof( student.division ) ) ;
     cin.getline( student.department , sizeof( student.department ) ) ;
