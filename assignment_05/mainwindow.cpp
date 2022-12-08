@@ -6,7 +6,7 @@
 #include <iostream>
 using namespace std ;
 
-QImage img( 500 , 500 , QImage::Format_RGB888 ) ;
+QImage img( 800 , 500 , QImage::Format_RGB888 ) ;
 bool isPointSelected ;
 QPoint prevPoint ;
 vector<Line> lines ;
