@@ -127,7 +127,7 @@ void MainWindow::on_pushButton_clicked() {
 
     // Start scan line algorithm; Iterate from y_min to y_max
     for( int y = y_min ; y < y_max; y++ ) {
-
+        cout << y << "\n" ;
         // Check for active edge and append x-intersection
         float x_inter[ numVertices ] ;
         int numActiveEdges = 0 ;
