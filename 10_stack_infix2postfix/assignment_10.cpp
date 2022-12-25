@@ -131,7 +131,7 @@ int main() {
             stack.pop() ; 
         }
         else {
-            while( stack.top() != '(' && getPrecedence( stack.top() ) >= getPrecedence( c ) ) {
+            while( !stack.isEmpty() && getPrecedence( stack.top() ) >= getPrecedence( c ) ) {
                 postfixExpression += stack.top() ; 
                 stack.pop() ;
             }
@@ -139,7 +139,7 @@ int main() {
         }
     }
     
-    while( stack.top() != '\0' ) {
+    while( !stack.isEmpty() ) {
         char p = stack.pop() ;
         postfixExpression += p ; 
     }

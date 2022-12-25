@@ -3,7 +3,7 @@ using namespace std ;
 
 class Appointment {
 
-    public:
+public:
 
     int startTime ; 
     int endTime ; 
@@ -28,8 +28,8 @@ class Slots {
     int appointmentStartTime ; 
     int appointmentEndTime ; 
 
-    Node* START ; 
-    Node* HEAD ;
+    Node* HEAD ; 
+    Node* TAIL ;
     int numAppointments ; 
     int numSlots ; 
 
@@ -38,8 +38,8 @@ class Slots {
     Slots( int numSlotsInADay ) {
         numAppointments = 0 ; 
         numSlots = numSlotsInADay;
+        TAIL = nullptr ; 
         HEAD = nullptr ; 
-        START = nullptr ; 
         int startTime = 9 ; // 9 AM
         for( int i = 0 ; i < numSlots ; i++ ) {
             Appointment app ; 
@@ -54,29 +54,19 @@ class Slots {
     }
 
     bool checkSlotAvailability( int slotTime ) {
-        Node* currentNode = START ;
-        for ( int i = 0 ; i < numSlots ; i ++ ) {
+        Node* currentNode = HEAD ;
+        while( currentNode != nullptr ) {
             if( currentNode -> appointment.startTime == slotTime ){
-                return false ; 
+                return currentNode -> appointment.isSlotAvailable ;
             }
             currentNode = currentNode -> pointerToNext ;
         }
         return true ; 
     }
 
-    void bookAppointment( int startTime ) {
-        Node* currentNode = START ;
-        for ( int i = 0 ; i < numSlots ; i ++ ) {
-            if( currentNode -> appointment.startTime == startTime ){
-                currentNode -> appointment.isSlotAvailable = false; 
-                cout << "Slot for " << startTime << ":00 booked." << endl ; 
-            }
-            currentNode = currentNode -> pointerToNext ;
-        }
-    }
 
     Node* getElement( int index ) {
-        Node* currentNode = START ;
+        Node* currentNode = HEAD ;
         for ( int i = 0 ; i < numSlots ; i ++ ) {
             if( i == index ) {
                 return currentNode ; 
@@ -102,9 +92,21 @@ class Slots {
         }
     }
 
+    
+    void bookAppointment( int startTime ) {
+        Node* currentNode = HEAD ;
+        while( currentNode != nullptr ) {
+            if( currentNode -> appointment.startTime == startTime ){
+                currentNode -> appointment.isSlotAvailable = false; 
+                cout << "Slot for " << startTime << ":00 booked." << endl ; 
+            }
+            currentNode = currentNode -> pointerToNext ;
+        }
+    }
+
     void cancelAppointment( int startTime ) {
-        Node* currentNode = START ;
-        for ( int i = 0 ; i < numSlots ; i ++ ) {
+        Node* currentNode = HEAD ;
+        while( currentNode != nullptr ) {
             if( currentNode -> appointment.startTime == startTime ){
                 currentNode -> appointment.isSlotAvailable = true; 
                 cout << "Slot for " << startTime << ":00 cancelled." << endl ; 
@@ -114,40 +116,36 @@ class Slots {
     }
 
     void addAppointment( Appointment app ) {
-        if ( numAppointments == 0 ) {
-            // If the list was empty, initialize START and HEAD
-            START = new( Node ) ;
-            START -> appointment = app ;
-            HEAD = START;
+        Node* newNode = new( Node ) ; 
+        newNode -> appointment = app ; 
+        if( numAppointments == 0 ) {
+            newNode -> pointerToNext = nullptr ; 
+            HEAD = TAIL = newNode ; 
         }
         else {
-            // Else, update HEAD
-            Node* headNode = HEAD ;
-            Node* nextNode = new( Node ) ;
-            nextNode -> appointment = app ;
-            headNode -> pointerToNext = nextNode ;
-            HEAD = nextNode ;
+            TAIL -> pointerToNext = newNode ; 
+            TAIL = newNode ; 
         }
         numAppointments++ ;
     }
 
     void printFreeSlots() {
-        Node* currentNode = START ;
-        for ( int i = 0 ; i < numSlots ; i ++ ) {
+        Node* currentNode = HEAD ;
+        while( currentNode != nullptr ) {
             Appointment app = currentNode -> appointment ;
             if( app.isSlotAvailable ) {
                 cout << " ----------------------------------------- " << endl ; 
                 cout << "Status     : " << "Not booked" << endl ; 
                 cout << "Start Time : " << app.startTime << "hrs" << endl ; 
                 cout << "End Time   : " << app.endTime << "hrs" << endl ;  
-                currentNode = currentNode -> pointerToNext ; 
             } 
+            currentNode = currentNode -> pointerToNext ; 
         }
     }
 
     void printAllSlots() {
-        Node* currentNode = START ;
-        for ( int i = 0 ; i < numSlots ; i ++ ) {
+        Node* currentNode = HEAD ;
+        while( currentNode != nullptr ) {
             Appointment app = currentNode -> appointment ; 
             cout << " ----------------------------------------- " << endl ; 
             if( app.isSlotAvailable ) {

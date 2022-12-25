@@ -64,10 +64,7 @@ void DoubleEndedQueue<E>::enqueueFront( E element ) {
             // first element
             FRONT++ ; // 0
         }
-        cout << --FRONT % capacity << " sfsdf " << "\n" ; 
         elements[ --FRONT % capacity ] = element ;
-        cout << FRONT % capacity << " sfsdf222 " << "\n" ;  
-        cout << elements[ -1 ] << "\n" ;
         numElements++ ; 
     }
     else {
