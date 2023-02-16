@@ -13,42 +13,42 @@ value found in the tree, iv. Change a tree so that the roles of the left and rig
 are swapped at every node, v. Search a value
 */
 
+template <class E>
+class BinarySearchTree ; 
+
+template <class E>
 class Node {
-	int val ;
+	E val ;
 	Node* left = nullptr ;
 	Node* right = nullptr ;
-	friend class BinarySearchTree ;
+	friend class BinarySearchTree<E> ;
 };
 
+template <class E>
 class BinarySearchTree {
 
-	Node* ROOT ;
+	Node<E>* ROOT ;
 	int numElements ; 
 
 public:
-
-    enum Traversals {
-		PREORDER , 
-		INORDER , 
-		POSTORDER , 
-	} ; 
 
 	BinarySearchTree() {
 		ROOT = nullptr ;
 		numElements = 0 ; 
 	}
 
-	void create( int rootNodeValue ) {
-		ROOT = new( Node ) ;
+	void create( E rootNodeValue ) {
+		ROOT = new( Node<E> ) ;
 		ROOT -> val = rootNodeValue ;
 	}
 
-	void insert( int element ) {
-		Node* newNode = new( Node ) ; // Create new node
+	void insert( E element ) {
+		// Allocate new node
+		Node<E>* newNode = new( Node<E> ) ;
 		newNode -> val = element ;
 		
-		Node* currentNode = ROOT ; // Start with ROOT node
-		Node* prevNode = nullptr ; // Node travelled before currentNode
+		Node<E>* currentNode = ROOT ; // Start with ROOT node
+		Node<E>* prevNode = nullptr ; // Node travelled before currentNode
 
 		while( currentNode != nullptr ) {
 			prevNode = currentNode ;
@@ -68,25 +68,11 @@ public:
 		numElements++ ; 
 	}
 
-	Node* getRoot() {
+	Node<E>* getRoot() {
 		return ROOT ; 
 	}
 
-	void recursiveTraversal( Traversals traversal ) {
-		switch( traversal ) {
-			case INORDER: 
-			    displayInOrderRecursive( ROOT ) ; 
-				break ; 
-			case PREORDER: 
-			    displayPreOrderRecursive( ROOT ) ; 
-				break ; 
-			case POSTORDER:
-			    displayPostOrderRecursive( ROOT ) ; 
-				break ; 
-		}
-	}
-
-	void displayInOrderRecursive( Node* currentNode ) {
+	void displayInOrderRecursive( Node<E>* currentNode ) {
 		if( currentNode == nullptr ) {
 			return;
 		}
@@ -95,7 +81,7 @@ public:
 		displayInOrderRecursive( currentNode -> right ) ;
 	}
 
-	void displayPreOrderRecursive( Node* currentNode ) {
+	void displayPreOrderRecursive( Node<E>* currentNode ) {
 		if( currentNode == nullptr ) {
 			return;
 		}
@@ -104,7 +90,7 @@ public:
 		displayPreOrderRecursive( currentNode -> right ) ;
 	}
 
-	void displayPostOrderRecursive( Node* currentNode ) {
+	void displayPostOrderRecursive( Node<E>* currentNode ) {
 		if( currentNode == nullptr ) {
 			return;
 		}
@@ -114,8 +100,8 @@ public:
 	}
 
 	void displayPreOrder() {
-		stack<Node*> s ; 
-		Node* currentNode = ROOT ; 
+		stack<Node<E>*> s ; 
+		Node<E>* currentNode = ROOT ; 
 		while( currentNode != nullptr || !s.empty() ) {
 			if( currentNode != nullptr ) {
 				cout << currentNode -> val << " " ; 
@@ -130,18 +116,18 @@ public:
 	}
 
 
-	int getMinElement() {
+	E getMinElement() {
 		// Travel to the leftmost node
-		Node* currentNode = ROOT ; 
+		Node<E>* currentNode = ROOT ; 
 		while( currentNode -> left != nullptr ) {
 			currentNode = currentNode -> left ; 
 		}
 		return currentNode -> val ; 
 	}
 
-	int getMaxElement() {
+	E getMaxElement() {
 		// Travel to the rightmost node
-		Node* currentNode = ROOT ; 
+		Node<E>* currentNode = ROOT ; 
 		while( currentNode -> right != nullptr ) {
 			currentNode = currentNode -> right ; 
 		}
@@ -152,13 +138,13 @@ public:
 		swapLeftRightChildren( ROOT ) ;  
 	}
 
-	void swapLeftRightChildren( Node* currentNode ) {
+	void swapLeftRightChildren( Node<E>* currentNode ) {
 		if( currentNode == nullptr ) {
 			// Leaf node reached, end recursive calls
 			return ; 
 		}
 		// Swap left and right nodes
-		Node* leftNode = currentNode -> left ; 
+		Node<E>* leftNode = currentNode -> left ; 
 		currentNode -> left = currentNode -> right ; 
 		currentNode -> right = leftNode ; 
 		// Proceed to left and right subtrees
@@ -166,8 +152,8 @@ public:
 		swapLeftRightChildren( currentNode -> right ) ; 
 	}
 
-	bool search( int key ) {
-		Node* currentNode = ROOT ; 
+	bool search( E key ) {
+		Node<E>* currentNode = ROOT ; 
 		bool found = false ;
 		while( currentNode != nullptr ) {
 			if( key < currentNode -> val ) {
@@ -187,7 +173,7 @@ public:
 };
 
 int main() {
-	BinarySearchTree tree ;
+	BinarySearchTree<int> tree ;
 	tree.create( 5 ) ;
 	tree.insert( 10 ) ;
 	tree.insert( 25 ) ;
@@ -196,15 +182,15 @@ int main() {
 	tree.insert( 3 ) ;
 
 	cout << "Preorder (Recursive): " ;
-	tree.recursiveTraversal( tree.PREORDER ) ;
+	tree.displayPreOrderRecursive( tree.getRoot() ) ;
 	cout << "\n" ;
 
 	cout << "Inorder (Recursive): " ;
-	tree.recursiveTraversal( tree.INORDER ) ;
+	tree.displayInOrderRecursive( tree.getRoot() ) ;
 	cout << "\n" ;
 
 	cout << "Postorder (Recursive): " ;
-	tree.recursiveTraversal( tree.POSTORDER ) ;
+	tree.displayPostOrderRecursive( tree.getRoot() ) ;
 	cout << "\n" ; 
 
 	int min = tree.getMinElement() ; 
@@ -225,8 +211,6 @@ int main() {
 	tree.mirror() ; 
 	tree.displayPreOrder() ; 
 	cout << "\n" ; 
-
-	
 
 	return 0;
 }

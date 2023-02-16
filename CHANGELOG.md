@@ -1,1 +1,3 @@
-Added `assignment_01.cpp` in `Assignment_01_BST_Basics`
+- Added `mirror` and `search` methods in `assignment_01.cpp`
+- Added `assignment_01_generic.cpp` that contains template-based methods and classes
+- Added enumerations for traversals in `assignment_01.cpp`
