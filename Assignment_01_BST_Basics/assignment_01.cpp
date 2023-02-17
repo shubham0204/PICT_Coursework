@@ -23,6 +23,7 @@ class Node {
 class BinarySearchTree {
 
 	Node* ROOT ;
+	map<Node*,int> nodeLevels ; 
 	int numElements ; 
 
 public:
@@ -129,6 +130,35 @@ public:
 		}
 	}
 
+	void longestLength() {
+		stack<Node*> s ; 
+		Node* currentNode = ROOT ; 
+		int currentLevel = 0 ;
+		while( currentNode != nullptr || !s.empty() ) {
+			if( currentNode != nullptr ) {
+				// Keep travelling leftwards and stack all nodes travelled
+				// Also, increase the level by 1
+				s.push( currentNode ) ;
+				nodeLevels[ currentNode ] = currentLevel++ ; 
+				currentNode = currentNode -> left ; 
+			}
+			else {
+				// Check if parent node on the node has a right child
+				// If the node does not have a right child, pop and check next node
+				// in the stack
+				currentNode = s.top() -> right ; 
+				s.pop() ; 
+				if( currentNode != nullptr ) {
+					// The parent node had a right child,
+					// decrement the level by 1
+					currentLevel-- ; 
+				}
+			}
+		}
+		for( map<Node*,int>::iterator itr = nodeLevels.begin() ; itr != nodeLevels.end() ; itr++ ) {
+			cout << "Node: " << itr -> first -> val << " Length: " << itr -> second << "\n" ; 
+		}
+	}
 
 	int getMinElement() {
 		// Travel to the leftmost node
@@ -211,6 +241,9 @@ int main() {
 	int max = tree.getMaxElement() ; 
 	cout << "max element: " << max << "\n" ; 
 	cout << "min element: " << min << "\n" ; 
+
+	cout << "Node path lengths: " << "\n" ; 
+	tree.longestLength() ;
 
 	int key ;
 	cout << "Enter key to search in BST: " << "\n" ; cin >> key ; 

@@ -1,3 +1,1 @@
-- Added `mirror` and `search` methods in `assignment_01.cpp`
-- Added `assignment_01_generic.cpp` that contains template-based methods and classes
-- Added enumerations for traversals in `assignment_01.cpp`
+- Added `longestLength` method in `assignment_01.cpp` and `assignment_01_generic.cpp`.
