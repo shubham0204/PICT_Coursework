@@ -4,11 +4,12 @@ using namespace std ;
 template <class E>
 struct StackNode {
     E val ; 
+    StackNode* prev = nullptr ; 
     StackNode* next = nullptr ;
 } ; 
 
 template <class E>
-class Stack {
+class LinkedStack {
 
     StackNode<E>* TOP ; 
     StackNode<E>* START ; 
@@ -16,20 +17,10 @@ class Stack {
 
     public:
 
-    Stack() {
+    LinkedStack() {
         START = nullptr ; 
         TOP = nullptr ; 
         numElements = 0 ; 
-    }
-
-    ~Stack() {
-        StackNode<E>* currentNode = new( StackNode<E> ) ; 
-        while( currentNode != nullptr ) {
-            StackNode<E>* nextNode = currentNode -> next ; 
-            delete currentNode ; 
-            currentNode = currentNode -> next ; 
-        }
-        cout << "\n" ; 
     }
 
     void push( E element ) {
@@ -40,24 +31,29 @@ class Stack {
             START = TOP ; 
         }
         else {
+            newNode -> prev = TOP ; 
             TOP -> next = newNode ; 
             TOP = newNode ; 
         }
         numElements++ ; 
     }
 
-    E pop() {
-        StackNode<E>* currentNode = START ; 
-        while( currentNode -> next -> next != nullptr ) {
-            currentNode = currentNode -> next ; 
+    E top() {
+        return TOP -> val ;
+    }
+
+    void pop() {
+        if( numElements >= 2 ) {
+            StackNode<E>* newTop = TOP -> prev ; 
+            delete TOP ; 
+            TOP = new( StackNode<E> ) ; 
+            TOP = newTop ;
+            TOP -> next = nullptr ;   
+        } 
+        else {
+            delete TOP ; 
         }
-        E topVal = TOP -> val ; 
-        delete TOP ; 
-        TOP = new( StackNode<E> ) ; 
-        TOP = currentNode ;
-        TOP -> next = nullptr ; 
-        numElements-- ;  
-        return topVal ;
+        numElements--;
     }
 
     void print() {
@@ -70,7 +66,7 @@ class Stack {
     }
 
     bool isEmpty() {
-        return numElements != 0 ; 
+        return numElements == 0 ; 
     }
 
 } ; 

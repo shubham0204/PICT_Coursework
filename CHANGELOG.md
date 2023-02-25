@@ -1,1 +1,3 @@
-- Added `Assignment_02_Binary_Tree` and `linkedqueue.cpp` and `linkedstack.cpp`
+- Added `longestPath`, `copyTree`, `deleteAllNodes` and all depth-first traversals
+  in `assignment_02.cpp`.
+- Fixed `linkedqueue.cpp` and `linkedstack.cpp`

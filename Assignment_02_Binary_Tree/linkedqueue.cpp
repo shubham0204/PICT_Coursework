@@ -44,14 +44,15 @@ class LinkedQueue {
         numElements++ ; 
     }
 
-    E pop() {
+    E front() {
+        return HEAD -> val ;
+    }
+
+    void pop() {
         QueueNode<E>* nextNode = HEAD -> next ; 
-        E val = HEAD -> val ; 
         delete HEAD ; 
-        HEAD = new( QueueNode<E> ) ; 
         HEAD = nextNode ; 
         numElements-- ; 
-        return val ;
     }
 
     void print() {
