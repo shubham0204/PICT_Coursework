@@ -3,22 +3,17 @@
 #include "linkedqueue.cpp"
 using namespace std ;
 
-template <class E>
-class BinaryTree ;
-
-template <class E>
 class TreeNode {
-    E val ;
+    int val ;
     TreeNode* left = nullptr ;
     TreeNode* right = nullptr ;
-    friend class BinaryTree<E> ;
+    friend class BinaryTree ;
 } ;
 
-template <class E>
 class BinaryTree {
 
-    TreeNode<E>* ROOT ;
-    LinkedQueue<TreeNode<E>*> nodes ;
+    TreeNode* ROOT ;
+    LinkedQueue<TreeNode*> nodes ;
     int numElements ; 
 
     public:
@@ -36,29 +31,29 @@ class BinaryTree {
     // Creates a binary tree from the given array
     // The array holds the typical representation of a binary tree
     // Iteration over this array builds a binary tree with level-wise node insertion
-    void create( E* elements , int n ) {
+    void create( int* elements , int n ) {
 
         // A pointer used to access elements from the array
         int elementPtr = 0 ;
         numElements = n ;
 
         // Initialize ROOT and set its value to elements[0]
-        ROOT = new( TreeNode<E> ) ;
+        ROOT = new( TreeNode ) ;
         ROOT -> val = elements[ elementPtr ] ;
 
         // Initialize a queue and push ROOT to it
-        LinkedQueue<TreeNode<E>*> nodesQueue ; 
+        LinkedQueue<TreeNode*> nodesQueue ; 
         nodesQueue.push( ROOT ) ;
 
         while( elementPtr < n - 1 && !nodesQueue.isEmpty() ) {
             // Get the front element from the queue and pop it
-            TreeNode<E>* currentNode = nodesQueue.front() ; 
+            TreeNode* currentNode = nodesQueue.front() ; 
             nodesQueue.pop() ; 
             // Add left and right children to currentNode
             // with values taken from `elements` array
-            TreeNode<E>* leftChild = new( TreeNode<E> ) ;
+            TreeNode* leftChild = new( TreeNode ) ;
             leftChild -> val = elements[ ++elementPtr ] ; 
-            TreeNode<E>* rightChild = new( TreeNode<E> ) ;
+            TreeNode* rightChild = new( TreeNode ) ;
             rightChild -> val = elements[ ++elementPtr ] ;
             currentNode -> left = leftChild ; 
             currentNode -> right = rightChild ; 
@@ -81,74 +76,96 @@ class BinaryTree {
                 break ; 
         }
     }
-    
-    void preorderTraversal() {
-       	LinkedStack<TreeNode<E>*> s ;
-       	s.push( ROOT ) ;
-       	while( !s.isEmpty()  ) {
-       		TreeNode<E>* currentNode = s.top() ;
-            s.pop() ; 
-       		if( currentNode -> right != nullptr ) {
-       			s.push( currentNode -> right ) ;
-       		}
-            cout << currentNode -> val << " " ;
-       		if( currentNode -> left != nullptr ) {
-       			s.push( currentNode -> left ) ;
-       		}
-       	}
-        cout << "\n" ; 
-    }
 
-    void postorderTraversal() {
-       	LinkedStack<TreeNode<E>*> s ;
-        LinkedStack<E> output ; 
-        s.push( ROOT ) ; 
-       	while( !s.isEmpty() ) {
-            TreeNode<E>* currentNode = s.top() ;
+    void preorderTraversal() {
+        LinkedStack<TreeNode*> s ; 
+        TreeNode* currentNode = ROOT ; 
+        while( true ) {
+            while( currentNode != nullptr ) {
+                s.push( currentNode ) ; 
+                currentNode = currentNode -> left ; 
+            }
+            if( s.isEmpty() ) {
+                cout << "\n" ; 
+                return ;
+            }
+            currentNode = s.top() ; 
             s.pop() ; 
-            output.push( currentNode -> val ) ;
-       		if( currentNode -> left != nullptr ) {
-       			s.push( currentNode -> left ) ;
-       		}
-       		if( currentNode -> right != nullptr ) {
-       			s.push( currentNode -> right ) ;
-       		}
-       	}
-        while( !output.isEmpty() ) {
-            cout << output.top() << " " ; 
-            output.pop() ; 
+            cout << currentNode -> val << " " ; 
+            currentNode = currentNode -> right ; 
         }
         cout << "\n" ; 
     }
 
-    void inorderTraversal() {
-       	LinkedStack<TreeNode<E>*> s ;
-       	TreeNode<E>* currentNode = ROOT ;
-       	while( !s.isEmpty() || currentNode != nullptr ) {
+    void postorderTraversal() {
+        LinkedStack<TreeNode*> s ; 
+        TreeNode* currentNode = ROOT ; 
+        TreeNode* temp = new( TreeNode ) ; 
+        temp -> val = -1 ; 
+        while( true ) {
             while( currentNode != nullptr ) {
-                s.push( currentNode ) ; 
-                currentNode = currentNode -> left ;
+                s.push( currentNode ) ;
+                if( currentNode -> right != nullptr ) {
+                    s.push( currentNode -> right ) ;
+                    s.push( temp ) ; 
+                }
+                currentNode = currentNode -> left ; 
             }
-       		currentNode = s.top() ;
+            if( s.isEmpty() ) {
+                cout << "\n" ; 
+                return;
+            }
+            currentNode = s.top() ; 
             s.pop() ; 
-            cout << currentNode -> val << " " ;
-            currentNode = currentNode -> right ;
-       	}
-        cout << "\n" ; 
+            while( currentNode -> val != -1 && !s.isEmpty() ) {
+                cout << currentNode -> val << " " ; 
+                currentNode = s.top() ; 
+                s.pop() ; 
+            }
+            if( !s.isEmpty() ) {
+                currentNode = s.top() ; 
+                s.pop() ; 
+            }
+            if( s.isEmpty() ) {
+                cout << currentNode -> val << " " ; 
+                cout << "\n" ; 
+                return;
+            }
+        }
     }
 
+    void inorderTraversal() {
+        LinkedStack<TreeNode*> s ;
+       	TreeNode* currentNode = ROOT ;
+        while( true ) {
+            while( currentNode != nullptr ) {
+                cout << currentNode -> val << " " ; 
+                if( currentNode -> right != nullptr ) {
+                    s.push( currentNode -> right ) ;
+                }
+                currentNode = currentNode -> left ;
+            }
+            if( s.isEmpty() ) {
+                cout << "\n" ; 
+                return;
+            }
+            currentNode = s.top() ; 
+            s.pop() ; 
+        }
+        
+    }
 
     void mirror() {
 		swapLeftRightChildren( ROOT ) ;
 	}
 
-	void swapLeftRightChildren( TreeNode<E>* currentNode ) {
+	void swapLeftRightChildren( TreeNode* currentNode ) {
 		if( currentNode == nullptr ) {
 			// Leaf node reached, end recursive calls
 			return;
 		}
 		// Swap left and right nodes
-		TreeNode<E>* leftNode = currentNode -> left ;
+		TreeNode* leftNode = currentNode -> left ;
 		currentNode -> left = currentNode -> right ;
 		currentNode -> right = leftNode ;
 		// Proceed to left and right subtrees
@@ -158,10 +175,10 @@ class BinaryTree {
 
 
     void longestLength() {
-		LinkedStack<TreeNode<E>*> s ;
-		TreeNode<E>* currentNode = ROOT ;
+		LinkedStack<TreeNode*> s ;
+		TreeNode* currentNode = ROOT ;
 		int currentLevel = 0 ;
-        TreeNode<E>* treeNodes[ numElements ] ;
+        TreeNode* treeNodes[ numElements ] ;
         int lengths[ numElements ] ;
         int nodePtr = 0 ;
 		while( currentNode != nullptr || !s.isEmpty() ) {
@@ -198,18 +215,47 @@ class BinaryTree {
         cout << "Longest length node: " << treeNodes[ maxLengthIndex ] -> val << " length= " << lengths[ maxLengthIndex ] << "\n" ; 
 	}
 
+    void setRoot( TreeNode* root ) {
+        ROOT = root ; 
+    }
+
     BinaryTree operator=( BinaryTree other ) {
-        return other.copyTree() ; 
+        BinaryTree tree ; 
+        tree.setRoot( other.copyTree( ROOT ) ) ;
+        return tree ; 
+    }
+
+    TreeNode* copyTree( TreeNode* parentNode ) {
+        if( parentNode != nullptr ) {
+            TreeNode* parentNodeCopy = new( TreeNode ) ; 
+            parentNodeCopy -> val = parentNodeCopy -> val ; 
+            if( parentNode -> left == nullptr ) {
+                parentNodeCopy -> left = nullptr ; 
+            }
+            else {
+                parentNodeCopy -> left = copyTree( parentNode -> left ) ; 
+            }
+            if( parentNode -> right == nullptr ) {
+                parentNodeCopy -> right = nullptr ; 
+            }
+            else {
+                parentNodeCopy -> right = copyTree( parentNode -> right ) ; 
+            }
+            return parentNodeCopy ; 
+        }
+        else {
+            return nullptr ; 
+        }
     }
 
     BinaryTree copyTree() {
-        TreeNode<E>* newRoot = ROOT ; 
-        E nodes[ numElements ] ;
+        TreeNode* newRoot = ROOT ; 
+        int nodes[ numElements ] ;
         int nodesPtr = 0 ;
-        LinkedQueue<TreeNode<E>*> q ;
+        LinkedQueue<TreeNode*> q ;
         q.push( newRoot ) ;
         while( !q.isEmpty() ) {
-            TreeNode<E>* currentNode = q.front() ; 
+            TreeNode* currentNode = q.front() ; 
             q.pop() ; 
             nodes[ nodesPtr++ ] = currentNode -> val ; 
             if( currentNode -> left != nullptr ) {
@@ -227,11 +273,11 @@ class BinaryTree {
     void countNodes() {
         int internalNodes = 0 ; 
         int leafNodes = 0 ; 
-        LinkedStack<TreeNode<E>*> s ;
-    	TreeNode<E>* currentNode = ROOT ;
+        LinkedStack<TreeNode*> s ;
+    	TreeNode* currentNode = ROOT ;
     	s.push( ROOT ) ;
-    	while( !s.empty() ) {
-    		TreeNode<E>* node = s.top() ;
+    	while( !s.isEmpty() ) {
+    		TreeNode* node = s.top() ;
     		s.pop() ;
     		if( node -> left == nullptr && node -> right == nullptr ) {
                 leafNodes++ ; 
@@ -251,11 +297,11 @@ class BinaryTree {
     }
 
     void deleteAllNodes() {
-        LinkedStack<TreeNode<E>*> s ;
-        LinkedStack<TreeNode<E>*> output ; 
+        LinkedStack<TreeNode*> s ;
+        LinkedStack<TreeNode*> output ; 
         s.push( ROOT ) ; 
        	while( !s.isEmpty() ) {
-            TreeNode<E>* currentNode = s.top() ;
+            TreeNode* currentNode = s.top() ;
             s.pop() ; 
             output.push( currentNode ) ;
        		if( currentNode -> left != nullptr ) {
@@ -267,6 +313,7 @@ class BinaryTree {
        	}
         while( !output.isEmpty() ) {
             delete output.top() ; 
+            output.pop() ; 
         }
         cout << "\n" ; 
     }
@@ -274,26 +321,49 @@ class BinaryTree {
 } ;
 
 int main() {
-    BinaryTree<int> tree;
-
-    int nums[7] = { 1 , 2 , 3 , 4 , 5 , 6 , 7 } ; 
-    tree.create( nums , 7 ) ; 
-
-    tree.preorderTraversal() ;
-	tree.inorderTraversal() ; 
-    tree.postorderTraversal() ; 
-
-    tree.longestLength() ; 
-
-    BinaryTree<int> tree2 = tree.copyTree() ; 
-    tree2.inorderTraversal() ; 
-
-    tree.deleteAllNodes() ; 
-    tree2.deleteAllNodes() ; 
-
-    tree.inorderTraversal() ; 
-    tree2.inorderTraversal() ; 
-  
+    BinaryTree tree ;
+    while( true ) {
+        int option ;
+        cout << "Enter option: " << "\n" ; 
+        cout << "1. Creation and insertion" << "\n" ; 
+        cout << "2. Preorder Traversal" << "\n" ; 
+        cout << "3. Inorder Traversal" << "\n" ; 
+        cout << "4. Postorder Traversal" << "\n" ; 
+        cout << "5. Swap nodes" << "\n" ; 
+        cout << "6. Find Height" << "\n" ; 
+        cout << "7. Count leaf and internal nodes" << "\n" ; 
+        cout << "8. Copy tree" << "\n" ; 
+        cout << "9. Erase all" << "\n" ; 
+        cin >> option ; 
+        if( option == 1 ) {
+            int nums[7] = { 1 , 2 , 3 , 4 , 5 , 6 , 7 } ;
+            tree.create( nums , 7 ) ; 
+        }
+        else if( option == 2 ) {
+            tree.preorderTraversal() ; 
+        }
+        else if( option == 3 ) {
+            tree.inorderTraversal() ; 
+        }
+        else if( option == 4 ) {
+            tree.postorderTraversal() ; 
+        }
+        else if( option == 5 ) {
+            tree.mirror() ; 
+        }
+        else if( option == 6 ) {
+            tree.longestLength() ; 
+        }
+        else if( option == 7 ) {
+            tree.countNodes() ; 
+        }
+        else if( option == 8 ) {
+            tree = tree.copyTree() ; 
+        }
+        else if( option == 9 ) {
+            tree.deleteAllNodes() ;
+        }
+    }
 
     return 0 ;
 }
