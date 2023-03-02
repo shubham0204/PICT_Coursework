@@ -1,31 +1,37 @@
-section .bss
-mess resb 25
-
 section .data
-strmaxlen db 100
+msg1  db  "Enter string: " , 0xA
+msg2  db  "Enter length: " , 0xA
+len1  equ  $-msg1
+len2  equ  $-msg2
 
 section .text
 global _start
 _start:
-mov rsi , mess
-strloop:
-mov rax , 00
-mov rdi , 00
-mov rdx , 1
-syscall
-cmp rsi , 2Ch
-je  print
-add rsi , 1
-jmp strloop
 
-print:
-
+%macro print 2
 mov rax , 01
 mov rdi , 01
-mov rsi , mess
-mov rdx , 5
+mov rsi , %1
+mov rdx , %2
 syscall
+%endmacro
+
+%macro read 2
+mov rax , 00
+mov rdi , 00
+mov rsi , %1
+mov rdx , %2
+syscall
+%endmacro
+
+print msg1 , len1
+print msg2 , len2
 
 mov rax , 60
-mov rdx , 00
+mov rdi , 00
 syscall
+
+
+
+
+
