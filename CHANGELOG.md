@@ -1,1 +1,2 @@
-- Simplified `Assignment_02_Binary_Tree` 
+- Added `Assignment_03_ThreadedBST`
+- Updated `README.md`
