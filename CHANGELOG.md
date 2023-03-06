@@ -1,1 +1,1 @@
-- Added `hex_to_ascii_conversion` 
+- Completed `hex_to_ascii_conversion` documentation
