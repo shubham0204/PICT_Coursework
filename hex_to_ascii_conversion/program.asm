@@ -14,6 +14,8 @@ mov rdx , %2
 syscall
 %endmacro
 
+; -------------------------------------------------------
+
 section .data
 M1 db "Enter a two-digit number..." , 0xA
 L1 equ $-M1
@@ -21,9 +23,13 @@ M2 db "The two-digit number is..." , 0xA
 L2 equ $-M2
 M3 db 2
 
+; -------------------------------------------------------
+
 section .bss
 num  resb  2  ; Two digits -> Two bytes
 ans  resb  2
+
+; -------------------------------------------------------
 
 section .text
 global _start

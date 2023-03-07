@@ -4,3 +4,4 @@
 *.obj
 *.o
 .vscode
+.bash_history
