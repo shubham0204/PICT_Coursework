@@ -1,1 +1,1 @@
-- Completed `hex_to_ascii_conversion` documentation
+- Added documented code for `Assignment_02`

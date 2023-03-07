@@ -61,7 +61,7 @@ jnz  back          ; Jump to back if not zero above register, rcx, is not zero
 
 print M2 , L2
 
-mov  rsi , ans     ; mov ans base address to rbp
+mov  rsi , ans     ; mov ans base address to rsi
 mov  rcx , 02h     ; reset counter to 0x02
 
 up:
