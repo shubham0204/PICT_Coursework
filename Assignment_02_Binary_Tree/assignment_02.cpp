@@ -248,7 +248,7 @@ class BinaryTree {
         }
     }
 
-    BinaryTree copyTree() {
+    BinaryTree copyTreeIterative() {
         TreeNode* newRoot = ROOT ; 
         int nodes[ numElements ] ;
         int nodesPtr = 0 ;
@@ -274,7 +274,6 @@ class BinaryTree {
         int internalNodes = 0 ; 
         int leafNodes = 0 ; 
         LinkedStack<TreeNode*> s ;
-    	TreeNode* currentNode = ROOT ;
     	s.push( ROOT ) ;
     	while( !s.isEmpty() ) {
     		TreeNode* node = s.top() ;

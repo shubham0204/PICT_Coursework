@@ -158,36 +158,54 @@ void ThreadedBinarySearchTree::preorder() {
 void ThreadedBinarySearchTree::deleteNode( int num ) {
 	ThreadedNode *currentNode = ROOT;
 	ThreadedNode *prevNode = nullptr;
-	while (currentNode -> right != nullptr && currentNode -> left != nullptr ){
-		prevNode = currentNode;
+	while( true ){
+		if( currentNode -> left == nullptr && currentNode -> rThread ) {
+			break;
+		}
 		if (currentNode->val > num) {
 			// Go left
+			prevNode = currentNode;
 			currentNode = currentNode->left;
 		}
-		else {
+		else if( currentNode -> val < num ) {
 			// Go right if rThread is False
 			// We wish to travel down the tree,
 			// if we encounter a thread, break the loop (as we've encountered a leaf node)
 			if (!(currentNode->rThread)) {
+				prevNode = currentNode;
 				currentNode = currentNode->right;
 			}
 			else {
 				break;
 			}
 		}
+		else {
+			break ;
+		}
 	}
 
-	if( currentNode -> left == nullptr && currentNode -> right == nullptr ) {
+	cout << "Val: " << currentNode -> val << "\n" ;
+	cout << "rThread: " << currentNode -> rThread << "\n" ; 
+
+	cout << "prev Val: " << prevNode -> val << "\n" ;
+	cout << "prev rThread: " << prevNode -> rThread << "\n" ; 
+ 
+
+	if( currentNode -> left == nullptr  && (currentNode -> rThread) ) {
+		cout << "Leaf Node deletion" << "\n" ; 
 		// Leaf node deletion
 		if( prevNode -> left == currentNode ) {
+			cout << "Left child delete" << "\n" ; 
 			prevNode -> left = nullptr ;
 		}
 		else if( prevNode -> right == currentNode ) {
-			prevNode -> right = nullptr ;
+			prevNode -> rThread = true ;
+			prevNode -> right = currentNode -> right ;
 		}
 		delete currentNode ;
 	}
-	else if( currentNode -> left != nullptr && currentNode -> right != nullptr ) {
+	else if( currentNode -> left != nullptr && currentNode -> right != nullptr && !(currentNode -> rThread) ) {
+		cout << "Two children deletion" << "\n" ; 
 		// currentNode has two children
 		ThreadedNode* minInRightTree = currentNode -> right ; 
 		ThreadedNode* newParent = currentNode ; 
@@ -195,28 +213,38 @@ void ThreadedBinarySearchTree::deleteNode( int num ) {
 			newParent = minInRightTree ;
 			minInRightTree = minInRightTree -> left ; 
 		}
-		currentNode -> val = minInRightTree -> val ; 
-		newParent -> left = minInRightTree -> right ; 
-		newParent -> rThread = minInRightTree -> rThread ; 
-		delete minInRightTree ; 
-	}
-	else {
+		int temp = minInRightTree -> val ; 
+		minInRightTree -> val = currentNode -> val ; 
+		currentNode -> val = temp ; 
+
+		prevNode = currentNode ; 
+		currentNode = minInRightTree ; 
+		
 		if( currentNode -> left != nullptr ) {
+			currentNode -> left -> right = prevNode ; 
 			prevNode -> left = currentNode -> left ; 
-			delete currentNode ; 
 		}
 		else if( currentNode -> right != nullptr ) {
 			prevNode -> right = currentNode -> right ; 
-			prevNode -> rThread = currentNode -> rThread ; 
-
-			delete currentNode ; 
 		}
+
+		delete minInRightTree ; 
+	}
+	else {
+		cout << "Single Child deletion" << "\n" ; 
+		if( currentNode -> left != nullptr ) {
+			currentNode -> left -> right = prevNode ; 
+			prevNode -> left = currentNode -> left ; 
+		}
+		else if( currentNode -> right != nullptr ) {
+			prevNode -> right = currentNode -> right ; 
+		}
+		delete currentNode ;
 	}
 
 }
 
-int main()
-{
+int main(){
 
 	ThreadedBinarySearchTree tree;
 	tree.create(20);
@@ -228,9 +256,10 @@ int main()
 	tree.insert(25);
 	tree.insert(12);
 	tree.insert(60);
+	tree.insert(18);
+	tree.insert(21);
 	tree.inorder();
 	tree.preorder() ; 
-	tree.deleteNode( 25 ) ; 
 
 	tree.inorder() ; 
 

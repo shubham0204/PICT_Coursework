@@ -17,3 +17,6 @@ are swapped at every node, v. Search a value
 (Implement both recursive and non-recursive methods)
 
 3. Create an inordered threaded binary search tree. Perform inorder, preorder traversals without recursion and deletion of a node. Analyze time and space complexity of the algorithm.
+
+4. Consider telephone book database of N clients. Make use of a hashtable implementation to quickly look up client’s telephone number. Make use of two collision handling techniques and compare them using number of comparisons required to find a set of telephone numbers
+(Note: Use linear probing with replacement and without replacement)

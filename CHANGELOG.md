@@ -1,2 +1,1 @@
-- Added `Assignment_03_ThreadedBST`
-- Updated `README.md`
+- Completed `Assignment_03_ThreadedBST`
