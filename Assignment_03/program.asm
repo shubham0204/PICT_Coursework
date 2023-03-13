@@ -1,3 +1,6 @@
+; 21356 - Shubham Panchal
+; https://shubham0204.github.io
+
 %macro print 2
 mov  rax , 01  ; sys_write
 mov  rdi , 01  ; stdout - file descriptor
@@ -30,9 +33,9 @@ section .text
 global _start
 _start:
 
-
+; Printing the array of numbers
 mov   rcx  , 05h                     ; Counter for no. of digits to print
-mov   r9   , 02h                     ; asda
+mov   r9   , 02h                     ; Counter for processing each digit two times
 
 mov   rsi  , arr                     ; Move `arr` to rsi (source array)
 mov   rdi  , arrout                  ; Move `arrout` to rdi (destination array)
@@ -47,27 +50,27 @@ jbe   copydigit1                     ; Jump to copydigit1 if cmp result was belo
 add     dl   ,   07h                 ; If there was no jump in above statement, add 07h to dl
 copydigit1:
 add     dl         ,  30h            ; Add 30h always
-mov     [rdi]      ,  dl             ; Move converted digit in dl to location specified by rsi
+mov     [rdi]      ,  dl             ; Move converted digit in dl to location specified by rdi
 inc     rdi                          ; Increment rdi (dest array pointer)
 dec     r9                           ; Decrement r9
-jnz     hextoascii1
-mov     r9         ,  02h
-mov     byte[rdi]  ,  0xA
-inc     rdi 
-inc     rsi 
-mov     bl         ,  [rsi]
-dec     rcx
-jnz     hextoascii1
+jnz     hextoascii1                  ; If r9 is not equal to 0, jump to hex2ascii1 
+                                     ; (this will happen two times for each digit)
+mov     r9         ,  02h            ; Reinitialize r9 to 02h
+mov     byte[rdi]  ,  0xA            ; Add line break to show output on different lines
+inc     rdi                          ; Increment rdi
+inc     rsi                          ; Increment rsi
+mov     bl         ,  [rsi]          ; Move next number in bl for conversion
+dec     rcx                          ; Decrement array counter 
+jnz     hextoascii1                  ; Jump if rcx is not zero
 
-mov     byte[rdi]  ,  0xA
-inc     rdi
+mov     byte[rdi]  ,  0xA       ; move 0xA (line break in ASCII) to rdi
+print   arrout     ,  16        ; print arrout (with five more linebreaks, hence 16 bytes)
 
-print arrout , 16
-
-mov   rsi , arr
+mov   rsi , arr                 ; Store source array pointer in rsi
 mov   al  , 0h                  ; Stores the current largest number 
 mov   rcx , 05h                 ; Counter for iterating through the array
 
+; Iterate through `arr` to find the largest element
 arrloop:
 mov   bl  , [rsi]               ; Move element pointed by [rsi] to bl
 cmp   bl  , al                  ; Compare current element (in bl) with al (current largest num)
@@ -78,26 +81,26 @@ inc     rsi                     ; For each iteration, increment rsi (source arra
 dec     rcx                     ; Decrement loop counter
 jnz     arrloop                 ; If loop counter is not equal to zero, jump to arrloop
 
-mov     rcx   ,   02h
-mov     rdi   ,   maxnumout
-mov     bl    ,   al
+mov     rcx   ,   02h           ; Reset counter for displaying largest number (2 digits)
+mov     rdi   ,   maxnumout     ; Set destination array to maxnumout (maximum number output)
+mov     bl    ,   al            ; Move largest number (stored in al) to bl for hex2ascii conversion
 
+; Conversion the hex val stored in al (the largest number) to ASCII for printing
 hextoascii:
-rol     bl    ,   04
-mov     dl    ,   bl
-and     dl    ,   0x0F
-cmp     dl    ,   09h
-jbe     copydigit
-add     dl    ,   07h
+rol     bl    ,   04            ; Rotate bl four times (swap nibbles)
+mov     dl    ,   bl            ; Move byte from bl to dl for conversion
+and     dl    ,   0x0F          ; AND with 0x0F to make everything zero except for right-most nibble
+cmp     dl    ,   09h           ; Compare dl with 0x09
+jbe     copydigit               ; Jump to copydigit1 if cmp result was below or equal
+add     dl    ,   07h           ; If there was no jump in above statement, add 07h to dl
 copydigit:
-add     dl     ,  30h 
-mov     [rdi]  ,  dl
-inc     rdi
-dec     rcx
-jnz     hextoascii
+add     dl     ,  30h           ; Add 30h always
+mov     [rdi]  ,  dl            ; Move converted digit in dl to location specified by rdi
+inc     rdi                     ; Increment rdi (dest array pointer)
+dec     rcx                     ; Decrement counter rcx
+jnz     hextoascii              ; If counter rcx is not equal to 0h, jump to hextoascii
 
-mov     byte[rdi]  ,  0xA
-
-print   maxnumout  ,  03
+mov     byte[rdi]  ,  0xA       ; move 0xA (line break in ASCII) to rdi
+print   maxnumout  ,  03        ; print maxnumout with linebreak (hence 3 bytes)
 
 exit

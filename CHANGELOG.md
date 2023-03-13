@@ -1,1 +1,1 @@
-- Added documented code for `Assignment_02`
+- Completed documentation for `Assignment_03`
