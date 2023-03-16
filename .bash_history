@@ -193,3 +193,68 @@ ld -o program program.o
 nasm -f elf64 program.asm
 ld -o program program.o
 ./program
+reset
+cd Assignment_03
+cd ~
+cd Assignment_04
+reset
+nasm -f elf64 program.asm
+nasm -f elf64 program.asm
+ld -o program program.p
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+nasm -f elf64 program.asm
+ld -o program program.o
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+gdb
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+nasm -f elf64 program.asm
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+exit
