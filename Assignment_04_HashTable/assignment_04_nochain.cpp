@@ -17,7 +17,6 @@ class Record {
 
 	char clientName[ 20 ] ;
 	int telephone ;
-	int chain ;
 
 public:
 
@@ -25,22 +24,18 @@ public:
 		// Created empty record with default values
 		strcpy( clientName , "----" ) ;
 		telephone = 0 ;
-		chain = -1 ;
 	}
 
 	Record( char name[] , int telephone ) {
 		strcpy( clientName , name ) ;
 		this -> telephone = telephone ;
-		this -> chain = -1 ;
 	}
 
 	void printRecord() {
 		cout.width( 20 ) ;
 		cout << clientName << " " ;
 		cout.width( 20 ) ;
-		cout << telephone << "" ;
-		cout.width( 20 ) ;
-		cout << chain << "\n" ;
+		cout << telephone << "\n" ;
 	}
 
 	bool isEmpty() {
@@ -91,9 +86,7 @@ public:
 		cout.width( 20 ) ;
 		cout << "Client Name  " ;
 		cout.width( 20 ) ;
-		cout << "Telephone  ";
-		cout.width( 20 ) ;
-		cout << "Chain  " << "\n" ;
+		cout << "Telephone  \n";
 		for( int i = 0 ; i < (this->tableSize) ; i++ ) {
 			cout << i << " " ;
 			records[ i ].printRecord() ;
@@ -114,7 +107,6 @@ public:
 			while( !records[ currentIndex ].isEmpty() ) {
 				currentIndex = ( currentIndex + 1 ) % tableSize ;
 			}
-			records[ index ].chain = currentIndex ;
 			records[ currentIndex ] = newRecord ;
 		}
 	}
@@ -135,7 +127,6 @@ public:
 				while( !records[ currentIndex ].isEmpty() ) {
 					currentIndex = ( currentIndex + 1 ) % tableSize ;
 				}
-				records[ ( currentIndex - 1 ) % tableSize ].chain = currentIndex ;
 				records[ currentIndex ] = newRecord ;
 			}
 			else {
@@ -147,7 +138,6 @@ public:
 				while( !records[ currentIndex ].isEmpty() ) {
 					currentIndex = ( currentIndex + 1 ) % tableSize ;
 				}
-				records[ index ].chain = currentIndex ;
 				records[ currentIndex ] = existingRecord ;
 			}
 		}
@@ -155,15 +145,22 @@ public:
 
 	void searchRecord( char clientName[] ) {
 		int index = hash( clientName ) ;
-		if( strcmp( clientName , records[ index ].clientName ) == 0  ) {
+		if( strcmp( records[ index ].clientName , clientName ) == 0 ) {
 			records[ index ].printRecord() ;
 		}
 		else {
-			int currentChain = records[ index ].chain ;
-			while( records[ currentChain ].chain != -1 ) {
-				currentChain = records[ currentChain ].chain ;
+			int currentIndex = index ; 
+            int passes = 0 ; 
+			while( strcmp( records[ currentIndex ].clientName , clientName ) != 0 && passes != tableSize ) {
+				currentIndex = ( currentIndex + 1 ) % tableSize ; 
+                passes++ ; 
 			}
-			records[ currentChain ].printRecord() ;
+            if( passes != tableSize ) {
+                records[ currentIndex ].printRecord() ;
+            }
+            else {
+                cout << "No record found for " << clientName << "\n" ; 
+            }
 		}
 	}
 
@@ -193,5 +190,6 @@ int main() {
 	table.searchRecord( "Shubham" ) ;
 	table.searchRecord( "PICT" ) ;
 	table.searchRecord( "Shubham" ) ;
+    table.searchRecord( "PICT2" ) ;
 	return 0;
 }
