@@ -24,6 +24,7 @@ syscall
 %endmacro
 
 asciitohex:
+mov   bl  ,  00h
 mov   rcx ,  02h
 next:
 rol   bl  ,  04
@@ -65,7 +66,7 @@ msg2     db   "Enter 2nd number" , 0xA
 len2     equ  $-msg2
 msg3     db   "Result is" , 0xA
 len3     equ  $-msg3
-msg4     db   "Options are 0 -> Add, 1 -> Subtract, 2 -> Multiply, 3 -> Divide"
+msg4     db   0xA , "Options are 0 -> Add, 1 -> Subtract, 2 -> Multiply, 3 -> Divide" , 0xA
 len4     equ  $-msg4
 
 ; -------------------------------------------------------
@@ -105,16 +106,17 @@ mov      [num2hex]  ,  bl
 
 programloop:
 print    msg4        ,  len4
-read     optionascii ,  01
-mov      bl    ,  00h
-mov      rsi   ,  optionascii
-call     asciitohex
-mov      [optionhex]  ,  bl
-print     optionhex   ,  01
+read     optionascii ,  02
+mov      bl    ,  byte[optionascii]
+sub      bl    ,  30h
 cmp      bl    ,  00h
-je       add
+jz       add
 cmp      bl    ,  01h
-je       subtract
+jz       subtract
+cmp      bl    ,  02h
+jz       multiply
+cmp      bl    ,  03h
+jz       divide
 
 add:
 mov      al    ,  byte[num1hex]
@@ -127,6 +129,20 @@ subtract:
 mov      al    ,  byte[num1hex]
 mov      bl    ,  byte[num2hex]
 sub      al    ,  bl
+mov   [reshex] ,  al
+jmp      printres
+
+multiply:
+mov      al    ,  byte[num1hex]
+mov      bl    ,  byte[num2hex]
+mul      bl
+mov   [reshex] ,  al
+jmp      printres
+
+divide:
+mov      al    ,  byte[num1hex]
+mov      bl    ,  byte[num2hex]
+div      bl
 mov   [reshex] ,  al
 jmp      printres
 
