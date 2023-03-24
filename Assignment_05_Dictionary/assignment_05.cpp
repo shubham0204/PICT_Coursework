@@ -51,6 +51,16 @@ class Dictionary {
         }
     }
 
+    Node* findLinkedList( Node* headNode , string word ) {
+        Node* currentNode = headNode ; 
+        while( currentNode -> next != nullptr ) {
+            if( currentNode -> word == word ) {
+                return currentNode ; 
+            }
+        }
+        return nullptr ; 
+    }
+
     void deleteLinkedList( int index , Node* headNode , string word ) {
     	if( headNode -> word == word ) {
     		Node* secondNode = headNode -> next ;
@@ -105,6 +115,18 @@ class Dictionary {
         }
     }
 
+    void find( string word ) {
+        int hashAddress = hash( word ) ;
+        Node* node = findLinkedList( headNodes[ hashAddress ] , word ) ; 
+        if( node == nullptr ) {
+            cout << "Record not found" << "\n" ; 
+        }
+        else {
+            cout << "Word: " << node -> word << "\n" ; 
+            cout << "Meaning: " << node -> meaning << "\n" ;
+        }
+    }
+
     void deleteWord( string word ) {
     	int hashAddress = hash( word ) ;
     	deleteLinkedList( hashAddress , headNodes[ hashAddress ] , word ) ;
@@ -115,12 +137,41 @@ class Dictionary {
 int main() {
 
     Dictionary dict( 10 ) ;
-    dict.insert( "glad" , "Happy" ) ;
-    dict.insert( "hello" , "hi" ) ;
-    dict.insert( "curious" , "Keen to know" ) ;
-    dict.display() ;
-    dict.deleteWord( "glad" ) ;
-    dict.display() ;
+    while( true ) {
+        int option ; 
+        cout << "Enter option: " << "\n" ; 
+        cout << "1 -> Insert" << "\n" ; 
+        cout << "2 -> Find" << "\n" ; 
+        cout << "3 -> Delete" << "\n" ;  
+        cout << "4 -> Display" << "\n" ;  
+        cout << "0 -> Exit" << "\n" ; 
+        cin >> option ; 
+
+        if( option == 1 ) {
+            string word , meaning ; 
+            cout << "Enter word: " << "\n" ; cin >> word ; 
+            cout << "Enter meaning: " << "\n" ; cin >> meaning ; 
+            dict.insert( word , meaning ) ; 
+        }
+        else if( option == 2 ){
+            string word ; 
+            cout << "Enter word to find: " << "\n" ; 
+            cin >> word ; 
+            dict.find( word ) ; 
+        }
+        else if( option == 3 ) {
+            string word ; 
+            cout << "Enter word to find: " << "\n" ; 
+            cin >> word ;
+            dict.deleteWord( word ) ; 
+        }
+        else if( option == 4 ) {
+            dict.display() ; 
+        }
+        else {
+            break ; 
+        }
+    }
 
     return 0 ;
 }
