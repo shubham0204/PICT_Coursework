@@ -1,85 +1,126 @@
+/*
+ * Implement all the functions of a dictionary (ADT) using open
+hashing technique: separate chaining using linked list Data: Set of
+(key, value) pairs, Keys are mapped to values, Keys must be
+comparable, and Keys must be unique. Standard Operations: Insert
+(key, value), Find(key), Delete(key)
+ */
+
 #include <iostream>
 #include <cstring>
-using namespace std ; 
+using namespace std ;
 
 
-template <class V>
 struct Node {
-    V val ; 
-    Node* next = nullptr ; 
-} ; 
+	string word ;
+    string meaning ;
+    Node* next = nullptr ;
+} ;
 
-template <class V>
 class Dictionary {
 
-    Node<V>** headNodes ; 
-    int currentSize ;
-    int tableSize ; 
-    
-    int hash( int identifier ) {
-        return identifier % tableSize ; 
+    Node** headNodes ;
+    int tableSize ;
+
+    int hash( string identifier ) {
+    	int asciiSum = 0 ;
+    	for( int i = 0 ; i < identifier.length() ; i++ ) {
+    		asciiSum += int(identifier[i]) ;
+    	}
+    	return asciiSum % tableSize ;
     }
 
-    void insertNode( Node<V>* headNode , V value ) {
-        Node<V>* currentNode = headNode ; 
+    void insertNode( Node* headNode , string word , string meaning ) {
+        Node* currentNode = headNode ;
         while( currentNode -> next != nullptr ) {
-            currentNode = currentNode -> next ; 
+            currentNode = currentNode -> next ;
         }
-        Node<V>* newNode = new( Node<V> ) ;
-        newNode -> next = nullptr ; 
-        newNode -> val = value ; 
-        currentNode -> next = newNode ; 
+        Node* newNode = new( Node ) ;
+        newNode -> next = nullptr ;
+        newNode -> word = word ;
+        newNode -> meaning = meaning ;
+        currentNode -> next = newNode ;
     }
 
-    void printLinkedList( Node<V>* headNode ) {
-        Node<V>* currentNode = headNode ; 
+    void printLinkedList( Node* headNode ) {
+        Node* currentNode = headNode ;
         while( currentNode != nullptr ) {
-            cout.width( 20 ) ; 
-            cout << currentNode -> val << " " ; 
-            currentNode = currentNode -> next ; 
+            cout.width( 10 ) ;
+            cout << currentNode -> word << " " << currentNode -> meaning << "," ;
+            currentNode = currentNode -> next ;
         }
+    }
+
+    void deleteLinkedList( int index , Node* headNode , string word ) {
+    	if( headNode -> word == word ) {
+    		Node* secondNode = headNode -> next ;
+    		delete headNodes[ index ] ;
+    		headNodes[ index ] = secondNode ;
+    	}
+    	else {
+    		Node* currentNode = headNode ;
+    		Node* prevNode = nullptr ;// Delete head node
+    		while( currentNode -> next != nullptr ) {
+    			if( currentNode -> word == word ) {
+    				break ;
+    			}
+    			prevNode = currentNode ;
+    			currentNode = currentNode -> next ;
+    		}
+    		prevNode -> next = currentNode -> next ;
+    		delete currentNode ;
+    	}
     }
 
     public:
 
     Dictionary( int tableSize ) {
-        this -> tableSize = tableSize ; 
-        headNodes = new Node<V>*[ tableSize ] ; 
+        this -> tableSize = tableSize ;
+        headNodes = new Node*[ tableSize ] ;
         for( int i = 0 ; i < tableSize ; i++ ) {
-            headNodes[ i ] = nullptr ; 
+            headNodes[ i ] = nullptr ;
         }
     }
 
-    void insert( int key , V value ) { 
-        int hashAddress = hash( key ) ; 
+    void insert( string word , string meaning ) {
+        int hashAddress = hash( word ) ;
         if( headNodes[ hashAddress ] == nullptr ) {
-            Node<V>* newNode = new( Node<V> ) ; 
-            newNode -> next = nullptr ; 
-            newNode -> val = value ; 
-            headNodes[ hashAddress ] = newNode ; 
+            Node* newNode = new( Node ) ;
+            newNode -> next = nullptr ;
+            newNode -> word = word ;
+            newNode -> meaning = meaning ;
+            headNodes[ hashAddress ] = newNode ;
         }
         else {
-            insertNode( headNodes[ hashAddress ] , value ) ; 
+            insertNode( headNodes[ hashAddress ] , word , meaning ) ;
         }
     }
 
     void display() {
         for( int i = 0 ; i < tableSize ; i++ ) {
             cout.width( 5 ) ;
-            cout << i << " " ; 
-            printLinkedList( headNodes[ i ] ) ; 
-            cout << "\n" ; 
+            cout << i << " " ;
+            printLinkedList( headNodes[ i ] ) ;
+            cout << "\n" ;
         }
     }
 
-} ; 
+    void deleteWord( string word ) {
+    	int hashAddress = hash( word ) ;
+    	deleteLinkedList( hashAddress , headNodes[ hashAddress ] , word ) ;
+    }
+
+} ;
 
 int main() {
 
-    Dictionary<string> dict( 10 ) ; 
-    dict.insert( 0 , "Hello World" ) ;
-    dict.insert( 0 , "Hello World Shubham" ) ; 
-    dict.display() ; 
+    Dictionary dict( 10 ) ;
+    dict.insert( "glad" , "Happy" ) ;
+    dict.insert( "hello" , "hi" ) ;
+    dict.insert( "curious" , "Keen to know" ) ;
+    dict.display() ;
+    dict.deleteWord( "glad" ) ;
+    dict.display() ;
 
-    return 0 ; 
+    return 0 ;
 }

@@ -222,7 +222,5 @@ int main() {
 	table2.searchRecord( "zasd" ) ;
 	table2.searchRecord( "dfgh" ) ;
 
-
-
 	return 0;
 }
