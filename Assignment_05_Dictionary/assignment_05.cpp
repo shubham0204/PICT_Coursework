@@ -1,3 +1,5 @@
+
+
 /*
  * Implement all the functions of a dictionary (ADT) using open
 hashing technique: separate chaining using linked list Data: Set of
@@ -46,19 +48,22 @@ class Dictionary {
         Node* currentNode = headNode ;
         while( currentNode != nullptr ) {
             cout.width( 10 ) ;
-            cout << currentNode -> word << " " << currentNode -> meaning << "," ;
+            cout << currentNode -> word << " " << currentNode -> meaning << " -> " ;
             currentNode = currentNode -> next ;
         }
+        cout.width( 10 ) ;
+        cout << "NULL" ;
     }
 
     Node* findLinkedList( Node* headNode , string word ) {
-        Node* currentNode = headNode ; 
+        Node* currentNode = headNode ;
         while( currentNode -> next != nullptr ) {
             if( currentNode -> word == word ) {
-                return currentNode ; 
+                return currentNode ;
             }
+            currentNode = currentNode -> next ;
         }
-        return nullptr ; 
+        return nullptr ;
     }
 
     void deleteLinkedList( int index , Node* headNode , string word ) {
@@ -79,6 +84,7 @@ class Dictionary {
     		}
     		prevNode -> next = currentNode -> next ;
     		delete currentNode ;
+    		cout << "Deleted word: " << word << "\n" ;
     	}
     }
 
@@ -117,12 +123,12 @@ class Dictionary {
 
     void find( string word ) {
         int hashAddress = hash( word ) ;
-        Node* node = findLinkedList( headNodes[ hashAddress ] , word ) ; 
+        Node* node = findLinkedList( headNodes[ hashAddress ] , word ) ;
         if( node == nullptr ) {
-            cout << "Record not found" << "\n" ; 
+            cout << "Record not found" << "\n" ;
         }
         else {
-            cout << "Word: " << node -> word << "\n" ; 
+            cout << "Word: " << node -> word << "\n" ;
             cout << "Meaning: " << node -> meaning << "\n" ;
         }
     }
@@ -138,38 +144,38 @@ int main() {
 
     Dictionary dict( 10 ) ;
     while( true ) {
-        int option ; 
-        cout << "Enter option: " << "\n" ; 
-        cout << "1 -> Insert" << "\n" ; 
-        cout << "2 -> Find" << "\n" ; 
-        cout << "3 -> Delete" << "\n" ;  
-        cout << "4 -> Display" << "\n" ;  
-        cout << "0 -> Exit" << "\n" ; 
-        cin >> option ; 
+        int option ;
+        cout << "Enter option: " << "\n" ;
+        cout << "1 -> Insert" << "\n" ;
+        cout << "2 -> Find" << "\n" ;
+        cout << "3 -> Delete" << "\n" ;
+        cout << "4 -> Display" << "\n" ;
+        cout << "0 -> Exit" << "\n" ;
+        cin >> option ;
 
         if( option == 1 ) {
-            string word , meaning ; 
-            cout << "Enter word: " << "\n" ; cin >> word ; 
-            cout << "Enter meaning: " << "\n" ; cin >> meaning ; 
-            dict.insert( word , meaning ) ; 
+            string word , meaning ;
+            cout << "Enter word: " << "\n" ; cin >> word ;
+            cout << "Enter meaning: " << "\n" ; cin >> meaning ;
+            dict.insert( word , meaning ) ;
         }
         else if( option == 2 ){
-            string word ; 
-            cout << "Enter word to find: " << "\n" ; 
-            cin >> word ; 
-            dict.find( word ) ; 
+            string word ;
+            cout << "Enter word to find: " << "\n" ;
+            cin >> word ;
+            dict.find( word ) ;
         }
         else if( option == 3 ) {
-            string word ; 
-            cout << "Enter word to find: " << "\n" ; 
+            string word ;
+            cout << "Enter word to delete: " << "\n" ;
             cin >> word ;
-            dict.deleteWord( word ) ; 
+            dict.deleteWord( word ) ;
         }
         else if( option == 4 ) {
-            dict.display() ; 
+            dict.display() ;
         }
         else {
-            break ; 
+            break ;
         }
     }
 
