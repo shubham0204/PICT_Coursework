@@ -1,1 +1,1 @@
-- Completed for `Assignment_04`
+- Added documentation for `Assignment_04`

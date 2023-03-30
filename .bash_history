@@ -383,3 +383,41 @@ ld -o program program.o
 ./program
 ./program
 exit
+reset
+nasm -f elf64 program.asm
+cd Assignment_04
+nasm -f elf64 program.asm
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+./program
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+exit

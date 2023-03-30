@@ -56,7 +56,7 @@ inc   rdi
 dec   rcx
 jnz   next1
 ret
- 
+
 ; -------------------------------------------------------
 
 section .data
@@ -72,14 +72,14 @@ len4     equ  $-msg4
 ; -------------------------------------------------------
 
 section .bss
-num1ascii     resb    02
-num2ascii     resb    02
-num1hex       resb    01
-num2hex       resb    01
-optionascii   resb    01
-optionhex     resb    01
-reshex        resb    01
-resascii      resb    02
+num1ascii     resb    02        ; ASCII representation of num1 (2 chars -> 2 bytes)
+num2ascii     resb    02        ; ASCII representation of num2 (2 chars -> 2 bytes)
+num1hex       resb    01        ; Hex representation of num1
+num2hex       resb    01        ; Hex representation of num2
+optionascii   resb    01        ; ASCII representation of option (1 char -> 1 byte)
+optionhex     resb    01        ; Hex representation of option
+resascii      resb    02        ; ASCII representation of result (2 chars -> 2 bytes)
+reshex        resb    01        ; Hex representation of result
 
 ; -------------------------------------------------------
 
@@ -89,34 +89,34 @@ global _start
 _start:
 
 print    msg1       ,  len1
-read     num1ascii  ,  03
+read     num1ascii  ,  03       ; Read 3 bytes (including EOF character)
 
 print    msg2       ,  len2
-read     num2ascii  ,  03
+read     num2ascii  ,  03       ; Read 3 bytes (including EOF character)
 
-mov      bl    ,  00h
-mov      rsi   ,  num1ascii
+mov      bl    ,  00h           ; reset bl
+mov      rsi   ,  num1ascii     ; set rsi to address of num1ascii
 call     asciitohex
-mov      [num1hex]  ,  bl
+mov      [num1hex]  ,  bl       ; move converted digit from bl to [num1hex]
 
-mov      bl    ,  00h
-mov      rsi   ,  num2ascii
+mov      bl    ,  00h           ; reset bl
+mov      rsi   ,  num2ascii     ; set rsi to address of num2ascii
 call     asciitohex
-mov      [num2hex]  ,  bl
+mov      [num2hex]  ,  bl       ; move converted digit from bl to [num2hex]
 
 programloop:
 print    msg4        ,  len4
-read     optionascii ,  02
-mov      bl    ,  byte[optionascii]
-sub      bl    ,  30h
-cmp      bl    ,  00h
-jz       add
+read     optionascii ,  02           ; read option from user (including EOF character)
+mov      bl    ,  byte[optionascii]  ; move option (ascii) to bl
+sub      bl    ,  30h                ; subtract 30h to get hex value
+cmp      bl    ,  00h                ; compare with 00h
+jz       add                         ; jump to 'add' if bl == 00h
 cmp      bl    ,  01h
-jz       subtract
+jz       subtract                    ; jump to 'subtract' if bl == 01h
 cmp      bl    ,  02h
-jz       multiply
+jz       multiply                    ; jump to 'multiply' if bl == 02h
 cmp      bl    ,  03h
-jz       divide
+jz       divide                      ; jump to 'divide' if bl == 03h
 
 add:
 mov      al    ,  byte[num1hex]
@@ -135,7 +135,7 @@ jmp      printres
 multiply:
 mov      al    ,  byte[num1hex]
 mov      bl    ,  byte[num2hex]
-mul      bl
+mul      bl 
 mov   [reshex] ,  al
 jmp      printres
 
