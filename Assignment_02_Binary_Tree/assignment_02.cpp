@@ -77,7 +77,7 @@ class BinaryTree {
         }
     }
 
-    void preorderTraversal() {
+    void inorderTraversal() {
         LinkedStack<TreeNode*> s ; 
         TreeNode* currentNode = ROOT ; 
         while( true ) {
@@ -134,7 +134,7 @@ class BinaryTree {
         }
     }
 
-    void inorderTraversal() {
+    void preorderTraversal() {
         LinkedStack<TreeNode*> s ;
        	TreeNode* currentNode = ROOT ;
         while( true ) {
@@ -339,10 +339,10 @@ int main() {
             tree.create( nums , 7 ) ; 
         }
         else if( option == 2 ) {
-            tree.preorderTraversal() ; 
+            tree.inorderTraversal() ; 
         }
         else if( option == 3 ) {
-            tree.inorderTraversal() ; 
+            tree.preorderTraversal2() ; 
         }
         else if( option == 4 ) {
             tree.postorderTraversal() ; 
