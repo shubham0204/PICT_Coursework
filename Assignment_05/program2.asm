@@ -43,59 +43,58 @@ ret
 section .data
 ; Positive number ex: 0456h, Negative number ex: F458h 
 ; We initialize this number as a word, as we'll store it in ax
-num   dw   0x0FF6 , 0x0F78 , 0x0F23 , 0x0234        
-msg1  db  "The count of positive and negative numbers is" , 0xA
-len1  equ  $-msg1
-msg2  db  "Positive" , 0xA
-len2  equ  $-msg2
-msg3  db  "Negative" , 0xA
-len3  equ  $-msg3
+num      dw      0xFFF6 , 0x0F78 , 0x0F23 , 0x0234        
+msg1     db      "The count of positive and negative numbers is" , 0xA
+len1     equ     $-msg1
+msg2     db      0xA , "Positive Count" , 0xA
+len2     equ     $-msg2
+msg3     db      0xA , "Negative Count" , 0xA
+len3     equ     $-msg3
 
 section .bss
-count1ascii  resb  02
-count2ascii  resb  02
+poscountascii  resb  02   ; array to store count of positive numbers in ASCII
+negcountascii  resb  02   ; array to store count of negative numbers in ASCII
 
 section .text
 
 global _start
 _start:
 
-mov    r10    ,  04h
-mov    r8     ,  00h
-mov    r9     ,  00h
-mov    rsi    ,  num
-print  msg1  ,  len1
+mov    r10    ,  04h   ; counter to loop through array `num`
+mov    r8     ,  00h   ; count of positive numbers
+mov    r9     ,  00h   ; count of negative numbers
+mov    rsi    ,  num   ; Moving base address `num` to rsi
 
 program:
 
-; 1st Approach - Use the sign flag
 mov    ax   ,  word[rsi]    ; Move num to al
-; mov    bx   ,  0000h        ; Move 0000h to bl
-; add    ax   ,  bx           ; Add al and bl, which changes the sign flag SF         
-; js     message2             ; Jump to message2 if the sign flag is SET i.e. the number in al is negative
-; jmp    message1             ; else jump to message2
+
+; 1st Approach - Use the sign flag
+; mov    bx   ,  0000h         ; Move 0000h to bl
+; add    ax   ,  bx            ; Add al and bl, which changes the sign flag SF         
+; js     incnegcount           ; Jump to message2 if the sign flag is SET i.e. the number in al is negative
+; jmp    incposcount           ; else jump to message2
 
 ; 2nd approach - Use the carry flag
-; rcl    al   ,  01         ; Rotate left with carry will rotate al by 01 and the sign bit (MSB) is stored 
-                            ; in the carry flag
-; jc     message2           ; Jump to message2 if the carry flag is SET i.e. the number in al is negative
-; jmp    message1           ; else jump to message2
+; rcl    ax   ,  01              ; Rotate left with carry will rotate al by 01 and the sign bit (MSB) is stored 
+;                                ; in the carry flag
+; jc     incnegcount             ; Jump to message2 if the carry flag is SET i.e. the number in al is negative
+; jmp    incposcount             ; else jump to message2
 
 ; 3rd approach - Use BT (Bit test) instruction
-bt     ax    ,  15          ; Test the bit at 15tt position i.e. the sign bit (MSB)
-jc     message2             ; The bit is transferred to the carry flag. 
-                            ; Jump to message2 if the carry flag is SET i.e. the number in ax is negative
-jmp    message1             ; Jump to message2 if the carry flag is SET i.e. the number in al is negative
+; bt     ax    ,  15           ; Test the bit at 15tt position i.e. the sign bit (MSB)
+; jc     incnegcount           ; The bit is transferred to the carry flag. 
+;                              ; Jump to message2 if the carry flag is SET i.e. the number in ax is negative
+; jmp    incposcount           ; Jump to message2 if the carry flag is SET i.e. the number in al is negative
 
-
-message1:
+incposcount:
 inc    r8
 add    rsi   ,  02h
 dec    r10
 jnz    program
 jmp    exitprogram
 
-message2:
+incnegcount:
 inc    r9
 add    rsi   ,  02h
 dec    r10
@@ -103,14 +102,18 @@ jnz    program
 jmp    exitprogram
 
 exitprogram:
-mov      rbx    ,  r9
-mov      rdi   ,  count1ascii
-call     hextoascii
-print    count1ascii , 02
+print    msg1   ,  len1
 
+print    msg2   ,  len2
 mov      rbx    ,  r8
-mov      rdi   ,  count2ascii
+mov      rdi    ,  poscountascii
 call     hextoascii
-print    count2ascii , 02
+print    poscountascii , 02
+
+print    msg3   ,  len3
+mov      rbx    ,  r9
+mov      rdi   ,   negcountascii
+call     hextoascii
+print    negcountascii , 02
 exit
 
