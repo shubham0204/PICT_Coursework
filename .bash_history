@@ -1,10 +1,3 @@
-cd Assignment_02
-nasm -f elf64 assignment_02.asm
-ld -o assignment_02 assignment_02.o
-./assignment_02
-./assignment_02
-nasm -f elf64 assignment_02.asm
-ld -o assignment_02 assignment_02.o
 ./assignment_02
 nasm -f elf64 assignment_02.asm
 ./assignment_02
@@ -497,4 +490,11 @@ nasm -f elf64 program.asm && ld -o program program.o && ./program
 nasm -f elf64 program.asm && ld -o program program.o && ./program
 exit
 pwd
+exit
+apt install gdb
+sudo apt install gdb
+cd ~/
+~
+cd ~
+ls
 exit

@@ -5,3 +5,4 @@
 *.o
 .vscode
 .bash_history
+.vscode-server

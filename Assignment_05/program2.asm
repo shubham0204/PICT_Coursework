@@ -23,26 +23,53 @@ mov  rdx , 00
 syscall 
 %endmacro
 
+hextoascii:
+mov   rcx  ,  02h
+next1:
+rol   bl   ,  04
+mov   dl   ,  bl
+and   dl   ,  0x0F
+cmp   dl   ,  09h
+jbe   update1
+add   dl   ,  07h
+update1:
+add   dl   ,  30h
+mov  [rdi] ,  dl
+inc   rdi
+dec   rcx
+jnz   next1
+ret
+
 section .data
-num   dw   0xFFF6                   ; Positive number ex: 0456h, Negative number ex: F458h 
-                                    ; We initialize this number as a word, as we'll store it in ax
-msg1  db  "The number is" , 0xA
+; Positive number ex: 0456h, Negative number ex: F458h 
+; We initialize this number as a word, as we'll store it in ax
+num   dw   0x0FF6 , 0x0F78 , 0x0F23 , 0x0234        
+msg1  db  "The count of positive and negative numbers is" , 0xA
 len1  equ  $-msg1
 msg2  db  "Positive" , 0xA
 len2  equ  $-msg2
 msg3  db  "Negative" , 0xA
 len3  equ  $-msg3
 
+section .bss
+count1ascii  resb  02
+count2ascii  resb  02
+
 section .text
 
 global _start
 _start:
 
-program:
+mov    r10    ,  04h
+mov    r8     ,  00h
+mov    r9     ,  00h
+mov    rsi    ,  num
 print  msg1  ,  len1
 
+program:
+
 ; 1st Approach - Use the sign flag
-mov    ax   ,  [num]        ; Move num to al
+mov    ax   ,  word[rsi]    ; Move num to al
 ; mov    bx   ,  0000h        ; Move 0000h to bl
 ; add    ax   ,  bx           ; Add al and bl, which changes the sign flag SF         
 ; js     message2             ; Jump to message2 if the sign flag is SET i.e. the number in al is negative
@@ -55,20 +82,35 @@ mov    ax   ,  [num]        ; Move num to al
 ; jmp    message1           ; else jump to message2
 
 ; 3rd approach - Use BT (Bit test) instruction
-bt     ax    ,  15          ; Test the bit at 15th position i.e. the sign bit (MSB)
+bt     ax    ,  15          ; Test the bit at 15tt position i.e. the sign bit (MSB)
 jc     message2             ; The bit is transferred to the carry flag. 
                             ; Jump to message2 if the carry flag is SET i.e. the number in ax is negative
 jmp    message1             ; Jump to message2 if the carry flag is SET i.e. the number in al is negative
 
 
 message1:
-print  msg2  ,  len2
+inc    r8
+add    rsi   ,  02h
+dec    r10
+jnz    program
 jmp    exitprogram
 
 message2:
-print  msg3  ,  len3
+inc    r9
+add    rsi   ,  02h
+dec    r10
+jnz    program
 jmp    exitprogram
 
 exitprogram:
+mov      rbx    ,  r9
+mov      rdi   ,  count1ascii
+call     hextoascii
+print    count1ascii , 02
+
+mov      rbx    ,  r8
+mov      rdi   ,  count2ascii
+call     hextoascii
+print    count2ascii , 02
 exit
 
