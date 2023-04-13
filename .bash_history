@@ -1,4 +1,3 @@
-reset
 cd Assignment_02
 nasm -f elf64 assignment_02.asm
 ld -o assignment_02 assignment_02.o
@@ -420,4 +419,82 @@ ld -o program program.o
 nasm -f elf64 program.asm
 ld -o program program.o
 ./program
+exit
+cd Assignment_04
+ls
+nasm -f elf64 program.asm
+ld -o program program.o
+./program
+./program
+./program
+cls
+exit
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+cd Assignment_05
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+gdb
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+apt
+apt-ge install gdb
+apt-get install gdb
+su root
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+nasm -f elf64 program.asm && ld -o program program.o && ./program
+exit
+pwd
 exit

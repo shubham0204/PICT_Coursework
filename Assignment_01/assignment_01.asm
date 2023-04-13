@@ -2,16 +2,16 @@ section .bss
 num resb 85                              ; initialize array of 85 bytes
 
 section .data
-M1    db "Enter 5 64bit numbers" , 0xA   ; initialize string M1
-L1    equ $-M1                           ; set constant L1 which equals size of M1
-count1 db  05                            ; counter for input loop
-count2 db  05                            ; counter for output loop
+M1      db "Enter 5 64bit numbers" , 0xA   ; initialize string M1
+L1      equ $-M1                           ; set constant L1 which equals size of M1
+count1  db  05                            ; counter for input loop
+count2  db  05                            ; counter for output loop
 
 section .text
 global _start
 _start:
 
-mov rax , 01   ; system write call
+mov rax , 01   ; write call
 mov rdi , 01   ; destination - standard o/p
 mov rsi , M1   ; write string M1
 mov rdx , L1   ; write L1 bytes
