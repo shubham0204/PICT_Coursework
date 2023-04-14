@@ -1,3 +1,6 @@
+; Created with 💖 by Shubham Panchal
+; https://shubham0204.github.io
+
 %macro print 2
 mov  rax , 01  ; sys_write
 mov  rdi , 01  ; stdout - file descriptor

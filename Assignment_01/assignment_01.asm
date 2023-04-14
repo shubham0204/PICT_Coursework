@@ -1,3 +1,6 @@
+; Created with 💖 by Shubham Panchal
+; https://shubham0204.github.io
+
 section .bss
 num resb 85                              ; initialize array of 85 bytes
 
