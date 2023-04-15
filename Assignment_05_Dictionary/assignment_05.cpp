@@ -24,6 +24,7 @@ class Dictionary {
     Node** headNodes ;
     int tableSize ;
 
+    // Hash function: (Sum of ASCII values of characters in indentifier) % tableSize
     int hash( string identifier ) {
     	int asciiSum = 0 ;
     	for( int i = 0 ; i < identifier.length() ; i++ ) {
@@ -32,6 +33,8 @@ class Dictionary {
     	return asciiSum % tableSize ;
     }
 
+    // Given the headNode, insert a node (word,meaning) to the end 
+    // of the linkedlist
     void insertNode( Node* headNode , string word , string meaning ) {
         Node* currentNode = headNode ;
         while( currentNode -> next != nullptr ) {
@@ -44,6 +47,7 @@ class Dictionary {
         currentNode -> next = newNode ;
     }
 
+    // Given the headnode, print the contents of the linkedlist
     void printLinkedList( Node* headNode ) {
         Node* currentNode = headNode ;
         while( currentNode != nullptr ) {
@@ -55,6 +59,7 @@ class Dictionary {
         cout << "NULL" ;
     }
 
+    // Given the headnode, find `word` in the linkedlist and return the node
     Node* findLinkedList( Node* headNode , string word ) {
         Node* currentNode = headNode ;
         while( currentNode -> next != nullptr ) {
@@ -66,6 +71,7 @@ class Dictionary {
         return nullptr ;
     }
 
+    
     void deleteLinkedList( int index , Node* headNode , string word ) {
     	if( headNode -> word == word ) {
     		Node* secondNode = headNode -> next ;
@@ -152,7 +158,6 @@ int main() {
         cout << "4 -> Display" << "\n" ;
         cout << "0 -> Exit" << "\n" ;
         cin >> option ;
-
         if( option == 1 ) {
             string word , meaning ;
             cout << "Enter word: " << "\n" ; cin >> word ;
