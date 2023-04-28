@@ -1,1 +1,1 @@
-- Added documentation for `Assignment_06_Graph_01`
+- Updated `Assignment_07_Graph_02`
