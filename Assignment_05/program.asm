@@ -23,6 +23,8 @@ mov  rdx , 00
 syscall 
 %endmacro
 
+; -------------------------------------------------------
+
 section .data
 num   dw   0xFFF6                   ; Positive number ex: 0456h, Negative number ex: F458h 
                                     ; We initialize this number as a word, as we'll store it in ax
@@ -32,6 +34,8 @@ msg2  db  "Positive" , 0xA
 len2  equ  $-msg2
 msg3  db  "Negative" , 0xA
 len3  equ  $-msg3
+
+; -------------------------------------------------------
 
 section .text
 
