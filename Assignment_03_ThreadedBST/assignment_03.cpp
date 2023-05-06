@@ -108,10 +108,11 @@ void ThreadedBinarySearchTree::inorder()
 			// Thread is present, update currentNode to the node pointed by thread
 			currentNode = currentNode->right;
 		}
-		else if(currentNode -> right == nullptr){
-			cout << "\n" ; 
-            return;
-        }
+		else if (currentNode->right == nullptr)
+		{
+			cout << "\n";
+			return;
+		}
 		else
 		{
 			// If there's no thread, go the right child
@@ -133,118 +134,145 @@ void ThreadedBinarySearchTree::inorder()
 	}
 }
 
-void ThreadedBinarySearchTree::preorder() {
-	ThreadedNode* currentNode = ROOT ;
-	cout << currentNode -> val << " " ; 
-	while( true ) {
-		while( currentNode -> left != nullptr ) {
-			currentNode = currentNode -> left ; 
-			cout << currentNode -> val << " " ; 
+void ThreadedBinarySearchTree::preorder()
+{
+	ThreadedNode *currentNode = ROOT;
+	cout << currentNode->val << " ";
+	while (true)
+	{
+		while (currentNode->left != nullptr)
+		{
+			currentNode = currentNode->left;
+			cout << currentNode->val << " ";
 		}
-		while( currentNode -> rThread ) {
-			currentNode = currentNode -> right ; 
+		while (currentNode->rThread)
+		{
+			currentNode = currentNode->right;
 		}
-		currentNode = currentNode -> right ; 
-		if( currentNode != nullptr ) {
-			cout << currentNode -> val << " " ; 
+		currentNode = currentNode->right;
+		if (currentNode != nullptr)
+		{
+			cout << currentNode->val << " ";
 		}
-		else {
-			cout << "\n" ; 
-			return ;
+		else
+		{
+			cout << "\n";
+			return;
 		}
-	} 
+	}
 }
 
-void ThreadedBinarySearchTree::deleteNode( int num ) {
+void ThreadedBinarySearchTree::deleteNode(int num)
+{
 	ThreadedNode *currentNode = ROOT;
 	ThreadedNode *prevNode = nullptr;
-	while( true ){
-		if( currentNode -> left == nullptr && currentNode -> rThread ) {
+	while (true)
+	{
+		if (currentNode->left == nullptr && currentNode->rThread)
+		{
 			break;
 		}
-		if (currentNode->val > num) {
+		if (currentNode->val > num)
+		{
 			// Go left
 			prevNode = currentNode;
 			currentNode = currentNode->left;
 		}
-		else if( currentNode -> val < num ) {
+		else if (currentNode->val < num)
+		{
 			// Go right if rThread is False
 			// We wish to travel down the tree,
 			// if we encounter a thread, break the loop (as we've encountered a leaf node)
-			if (!(currentNode->rThread)) {
+			if (!(currentNode->rThread))
+			{
 				prevNode = currentNode;
 				currentNode = currentNode->right;
 			}
-			else {
+			else
+			{
 				break;
 			}
 		}
-		else {
-			break ;
+		else
+		{
+			break;
 		}
 	}
 
-	cout << "Val: " << currentNode -> val << "\n" ;
-	cout << "rThread: " << currentNode -> rThread << "\n" ; 
+	cout << "Val: " << currentNode->val << "\n";
+	cout << "rThread: " << currentNode->rThread << "\n";
 
-	cout << "prev Val: " << prevNode -> val << "\n" ;
-	cout << "prev rThread: " << prevNode -> rThread << "\n" ; 
- 
+	cout << "prev Val: " << prevNode->val << "\n";
+	cout << "prev rThread: " << prevNode->rThread << "\n";
 
-	if( currentNode -> left == nullptr  && (currentNode -> rThread) ) {
-		cout << "Leaf Node deletion" << "\n" ; 
+	if (currentNode->left == nullptr && (currentNode->rThread))
+	{
+		cout << "Leaf Node deletion"
+			 << "\n";
 		// Leaf node deletion
-		if( prevNode -> left == currentNode ) {
-			cout << "Left child delete" << "\n" ; 
-			prevNode -> left = nullptr ;
+		if (prevNode->left == currentNode)
+		{
+			cout << "Left child delete"
+				 << "\n";
+			prevNode->left = nullptr;
 		}
-		else if( prevNode -> right == currentNode ) {
-			prevNode -> rThread = true ;
-			prevNode -> right = currentNode -> right ;
+		else if (prevNode->right == currentNode)
+		{
+			prevNode->rThread = true;
+			prevNode->right = currentNode->right;
 		}
-		delete currentNode ;
+		delete currentNode;
 	}
-	else if( currentNode -> left != nullptr && currentNode -> right != nullptr && !(currentNode -> rThread) ) {
-		cout << "Two children deletion" << "\n" ; 
+	else if (currentNode->left != nullptr && currentNode->right != nullptr && !(currentNode->rThread))
+	{
+		cout << "Two children deletion"
+			 << "\n";
 		// currentNode has two children
-		ThreadedNode* minInRightTree = currentNode -> right ; 
-		ThreadedNode* newParent = currentNode ; 
-		while( minInRightTree -> left != nullptr ) {
-			newParent = minInRightTree ;
-			minInRightTree = minInRightTree -> left ; 
+		ThreadedNode *minInRightTree = currentNode->right;
+		ThreadedNode *newParent = currentNode;
+		while (minInRightTree->left != nullptr)
+		{
+			newParent = minInRightTree;
+			minInRightTree = minInRightTree->left;
 		}
-		int temp = minInRightTree -> val ; 
-		minInRightTree -> val = currentNode -> val ; 
-		currentNode -> val = temp ; 
+		int temp = minInRightTree->val;
+		minInRightTree->val = currentNode->val;
+		currentNode->val = temp;
 
-		prevNode = currentNode ; 
-		currentNode = minInRightTree ; 
-		
-		if( currentNode -> left != nullptr ) {
-			currentNode -> left -> right = prevNode ; 
-			prevNode -> left = currentNode -> left ; 
+		prevNode = currentNode;
+		currentNode = minInRightTree;
+
+		if (currentNode->left != nullptr)
+		{
+			currentNode->left->right = prevNode;
+			prevNode->left = currentNode->left;
 		}
-		else if( currentNode -> right != nullptr ) {
-			prevNode -> right = currentNode -> right ; 
+		else if (currentNode->right != nullptr)
+		{
+			prevNode->right = currentNode->right;
 		}
 
-		delete minInRightTree ; 
+		delete minInRightTree;
 	}
-	else {
-		cout << "Single Child deletion" << "\n" ; 
-		if( currentNode -> left != nullptr ) {
-			currentNode -> left -> right = prevNode ; 
-			prevNode -> left = currentNode -> left ; 
+	else
+	{
+		cout << "Single Child deletion"
+			 << "\n";
+		if (currentNode->left != nullptr)
+		{
+			currentNode->left->right = prevNode;
+			prevNode->left = currentNode->left;
 		}
-		else if( currentNode -> right != nullptr ) {
-			prevNode -> right = currentNode -> right ; 
+		else if (currentNode->right != nullptr)
+		{
+			prevNode->right = currentNode->right;
 		}
-		delete currentNode ;
+		delete currentNode;
 	}
-
 }
 
-int main(){
+int main()
+{
 
 	ThreadedBinarySearchTree tree;
 	tree.create(20);
@@ -259,9 +287,9 @@ int main(){
 	tree.insert(18);
 	tree.insert(21);
 	tree.inorder();
-	tree.preorder() ; 
+	tree.preorder();
 
-	tree.inorder() ; 
+	tree.inorder();
 
 	return 0;
 }
