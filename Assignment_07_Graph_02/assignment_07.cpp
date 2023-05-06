@@ -146,7 +146,7 @@ int main() {
 	g.addEdge( 'C' , 'E' , 4 ) ;
 	g.addEdge( 'B' , 'E' , 1 ) ;
 	g.print() ;
-	g.minimum_spanning_tree_prims( 'A' ) ;
+	g.minimum_spanning_tree_prims( 'B' ) ;
 
 	return 0;
 }
