@@ -1,12 +1,13 @@
 #include <iostream>
 #include <cmath>
 #include <cstring>
+#include "linkedqueue.cpp"
 using namespace std ; 
 
 struct Node {
     int key ; 
     string value ; 
-    int height = 0 ;
+    int height = 1 ;
     Node* left = nullptr ; 
     Node* right = nullptr ; 
 } ; 
@@ -34,53 +35,62 @@ void updateHeight( Node* node ) {
     node -> height = 1 + max( getHeight( node -> left ) , getHeight( node -> right ) )  ; 
 }
 
-Node* rotateLL( Node* node ) {
+Node* rotateRight( Node* node ) {
     Node* newRoot = node -> left ; 
+    node -> left = newRoot -> right ; 
     newRoot -> right = node;
+    updateHeight( node ) ; 
+    updateHeight( newRoot ) ; 
+    cout << "[Performed LL Rotation]" << "\n" ;
     return newRoot ;  
 }
 
-Node* rotateRR( Node* node ) {
+Node* rotateLeft( Node* node ) {
     Node* newRoot = node -> right ; 
+    node -> right = newRoot -> left ;
     newRoot -> left = node ; 
+    updateHeight( node ) ; 
+    updateHeight( newRoot ) ;
+    cout << "[Performed RR Rotation]" << "\n" ;
     return newRoot ; 
 }
 
 Node* rotateRL( Node* node ) {
-    node -> right = rotateRR( node -> right ) ; 
-    return rotateLL( node ) ; 
+    node -> right = rotateLeft( node -> right ) ; 
+    return rotateRight( node ) ; 
 }
 
 Node* rotateLR( Node* node ) {
-    node -> left = rotateLL( node -> left ) ; 
-    return rotateRR( node ) ; 
+    node -> left = rotateRight( node -> left ) ; 
+    return rotateLeft( node ) ; 
 }
 
 Node* balance( Node* node ) {
     if( getBalanceFactor( node ) == 2 ) {
         // Left subtree has a greater height
         // Possible rotations: LL, LR
-        if( getBalanceFactor( node -> left ) > 0 ) {
-            // For left child, left subtree has greater height. Hence, use LL rotation
-            node = rotateLL( node ) ;
-        }
-        else {
+        if( getBalanceFactor( node -> left ) < 0 ) {
             // For left child, right subtree has greater height. Hence, use LR rotation
             node = rotateLR( node ) ;
+        }
+        else {
+            // For left child, left subtree has greater height. Hence, use LL rotation
+            node = rotateRight( node ) ;
         }
     }
     else if( getBalanceFactor( node ) == -2 ) {
         // Right subtree has a greater height
         // Possible rotations: RR, RL
-        if( getBalanceFactor( node -> right ) < 0 ) {
-            // For left child, left subtree has greater height. Hence, use RR rotation
-            node = rotateRR( node ) ;
+        if( getBalanceFactor( node -> right ) > 0 ) {
+            // For left child, right subtree has greater height. Hence, use RL rotation
+            node = rotateRL( node ) ;
         }
         else {
-            // For left child, right subtree has greater height. Hence, use RL rotation
-            node = rotateRL( node ) ; 
+            // For left child, left subtree has greater height. Hence, use RR rotation
+            node = rotateLeft( node ) ; 
         }
     }
+    updateHeight( node ) ; 
     return node ; 
 }
 
@@ -137,6 +147,24 @@ Node* search( int key ) {
             return curr ; 
         }
     }
+    return nullptr ; 
+}
+
+void BFS() {
+    LinkedQueue<Node*> q ; 
+    q.push( ROOT ) ; 
+    while( !q.isEmpty() ) {
+        Node* poppedNode = q.front() ; 
+        cout << poppedNode -> key << " " ; 
+        q.pop() ;
+        if( poppedNode -> left != nullptr ) {
+            q.push( poppedNode -> left ) ; 
+        }
+        if( poppedNode -> right != nullptr ) {
+            q.push( poppedNode -> right ) ;
+        }
+    }
+    cout << "\n" ; 
 }
 
 } ;
@@ -151,6 +179,7 @@ int main() {
         cout << "2. Inorder traversal" << "\n" ;
         cout << "3. Search" << "\n" ;
         cout << "4. Exit" << "\n" ;
+        cout << "5. BFS" << "\n" ;
         cin >> option ; 
         if( option == 1 ) {
             int key ; 
@@ -176,6 +205,10 @@ int main() {
         }
         else if( option == 4 ){
             break ; 
+        }
+        else if( option == 5 ) {
+            cout << "BFS traversal is " ; 
+            tree.BFS() ; 
         }
     }
 
