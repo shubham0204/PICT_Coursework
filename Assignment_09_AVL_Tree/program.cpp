@@ -7,7 +7,7 @@ using namespace std ;
 struct Node {
     int key ; 
     string value ; 
-    int height = 1 ;
+    int height = 1 ;       // Default height of a node w.r.t its parent would be one
     Node* left = nullptr ; 
     Node* right = nullptr ; 
 } ; 
@@ -25,6 +25,8 @@ int getHeight( Node* node ) {
 }
 
 int getBalanceFactor( Node* node ) {
+    // Balance factor is the difference between the heights of the left
+    // subtree and right subtree w.r.t to node
     if( node == nullptr ) {
         return 0 ; 
     }
@@ -35,34 +37,44 @@ void updateHeight( Node* node ) {
     node -> height = 1 + max( getHeight( node -> left ) , getHeight( node -> right ) )  ; 
 }
 
-Node* rotateRight( Node* node ) {
-    Node* newRoot = node -> left ; 
-    node -> left = newRoot -> right ; 
+Node* LLRotation( Node* node ) {
+
+    Node* newRoot = node -> left ;
     newRoot -> right = node;
+    node -> left = nullptr ; 
+
+    // Updating the heights of node and newRoot
+    // to in-turn update balance factors of these nodes
     updateHeight( node ) ; 
     updateHeight( newRoot ) ; 
+
     cout << "[Performed LL Rotation]" << "\n" ;
     return newRoot ;  
 }
 
-Node* rotateLeft( Node* node ) {
+Node* RRRotation( Node* node ) {
+
     Node* newRoot = node -> right ; 
-    node -> right = newRoot -> left ;
     newRoot -> left = node ; 
-    updateHeight( node ) ; 
+    node -> right = nullptr ; 
+
+    // Updating the heights of node and newRoot
+    // to in-turn update balance factors of these nodes
+    updateHeight( node ) ;
     updateHeight( newRoot ) ;
+
     cout << "[Performed RR Rotation]" << "\n" ;
     return newRoot ; 
 }
 
 Node* rotateRL( Node* node ) {
-    node -> right = rotateLeft( node -> right ) ; 
-    return rotateRight( node ) ; 
+    node -> right = RRRotation( node -> right ) ; 
+    return LLRotation( node ) ; 
 }
 
 Node* rotateLR( Node* node ) {
-    node -> left = rotateRight( node -> left ) ; 
-    return rotateLeft( node ) ; 
+    node -> left = LLRotation( node -> left ) ; 
+    return RRRotation( node ) ; 
 }
 
 Node* balance( Node* node ) {
@@ -75,7 +87,7 @@ Node* balance( Node* node ) {
         }
         else {
             // For left child, left subtree has greater height. Hence, use LL rotation
-            node = rotateRight( node ) ;
+            node = LLRotation( node ) ;
         }
     }
     else if( getBalanceFactor( node ) == -2 ) {
@@ -87,7 +99,7 @@ Node* balance( Node* node ) {
         }
         else {
             // For left child, left subtree has greater height. Hence, use RR rotation
-            node = rotateLeft( node ) ; 
+            node = RRRotation( node ) ; 
         }
     }
     updateHeight( node ) ; 
