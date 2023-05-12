@@ -264,7 +264,7 @@ public:
         if (parentNode != nullptr)
         {
             TreeNode *parentNodeCopy = new (TreeNode);
-            parentNodeCopy->val = parentNodeCopy->val;
+            parentNodeCopy->val = parentNode->val;
             if (parentNode->left == nullptr)
             {
                 parentNodeCopy->left = nullptr;
@@ -412,7 +412,7 @@ int main()
         }
         else if (option == 3)
         {
-            tree.preorderTraversal2();
+            tree.preorderTraversal();
         }
         else if (option == 4)
         {
@@ -432,7 +432,7 @@ int main()
         }
         else if (option == 8)
         {
-            tree = tree.copyTree();
+            tree = tree ;
         }
         else if (option == 9)
         {

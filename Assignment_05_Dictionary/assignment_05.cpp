@@ -22,7 +22,7 @@ struct Node
 class Dictionary
 {
 
-    Node **headNodes;
+    Node* headNodes;
     int tableSize;
 
     // Hash function: (Sum of ASCII values of characters in indentifier) % tableSize
@@ -112,17 +112,17 @@ public:
     Dictionary(int tableSize)
     {
         this->tableSize = tableSize;
-        headNodes = new Node *[tableSize];
+        headNodes = new Node[tableSize];
         for (int i = 0; i < tableSize; i++)
         {
-            headNodes[i] = nullptr;
+            headNodes[i].next = nullptr;
         }
     }
 
     void insert(string word, string meaning)
     {
         int hashAddress = hash(word);
-        if (headNodes[hashAddress] == nullptr)
+        if ( headNodes[hashAddress] == nullptr)
         {
             Node *newNode = new (Node);
             newNode->next = nullptr;
@@ -132,7 +132,7 @@ public:
         }
         else
         {
-            insertNode(headNodes[hashAddress], word, meaning);
+            insertNode( &headNodes[hashAddress], word, meaning);
         }
     }
 
@@ -142,7 +142,7 @@ public:
         {
             cout.width(5);
             cout << i << " ";
-            printLinkedList(headNodes[i]);
+            printLinkedList( &headNodes[i]);
             cout << "\n";
         }
     }
@@ -150,7 +150,7 @@ public:
     void find(string word)
     {
         int hashAddress = hash(word);
-        Node *node = findLinkedList(headNodes[hashAddress], word);
+        Node *node = findLinkedList( &headNodes[hashAddress], word);
         if (node == nullptr)
         {
             cout << "Record not found"
@@ -166,7 +166,7 @@ public:
     void deleteWord(string word)
     {
         int hashAddress = hash(word);
-        deleteLinkedList(hashAddress, headNodes[hashAddress], word);
+        deleteLinkedList(hashAddress, &headNodes[hashAddress], word);
     }
 };
 
