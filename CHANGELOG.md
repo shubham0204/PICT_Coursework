@@ -1,1 +1,3 @@
-- Completed `Assignment_09_AVL_Tree`
+- Updated `Assignment_09_AVL_Tree`
+- Added `Assignment_08_Optimal_BST`
+- Added `Assignment_11_Sequential_File`

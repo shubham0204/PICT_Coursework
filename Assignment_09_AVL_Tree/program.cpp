@@ -40,8 +40,8 @@ void updateHeight( Node* node ) {
 Node* LLRotation( Node* node ) {
 
     Node* newRoot = node -> left ;
+    node -> left = newRoot -> right ; 
     newRoot -> right = node;
-    node -> left = nullptr ; 
 
     // Updating the heights of node and newRoot
     // to in-turn update balance factors of these nodes
@@ -55,8 +55,8 @@ Node* LLRotation( Node* node ) {
 Node* RRRotation( Node* node ) {
 
     Node* newRoot = node -> right ; 
+    node -> right = newRoot -> left ; 
     newRoot -> left = node ; 
-    node -> right = nullptr ; 
 
     // Updating the heights of node and newRoot
     // to in-turn update balance factors of these nodes
@@ -68,12 +68,12 @@ Node* RRRotation( Node* node ) {
 }
 
 Node* rotateRL( Node* node ) {
-    node -> right = RRRotation( node -> right ) ; 
+    node -> right = LLRotation( node -> right ) ; 
     return LLRotation( node ) ; 
 }
 
 Node* rotateLR( Node* node ) {
-    node -> left = LLRotation( node -> left ) ; 
+    node -> left = RRRotation( node -> left ) ; 
     return RRRotation( node ) ; 
 }
 
