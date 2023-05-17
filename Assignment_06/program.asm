@@ -65,6 +65,9 @@ len4   equ  $-msg4
 msg5   db   "--- IDTR ---" , 0xA
 len5   equ  $-msg5
 
+msg6   db   "--- TR ---" , 0xA
+len6   equ  $-msg6
+
 linebr db   0xA
 
 ; -------------------------------------------------------
@@ -74,6 +77,7 @@ cr0_data          resb   002
 gdtr_data         resb   010
 ldtr_data         resb   002
 idtr_data         resb   010
+tr_data           resb   002
 value             resb   002
 
 ; -------------------------------------------------------
@@ -160,6 +164,14 @@ mov      rsi    ,   idtr_data
 call     printcontents
 print    linebr             ,  001
 
+task_06:
+print    msg6   ,   len6                       
+str     [tr_data]
+mov      rsi    ,   tr_data + 02h    
+call     printcontents
+mov      rsi    ,   tr_data                   
+call     printcontents
+print    linebr             ,  001
 
 exit
 
