@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <fstream>
 #include <ios>
@@ -39,6 +38,7 @@ public:
 	}
 
 	void writeRecords( Record records[] , int n ) {
+		// Open the filestream and append records line-by-line
 		outputStream.open( filename , ios::out ) ;
 		for( int i = 0 ; i < n ; i++ ) {
 			outputStream << records[i].rollNumber << "," << records[i].name << "," << records[i].division << "," << records[i].address + "\n"  ;
@@ -47,6 +47,7 @@ public:
  	}
 
 	void printRecords() {
+		// Open the filestream in ios::in mode and read records line-by-line
 		inputStream.open( filename , ios::in ) ;
 		while( !inputStream.eof() ) {
 			string record ;
@@ -57,6 +58,7 @@ public:
 	}
 
 	void searchRecord( int rollNumber ) {
+		// Search the record for rollNumber line-by-line
 		inputStream.open( filename , ios::in ) ;
 		bool isFound = false ;
 		while( !inputStream.eof() ) {
@@ -76,6 +78,9 @@ public:
 	}
 
 	void deleteRecord( int rollNumber ) {
+		// Append lines for the records whose
+		// rollnumber does not equal the given number
+		// in the list `lines`
 		inputStream.open( filename , ios::in ) ;
 		vector<string> lines ;
 		while( !inputStream.eof() ) {
@@ -86,6 +91,8 @@ public:
 			}
 		}
 		inputStream.close() ;
+		// Clear all contents of the file (by opening it in ios::out mode)
+		// and rewrite all files
 		outputStream.open( filename , ios::out ) ;
 		for( int i = 0 ; i < lines.size() ; i++ ) {
 			outputStream << lines[ i ] << "\n" ;
