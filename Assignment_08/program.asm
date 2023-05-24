@@ -23,13 +23,10 @@ mov  rdx , 00
 syscall 
 %endmacro
 
-
-
 byte_hex_to_ascii:
 mov     bl   ,   [rsi]
 mov     rdi  ,   value
 mov     r9   ,   02h
-
 add:
 rol     bl   ,   04                  ; Rotate bl four times (swap nibbles)
 mov     dl   ,   bl                  ; Move byte from bl to dl for conversion
@@ -43,10 +40,35 @@ mov     [rdi]      ,  dl             ; Move converted digit in dl to location sp
 inc     rdi                          ; Increment rdi (dest array pointer)
 dec     r9                           ; Decrement r9
 jnz     add                          ; If r9 is not equal to 0, jump to hex2ascii1 
-
 print   value  ,  02
 ret
 
+
+
+factorial:
+xor     rax  , rax                   ; Reset all GPRs
+xor     rbx  , rbx
+xor     rcx  , rcx
+xor     rdx  , rdx
+
+mov     cl   , [arg_input]           ; Move the input number to cl
+
+push_num:
+push    rcx                          ; Push the number to the stack
+dec     rcx                          ; Decrement the number by 1
+jnz     push_num                     ; Repeat if the number in rcx is not zero
+
+mov     cl  ,  [arg_input]           ; Reinitialize counter to the input number
+mov     bl  ,  01h                   ; bl holds the final output - product of all numbers
+                                     ; i.e. the factorial
+
+pop_num:
+pop     rax                          ; pop the top element of the stack in rax
+mul     rbx                          ; multiply with bl (rbx)
+mov     bl  ,  al                    ; move the resulting product in bl (product is stored in rax)
+dec     rcx                          ; decrement counter
+jnz     pop_num                      ; if counter is not zero, repeat the process
+ret
 
 
 
@@ -54,6 +76,12 @@ section .bss
 arg_count    resb    01
 arg_input    resb    01
 value        resb    01
+argv         resb    64
+fact_output  resb    01
+
+
+section .data
+num           db     05h
 
 
 
@@ -62,17 +90,19 @@ section .text
 global _start
 _start:
 
-pop     rcx
-mov     byte[arg_count]   ,   cl
-mov     rsi               ,   arg_count
-call    byte_hex_to_ascii
+pop     rbx                            ; stores argc in rbx
+pop     rbx                            ; stores the address of first argument in rbx i.e. argv[0]
+pop     rbx                            ; stores the address of second argument in rbx i.e. argv[1]
+mov     rdx             ,   00h
+mov     dl              ,   [ rbx ]    ; fetch value from argv[1] and store in dl
+sub     dl              ,   30h        ; subtract 30h from dl to convert ASCII to hex
+mov     byte[arg_input] , dl           ; move dl to arg_input
+print   arg_input       , 01           ; print arg_input
 
-pop     rbx
-pop     rbx
-pop     rbx
-pop     rbx
-mov     byte[arg_input]   ,   bl
-mov     rsi               ,   arg_input
+call    factorial                         ; call factorial procedure
+mov     byte[fact_output] , bl            ; output is stored in bl, move it to fact_output
+mov     rsi               , fact_output   ; HEX to ASCII conversion for fact_output
 call    byte_hex_to_ascii
+print   fact_output       , 02            ; print the factorial
 
 exit
