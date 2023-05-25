@@ -82,7 +82,7 @@ fact_output  resb    01
 
 section .data
 num           db     05h
-
+line_br       db     0Ah
 
 
 section .text
@@ -98,6 +98,7 @@ mov     dl              ,   [ rbx ]    ; fetch value from argv[1] and store in d
 sub     dl              ,   30h        ; subtract 30h from dl to convert ASCII to hex
 mov     byte[arg_input] , dl           ; move dl to arg_input
 print   arg_input       , 01           ; print arg_input
+print   line_br         , 01
 
 call    factorial                         ; call factorial procedure
 mov     byte[fact_output] , bl            ; output is stored in bl, move it to fact_output
