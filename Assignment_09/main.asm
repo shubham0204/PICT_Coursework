@@ -1,27 +1,6 @@
-; 0 -> read
-; 1 -> write
-; 2 -> read + write    access 
-
-; file open
-; rax -> 2
-; rdi -> filename
-; rsi -> 2
-; rdx -> 0777h
-
-; rax -> file descriptor
-
-; file read
-; rax -> 0
-; rdi -> file descriptor
-; rsi -> buffer
-; rdx -> buffer size
-
-; rax -> num bytes read OR file size
-
-
-; file close 
-; rax -> 3
-; rdx -> file descriptor
+; Shubham Panchal
+; https://shubham0204.github.io
+; References: https://github.com/IamVaibhavsar/Second_Year_Lab_Assignments/tree/master/Microprocessor%20lab/nearFarProcedure
 
 %macro print 2
 mov  rax , 01  ; sys_write
@@ -49,7 +28,7 @@ syscall
 mov  rax , 02         ; sys_file_open
 mov  rdi , %1         ; file name
 mov  rsi , 02         ; file access mode
-mov  rdx , 0777o       ; permissions
+mov  rdx , 0777       ; permissions
 syscall
 %endmacro
 
@@ -57,7 +36,7 @@ syscall
 mov  rax , 0
 mov  rdi , %1
 mov  rsi , %2
-mov  rdi , %3
+mov  rdx , %3
 syscall 
 %endmacro 
 
@@ -85,23 +64,52 @@ inc     rdi                          ; Increment rdi (dest array pointer)
 dec     r9                           ; Decrement r9
 jnz     add                          ; If r9 is not equal to 0, jump to hex2ascii1 
 
-print   value  ,  02
+print   line_break , 01
+print   value      , 02
+print   line_break , 01
 ret
 
 
 
+extern    proc_count_spaces
+extern    proc_count_lines
+extern    proc_count_char
+
+
+
+global    count_char
+global    count_lines
+global    count_spaces
+global    filesize
+global    buffer
+global    input_char
+
+
+
 section .bss
-filedesc     resb    01
-filesize     resb    01
-buffer       resb    100
-value        resb    01
-char         resb    01
-filename     resb    64
+filedesc       resb    01
+filesize       resb    01
+buffer         resb    200
+count_spaces   resb    01   
+count_lines    resb    01
+count_char     resb    01
+
+value                resb    01
+input_char           resb    02
+input_filename       resb    50
+
 
 
 section .data
-filename_const       db     "test.txt"
-buffer_size    db     100
+msg_count_spaces       db        "The number of spaces is"
+len_count_spaces       equ       $-msg_count_spaces
+msg_count_lines        db        "The number of lines is"
+len_count_lines        equ       $-msg_count_lines
+msg_count_char         db        "The frequency of given character is"
+len_count_char         equ       $-msg_count_char
+msg_input_char         db        "Enter char to find frequency:"
+len_input_char         equ       $-msg_input_char
+line_break             db        0xA
 
 
 
@@ -110,22 +118,32 @@ section .text
 global _start
 _start:
 
-pop rcx
-pop rcx
-pop rcx 
-mov         [filename]  ,  rcx
-file_open   filename
-br01:
-mov    [filedesc]   ,   rax
+read        input_filename       ,     09
 
-file_read   filedesc  ,  buffer  ,  buffer_size
+dec         rax
+mov         byte[input_filename + rax] , 0
+file_open   input_filename
+mov         [filedesc]           ,   rax
 
-mov    [filesize]   ,   rax
+file_read   [filedesc]   ,   buffer  ,  200
+mov         [filesize]   ,   rax
 
-mov    bl           ,   byte[filedesc + 4]
-mov    [char]       ,   bl
-mov    rsi          ,   char
-print  char         ,   01
+call        proc_count_spaces
+print       msg_count_spaces   ,   len_count_spaces
+mov         rsi                ,   count_spaces
+call        byte_hex_to_ascii
+
+call        proc_count_lines
+print       msg_count_lines  ,  len_count_lines
+mov         rsi              ,  count_lines
+call        byte_hex_to_ascii
+
+print       msg_input_char   ,  len_input_char
+read        input_char       ,  02
+call        proc_count_char
+print       msg_count_char   ,  len_count_char
+mov         rsi              ,  count_char
+call        byte_hex_to_ascii 
 
 file_close  filedesc
 
