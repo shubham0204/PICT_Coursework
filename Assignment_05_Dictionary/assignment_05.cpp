@@ -1,7 +1,9 @@
 
 
 /*
- * Implement all the functions of a dictionary (ADT) using open
+Name: Shubham Panchal
+Roll no: 21356 - G3
+Implement all the functions of a dictionary (ADT) using open
 hashing technique: separate chaining using linked list Data: Set of
 (key, value) pairs, Keys are mapped to values, Keys must be
 comparable, and Keys must be unique. Standard Operations: Insert

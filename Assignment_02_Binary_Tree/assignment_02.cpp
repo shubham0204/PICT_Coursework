@@ -1,3 +1,20 @@
+/*
+Name: Shubham Panchal
+Roll no: 21356 - G3
+Beginning with an empty binary tree, Construct binary tree by inserting the 
+values in the order given. After constructing a binary tree perform following 
+operations on it-
+ Perform inorder, preorder and post order traversal
+ Change a tree so that the roles of the left and right pointers are swapped at 
+every node 
+ Find the height of tree
+ Copy this tree to another [operator=] 
+ Count number of leaves, number of internal nodes. 
+ Erase all nodes in a binary tree. 
+(Implement both recursive and non-recursive methods)
+
+*/
+
 #include <iostream>
 #include "linkedstack.cpp"
 #include "linkedqueue.cpp"

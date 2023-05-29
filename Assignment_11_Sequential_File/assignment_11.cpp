@@ -1,3 +1,14 @@
+/*
+Name: Shubham Panchal
+Roll no: 21356 - G3
+Department maintains a student information. The file contains roll number, name, 
+division and address. Allow user to add, delete information of student. Display 26/05/2023
+P:F-LTL-UG/02/R1 3
+information of particular employee. If record of student does not exist an 
+appropriate message is displayed. If it is, then the system displays the student 
+details. Use sequential file to main the data
+*/
+
 #include <iostream>
 #include <fstream>
 #include <ios>

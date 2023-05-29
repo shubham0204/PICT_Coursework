@@ -1,3 +1,18 @@
+/*
+Name: Shubham Panchal
+Roll no: 21356 - G3
+ Represent a given graph using adjacency list to perform DFS and BFS. Use the 
+map of the area around the college as the graph. Identify the prominent land marks 
+as nodes and perform DFS and BFS on that.
+OR
+There are fight paths between the cities. If there is a fight between the city A and 
+city B then there is an edge between the city A to B. The cost of an edge represent 
+the time required or fuel required to travel from city A to B. Represent this as a 
+graph using adjacency list where every node of graph represented by city name. 
+Perform following operations 1) calculate in degree, out degree of vertices 
+2)check whether graph is connected or not 
+*/
+
 #include <iostream>
 #include <cstring>
 #include <vector>

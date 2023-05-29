@@ -1,3 +1,8 @@
+/*
+Implementation of a direct access file -Insertion and deletion of a record from a 
+direct access file
+*/
+
 #include <iostream>
 #include <fstream>
 #include <cstring>

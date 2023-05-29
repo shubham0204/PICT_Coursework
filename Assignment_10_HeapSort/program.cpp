@@ -1,3 +1,14 @@
+/*
+Name: Shubham Panchal
+Roll no: 21356 - G3
+Implement the Heap sort algorithm demonstrating heap/shell data structure with 
+modularity of programming language
+OR
+Read the marks obtained by students of second year in an online examination of 
+particular subject. Find out maximum / minimum marks obtained in that subject. 
+Use heap data structure. Analyze the algorithm.
+*/
+
 #include <iostream>
 #include <queue>
 using namespace std ; 
