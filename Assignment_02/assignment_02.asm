@@ -1,4 +1,4 @@
-; Created with 💖 by Shubham Panchal
+; Shubham Panchal
 ; https://shubham0204.github.io
 
 %macro print 2

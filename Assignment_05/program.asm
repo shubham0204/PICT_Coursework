@@ -1,4 +1,4 @@
-; Created with 💖 by Shubham Panchal
+; Shubham Panchal
 ; https://shubham0204.github.io
 
 %macro print 2
@@ -65,7 +65,7 @@ jc     message2             ; The bit is transferred to the carry flag.
 jmp    message1             ; Jump to message2 if the carry flag is SET i.e. the number in al is negative
 
 
-message1:
+message1:   
 print  msg2  ,  len2
 jmp    exitprogram
 

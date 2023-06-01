@@ -1,4 +1,4 @@
-; Created with 💖 by Shubham Panchal
+; Shubham Panchal
 ; https://shubham0204.github.io
 ; Reference: https://github.com/RohanDoshi21/SE_PICT_SEM4/blob/main/MP/Assignment6/program.asm
 
