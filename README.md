@@ -1,6 +1,8 @@
 # PICT Coursework - Shubham Panchal
 > A collection of all assignments for computer engineering w.r.t. SPPU Pune
 
+**For suggestions or improvements, [open an issue](https://github.com/shubham0204/PICT_Coursework/issues/new) or [start a discussion](https://github.com/shubham0204/PICT_Coursework/discussions/new/choose)**
+
 ## Subjects
 
 ### Semester 3
