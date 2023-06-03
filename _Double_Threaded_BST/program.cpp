@@ -1,312 +1,214 @@
 #include <iostream>
 using namespace std;
 
-class ThreadedNode
-{
-    int val;
-    ThreadedNode *left = nullptr;
-    ThreadedNode *right = nullptr;
-    int lbit = 0; // 0 -> Thread, 1 -> Child
-    int rbit = 0; // 0 -> Thread, 1 -> Child
-    friend class ThreadedBST;
-};
+class Node {
 
-class ThreadedBST
-{
-
-    ThreadedNode *HEAD;
-    ThreadedNode *ROOT;
+	int val ;
+	Node* left = nullptr ;
+	Node* right = nullptr ;
+	int lbit = 0 ;
+	int rbit = 0 ;
 
 public:
-    void create(int rootValue);
-    void insert(int value);
 
-    ThreadedNode *inorderSuccessor(ThreadedNode *node);
-    void inorder();
+	friend class ThreadedBST ;
 
-    void preorder();
-
-    void deleteChildNode(ThreadedNode *parentNode, ThreadedNode *childNode);
-    void deleteNode(int x);
 };
 
-void ThreadedBST::create(int rootValue)
-{
-    ThreadedNode *newNode = new (ThreadedNode);
-    newNode->val = rootValue;
+class ThreadedBST {
 
-    HEAD = new (ThreadedNode);
-    HEAD->val = 0;
-    HEAD->rbit = 1;
-    HEAD->lbit = 1;
-    HEAD->right = HEAD;
+	Node* HEAD = nullptr ;
+	Node* ROOT = nullptr ;
 
-    newNode->rbit = 0; // thread
-    newNode->lbit = 0;
-    newNode->right = HEAD;
-    newNode->left = HEAD;
+public:
 
-    HEAD->left = newNode;
-}
+	void create( int rootVal ) {
 
-void ThreadedBST::insert(int x)
-{
-    ThreadedNode *currentNode = HEAD->left; // ROOT
-    ThreadedNode *parentNode = HEAD->left;  // ROOT
-    while (true)
-    {
-        parentNode = currentNode;
-        if (currentNode->val > x)
-        { // ;left
-            if (currentNode->lbit == 1)
-            {
-                // left -> child
-                currentNode = currentNode->left; // Go left
-            }
-            else
-            {
-                break;
-            }
-        }
-        else
-        { // x > currentNode -> val
-            if (currentNode->rbit == 1)
-            {                                     // right
-                currentNode = currentNode->right; // Go right
-            }
-            else
-            {
-                break;
-            }
-        }
-    }
-    ThreadedNode *newNode = new (ThreadedNode);
-    newNode->val = x;
-    if (parentNode->val < x)
-    {
-        // x is greater than parent, insert right
+		ROOT = new( Node ) ;
+		ROOT -> val = rootVal ;
 
-        // 1. copy parent node's right and rbit to newnode
-        newNode->right = parentNode->right;
-        newNode->rbit = parentNode->rbit;
+		HEAD = new( Node ) ;
+		HEAD -> val = -1 ;
+		HEAD -> right = HEAD ;
+		HEAD -> rbit = 1 ;
+		HEAD -> left = ROOT ;
+		HEAD -> lbit = 1 ;
 
-        // 2.
-        newNode->lbit = 0;
-        newNode->left = parentNode;
+		ROOT -> lbit = 0 ;
+		ROOT -> left = HEAD ;
+		ROOT -> rbit = 0 ;
+		ROOT -> right = HEAD ;
 
-        // 3.
-        parentNode->rbit = 1;
-        parentNode->right = newNode;
-    }
-    else
-    {
-        // x is smaller than parent, insert left
+	}
 
-        // 1. copy parent node's left and lbit to newnode
-        newNode->left = parentNode->left;
-        newNode->lbit = parentNode->lbit;
+	void insert( int nodeVal ) {
+		Node* currentNode = HEAD -> left ;
+		Node* parentNode = HEAD -> left ;
+		while( true ) {
+			parentNode = currentNode ;
+			if( currentNode -> val > nodeVal ) {
+				if( currentNode -> lbit == 1 ) {
+					currentNode = currentNode -> left ;
+				}
+				else {
+					break ;
+				}
+			}
+			else {
+				if( currentNode -> rbit == 1 ) {
+					currentNode = currentNode -> right ;
+				}
+				else {
+					break ;
+				}
+			}
+		}
 
-        // 2.
-        newNode->rbit = 0;
-        newNode->right = parentNode;
+		Node* newNode = new( Node ) ;
+		newNode -> val = nodeVal ;
+		if( parentNode -> val > nodeVal ) {
+			newNode -> left = parentNode -> left ;
+			newNode -> lbit = parentNode -> lbit ;
 
-        // 3.
-        parentNode->lbit = 1; // 0 -> 1
-        parentNode->left = newNode;
-    }
-}
+			newNode -> rbit = 0 ;
+			newNode -> right = parentNode ;
 
-ThreadedNode *ThreadedBST::inorderSuccessor(ThreadedNode *node)
-{
-    ThreadedNode *succ = node->right;
-    if (node->rbit == 1)
-    {
-        // Node has right child,
-        // then go to leftmost child
-        while (succ->lbit == 1)
-        {
-            succ = succ->left;
-        }
-    }
-    return succ;
-}
+			parentNode -> lbit = 1 ;
+			parentNode -> left = newNode ;
+		}
+		else {
+			newNode -> right = parentNode -> right ;
+			newNode -> rbit = parentNode -> rbit ;
 
-void ThreadedBST::inorder()
-{
-    ThreadedNode *currentNode = HEAD;
-    while (true)
-    {
-        currentNode = inorderSuccessor(currentNode);
-        if (currentNode == HEAD)
-        {
-            cout << "\n";
-            return;
-        }
-        cout << currentNode->val << " ";
-    }
-}
+			newNode -> lbit = 0 ;
+			newNode -> left = parentNode ;
 
-void ThreadedBST::preorder()
-{
-    int flag = 1;
-    ThreadedNode *currentNode = HEAD->left; // ROOT Node
-    while (currentNode != HEAD)
-    {
-        while (flag != 0)
-        { // Execute the loop until a thread is found
-            cout << currentNode->val << " ";
-            if (currentNode->lbit == 1)
-            {
-                currentNode = currentNode->left;
-            }
-            else
-            {
-                // currentNode -> lbit = 0, a thread is present, hence break the loop
-                break;
-            }
-        }
-        flag = currentNode->rbit;
-        currentNode = currentNode->right;
-    }
-    cout << "\n";
-}
+			parentNode -> rbit = 1 ;
+			parentNode -> right = newNode ;
+		}
+	}
 
-void ThreadedBST::deleteNode(int x)
-{
-    ThreadedNode *parentNode = HEAD->left;
-    ThreadedNode *currentNode = HEAD->left;
-    while (currentNode->val != x)
-    {
-        parentNode = currentNode;
-        if (currentNode->val > x)
-        { // left
-            if (currentNode->lbit == 1)
-            {
-                // left -> child
-                currentNode = currentNode->left; // Go left
-            }
-        }
-        else if (currentNode->val < x)
-        { // x > currentNode -> val
-            if (currentNode->rbit == 1)
-            {                                     // right
-                currentNode = currentNode->right; // Go right
-            }
-        }
-    }
-    deleteChildNode(parentNode, currentNode);
-}
+	Node* inorderSuccessor( Node* node ) {
+		Node* curr = node -> right ;
+		if( node -> rbit == 1 ) {
+			while( curr -> lbit != 0 ) {
+				curr = curr -> left ;
+			}
+		}
+		return curr ;
+	}
 
-void ThreadedBST::deleteChildNode(ThreadedNode *parentNode, ThreadedNode *childNode)
-{
-    // We need to delete child node
-    // Check for three cases
+	void inorder() {
+		Node* curr = HEAD ;
+		while( true ) {
+			curr = inorderSuccessor( curr ) ;
+			if( curr == HEAD ) {
+				cout << "\n" ;
+				return ;
+			}
+			cout << curr -> val << " " ;
+		}
+	}
 
-    if (childNode->lbit == 1 && childNode->rbit == 1)
-    {
-        // Deletion of node with two children
-        // Find smallest value in right-subtree
-        ThreadedNode *node = childNode->right; // Will represent smallest value in right-subtree
-        while (node->lbit != 0)
-        {
-            node = node->left;
-        }
-        childNode->val = node->val;
-        childNode = node;
-        // childNode will not get deleted in any of the subsequent blocks
-        // based on the number of children it has
-    }
+	void del( int val ) {
+		Node* currentNode = HEAD -> left ;
+		Node* parentNode = HEAD ;
+		while( currentNode -> val != val ) {
+			parentNode = currentNode ;
+			if( val > currentNode -> val ) {
+				if( currentNode -> rbit == 1 ) {
+					currentNode = currentNode -> right ;
+				}
+				else { break; }
+			}
+			else {
+				if( currentNode -> lbit == 1 ) {
+					currentNode = currentNode -> left ;
+				}
+				else {
+					break;
+				}
+			}
+		}
+		delNode( parentNode , currentNode ) ;
+	}
 
-    if (childNode->lbit == 0 && childNode->rbit == 0)
-    {
-        // Deletion of node with no children i.e. leaf node
-        if (parentNode->right == childNode)
-        {
-            // Transfer child's rbit and right thread to parent
-            parentNode->rbit = childNode->rbit;
-            parentNode->right = childNode->right;
-        }
-        else
-        {
-            // Transfer child's lbit and left thread to parent
-            parentNode->lbit = childNode->lbit;
-            parentNode->left = childNode->left;
-        }
-        delete childNode;
-    }
-    else
-    {
-        // Deletion of node with one child
+	void delNode( Node* parent , Node* currNode ) {
 
-        if (childNode->lbit == 1 && childNode->rbit == 0)
-        {
-            // Left child is node
-            // Right child is a thread
-            if (parentNode->left == childNode)
-            {
-                parentNode = childNode->left;
-            }
-            else if (parentNode->right == childNode)
-            {
-                parentNode = parentNode->right;
-            }
+		if( currNode -> lbit == 1 && currNode -> rbit == 1 ) {
+			// Two child node
+			Node* leftmost = currNode -> right ;
+			while( leftmost -> lbit == 1 ) {
+				parent = leftmost ;
+				leftmost = leftmost -> left ;
+			}
+			int temp = currNode -> val ;
+			currNode -> val = leftmost -> val ;
+			leftmost -> val = temp ;
+			currNode = leftmost ;
+		}
 
-            while (parentNode->rbit != 1)
-            {
-                parentNode = parentNode->right;
-            }
-            parentNode->right = childNode->right;
-            delete childNode;
-        }
-        else if (childNode->lbit == 0 && childNode->rbit == 1)
-        {
-            // Left child is thread
-            // Right child is a node
-            if (parentNode->left == childNode)
-            {
-                parentNode = childNode->left;
-            }
-            else if (parentNode->right == childNode)
-            {
-                parentNode = parentNode->right;
-            }
-            while (parentNode->lbit != 1)
-            {
-                parentNode = parentNode->left;
-            }
-            parentNode->left = childNode->left;
-            delete childNode;
-        }
-    }
-}
+		if( currNode -> lbit == 0 && currNode -> rbit == 0 ) {
+			// Leaf node deletion
+			if( parent -> left == currNode ) {
+				parent -> left = currNode -> left ;
+				parent -> lbit = currNode -> lbit ;
+			}
+			else if( parent -> right == currNode ) {
+				parent -> right = currNode -> right ;
+				parent -> rbit = currNode -> rbit ;
+			}
+			delete currNode ;
+		}
+		else {
+			if( currNode -> lbit == 1 && currNode -> rbit == 0 ) {
+				parent -> left = currNode -> left ;
+				currNode -> left -> right = parent ;
+			}
+			else if( currNode -> lbit == 0 && currNode -> rbit == 1 ) {
+				parent -> right = currNode -> right ;
+				currNode -> right -> left = parent ;
+			}
+			delete currNode ;
+		}
 
-int main()
-{
+	}
 
-    ThreadedBST tree;
-    tree.create(50);
-    tree.insert(60);
-    tree.insert(30);
-    tree.insert(10);
-    tree.insert(20);
-    tree.insert(40);
-    tree.insert(80);
-    tree.insert(75);
-    tree.inorder();
-    tree.preorder();
+};
 
-    tree.deleteNode(20);
-    tree.inorder();
-    tree.deleteNode(40);
-    tree.inorder();
-    tree.deleteNode(75);
-    tree.inorder();
-    tree.deleteNode(80);
-    tree.inorder();
-    tree.deleteNode(60);
-    tree.inorder();
-    tree.deleteNode(30);
-    tree.inorder();
+int main() {
 
-    return 0;
+	ThreadedBST tree;
+	tree.create(50);
+	tree.insert(60);
+	tree.insert(30);
+	tree.insert(10);
+	tree.insert(20);
+	tree.insert(40);
+	tree.insert(80);
+	tree.insert(75);
+	tree.inorder();
+
+	cout << "Deletion inorders" << "\n" ;
+	tree.del(20);
+	tree.inorder();
+	tree.del(40);
+	tree.inorder();
+	tree.del(75);
+	tree.inorder();
+	tree.del(80);
+	tree.inorder();
+	tree.del(60);
+	tree.inorder();
+	tree.del(30);
+	tree.inorder();
+
+	tree.del(50) ;
+	tree.inorder() ;
+	tree.del(10) ;
+	tree.inorder() ;
+
+
+
+	return 0;
 }

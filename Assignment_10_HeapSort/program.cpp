@@ -168,9 +168,9 @@ class Heap {
 } ; 
 
 int main() {
-    int keys[ 7 ] = { 87 , 5 , 34 , 99 , 44 , 12 , 68 } ; 
+    int values[15] = { 1 , 2 , 34 , 10 , 15 , -1 , 23,  23 , 12 , 67 , 45 , 11 , 77 , 99 , 100  } ;
     Heap heap ; 
-    heap.insert( keys , 7 ) ;
+    heap.insert( values , 15 ) ;
     heap.sort() ; 
     return 0 ;
 }
