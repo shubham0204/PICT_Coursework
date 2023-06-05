@@ -28,6 +28,7 @@ class Node {
 class OptimalBST {
 
     int R[ 100 ][ 100 ] ; 
+    int C[ 100 ][ 100 ] ; 
 
     // Denotes the function 'w'
     // arr -> freqs (frequencies)
@@ -42,20 +43,45 @@ class OptimalBST {
         return sum ;
     }
 
-    public:
-
-    Node* ROOT = nullptr ;
-
-    void findOBST( int values[] , int freqs[] , int len ) {
-        int n = len + 1 ;  
+    // Find an optimal subtree given that the subtrees should be 
+    // made of 'n' nodes
+    // The cost of each subtree is maintained in the matrix C
+    // The root of each subtree is maintained in the matrix R
+    void findOptimalSubtree( int freqs[] , int numNodesInSubtree , int n ) {
 
         // Use the formula:
         // C[ i , j ] = min{ C[ i , k-1 ] + C[ k , j ] } + w( i , j )
         // Range for k is: i < k <= j
 
+        for( int i = 0 ; i < n - numNodesInSubtree ; i++ ) {
+            int j = i + numNodesInSubtree ; 
+            // Here, we need to use the formula mentioned in
+            // the beginning of this method
+            int minCost = 1e+8 ; 
+            int minCostRoot = R[ i ][ j - 1 ] ; 
+            for( int k = i + 1 ; k <= j ; k++ ) {
+                int cost = C[ i ][ k - 1 ] + C[ k ][ j ] ;
+                if( cost < minCost ) {
+                    minCost = cost ; 
+                    minCostRoot = k ; 
+                }
+            }
+            C[ i ][ j ] = minCost + subarray_sum( freqs , i , j ) ; 
+            R[ i ][ j ] = minCostRoot ; 
+        }
+
+    }
+
+
+    public:
+
+    Node* ROOT = nullptr ;
+
+    void findOBST( int values[] , int freqs[] , int totalNodes ) {
+        int n = totalNodes + 1 ; 
+
         // Denotes the matrix C and set all 
         // entries to zero
-        int C[ n ][ n ] ; 
         for( int i = 0 ; i < n ; i++ ) {
             for( int j = 0 ; j < n ; j++ ) {
                 C[ i ][ j ] = 0;
@@ -76,7 +102,7 @@ class OptimalBST {
         for( int i = 0 ; i < n ; i++ ) {
             C[ i ][ i ] = 0 ; 
         }
-        
+
         // Step 2 -> 
         // Compute cost for all BSTs made up of 1 node
         // i.e. C_ij such that (j - i) = 1
@@ -86,68 +112,21 @@ class OptimalBST {
             R[ i ][ j ] = j ; 
         }
 
-        // Step 3 -> 
+        // Step 3 ->
         // Compute cost for all BSTs made up of 2 nodes
-        // i.e. C_ij such that (j - i) = 2
-        for( int i = 0 ; i < n - 2 ; i++ ) {
-            int j = i + 2 ; 
-            cout << " i: " << i << " j: " << j << "\n" ; 
-            // Here, we need to use the formula mentioned in
-            // the beginning of this method
-            int minCost = 1e+8 ; 
-            int minCostRoot = R[ i ][ j - 1 ] ; 
-            for( int k = i + 1 ; k <= j ; k++ ) {
-                int cost = C[ i ][ k - 1 ] + C[ k ][ j ] ;
-                if( cost < minCost ) {
-                    minCost = cost ; 
-                    minCostRoot = k ; 
-                }
-            }
-            C[ i ][ j ] = minCost + subarray_sum( freqs , i , j ) ; 
-            R[ i ][ j ] = minCostRoot ; 
+        // to (n-1) nodes
+        for( int i = 2 ; i < n ; i++ ) {
+            findOptimalSubtree( freqs , i , n ) ;
         }
 
-        // Step 4 -> 
-        // Compute cost for all BSTs made up of 3 nodes
-        // i.e. C_ij such that (j - i) = 3
-        for( int i = 0 ; i < n - 3 ; i++ ) {
-            int j = i + 3 ; 
-            // Here, we need to use the formula mentioned in
-            // the beginning of this method
-            int minCost = 1e+8 ; 
-            int minCostRoot = R[ i ][ j - 1 ] ; 
-            for( int k = i + 1 ; k <= j ; k++ ) {
-                int cost = C[ i ][ k - 1 ] + C[ k ][ j ] ;
-                if( cost < minCost ) {
-                    minCost = cost ; 
-                    minCostRoot = k ; 
-                }
+        // (Optional) Print the matrix R
+        for( int i = 0 ; i < n ; i++ ) {
+            for( int j = 0 ; j < n ; j++ ) {
+                cout.width( 5 ) ; 
+                cout << R[ i ][ j ] << " " ; 
             }
-            C[ i ][ j ] = minCost + subarray_sum( freqs , i , j ) ; 
-            R[ i ][ j ] = minCostRoot ; 
+            cout << "\n" ; 
         }
-
-        // Step 5 ->
-        // Compute cost for all BSTs made up of 4 nodes
-        // i.e. C_ij such that (j - i) = 4
-        // Only one pair of ( i , j ) is possible
-        // which is ( 0 , 4 )
-        int i = 0 ;
-        int j = 4 ; 
-        // Here, we need to use the formula mentioned in
-        // the beginning of this method
-        int minCost = 1e+8 ; 
-        int minCostRoot = R[ i ][ j - 1 ] ;
-        for( int k = i + 1 ; k <= j ; k++ ) {
-            int cost = C[ i ][ k - 1 ] + C[ k ][ j ] ;
-            if( cost < minCost ) {
-                minCostRoot = k ; 
-                minCost = cost ; 
-            }
-        }
-        C[ i ][ j ] = minCost + subarray_sum( freqs , i , j ) ; 
-        R[ i ][ j ] = minCostRoot ; 
-    
 
         // (Optional) Print the matrix C
         for( int i = 0 ; i < n ; i++ ) {
@@ -157,24 +136,15 @@ class OptimalBST {
             }
             cout << "\n" ; 
         }
-        cout << "Cost of OBST: " << C[ 0 ][ n - 1 ] << "\n" ;
+        cout << "Cost of OBST is " << C[ 0 ][ n - 1 ] << "\n" ; 
 
-        // (Optional) Print the matrix R
-        for( int i = 0 ; i < n ; i++ ) {
-            for( int j = 0 ; j < n ; j++ ) {
-                cout.width( 5 ) ; 
-                cout << R[ i ][ j ] << " " ; 
-            }
-            cout << "\n" ; 
-        } 
-
+        // Step 4 -> 
+        // Construct the OBST with cost matrix C and roots matrix R ready
         ROOT = new( Node ) ; 
         ROOT = constructOBST( 0 , n - 1  , values ) ; 
-
     }
 
     Node* constructOBST( int i , int j , int values[] ) { 
-        cout << i << " " << j << "\n" ; 
         if( i == j ) {
             return nullptr ; 
         }
@@ -196,13 +166,31 @@ class OptimalBST {
         inorder( node -> right ) ;
     }
 
+    void preorder(Node* node) {
+        if( node == nullptr ) {
+            return;
+        }
+        cout << node -> val << " " ;
+        preorder( node -> left ) ;
+        preorder( node -> right ) ;
+    }
+
 } ;
 
 int main() {
     OptimalBST tree ; 
-    int values[ 4 ] = { 10 , 20 , 30 , 40 } ; 
-    int freqs[ 4 ] = { 4 , 2 , 6 , 3 } ;
-    tree.findOBST( values , freqs , 4 ) ;  
+    cout << "Enter number of values: " << "\n" ; 
+    int totalNodes = 0 ; cin >> totalNodes ; 
+    int values[ totalNodes ] ;
+    int freqs[ totalNodes ] ; 
+    for( int i = 0 ; i < totalNodes ; i++ ) {
+        cout << "Enter value: " << "\n" ; 
+        cin >> values[ i ] ; 
+        cout << "Enter frequency: " << "\n" ; 
+        cin >> freqs[ i ] ; 
+    }
+    tree.findOBST( values , freqs , totalNodes ) ;  
     tree.inorder( tree.ROOT ) ;
+    tree.preorder( tree.ROOT ) ; 
     return 0 ; 
 }
