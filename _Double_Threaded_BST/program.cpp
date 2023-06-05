@@ -110,6 +110,25 @@ public:
 		}
 	}
 
+	void preorder() {
+		int flag = 1 ;
+		Node* curr = HEAD -> left ;
+		while( curr != HEAD ) {
+			while( flag != 0 ) {
+				cout << curr -> val << " " ;
+				if( curr -> lbit == 1 ) {
+					curr = curr -> left ;
+				}
+				else {
+					break ;
+				}
+			}
+			flag = curr -> rbit ;
+			curr = curr -> right ;
+		}
+		cout << "\n" ;
+	}
+
 	void del( int val ) {
 		Node* currentNode = HEAD -> left ;
 		Node* parentNode = HEAD ;
@@ -138,6 +157,7 @@ public:
 		if( currNode -> lbit == 1 && currNode -> rbit == 1 ) {
 			// Two child node
 			Node* leftmost = currNode -> right ;
+			parent = currNode ;
 			while( leftmost -> lbit == 1 ) {
 				parent = leftmost ;
 				leftmost = leftmost -> left ;
@@ -179,35 +199,14 @@ public:
 int main() {
 
 	ThreadedBST tree;
-	tree.create(50);
-	tree.insert(60);
-	tree.insert(30);
-	tree.insert(10);
-	tree.insert(20);
-	tree.insert(40);
-	tree.insert(80);
-	tree.insert(75);
-	tree.inorder();
-
-	cout << "Deletion inorders" << "\n" ;
-	tree.del(20);
-	tree.inorder();
-	tree.del(40);
-	tree.inorder();
-	tree.del(75);
-	tree.inorder();
-	tree.del(80);
-	tree.inorder();
-	tree.del(60);
-	tree.inorder();
-	tree.del(30);
-	tree.inorder();
-
-	tree.del(50) ;
+	tree.create( 50 ) ;
+	tree.insert( 10 ) ;
+	tree.insert( 60 ) ;
 	tree.inorder() ;
-	tree.del(10) ;
-	tree.inorder() ;
+	tree.preorder() ;
 
+	tree.del( 50 ) ;
+	tree.inorder() ;
 
 
 	return 0;
