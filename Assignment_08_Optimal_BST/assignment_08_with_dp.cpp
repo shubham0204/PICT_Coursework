@@ -27,6 +27,8 @@ class Node {
 
 class OptimalBST {
 
+    int R[ 100 ][ 100 ] ; 
+
     // Denotes the function 'w'
     // arr -> freqs (frequencies)
     // low -> 'i'
@@ -41,6 +43,8 @@ class OptimalBST {
     }
 
     public:
+
+    Node* ROOT = nullptr ;
 
     void findOBST( int values[] , int freqs[] , int len ) {
         int n = len + 1 ;  
@@ -58,6 +62,14 @@ class OptimalBST {
             }
         }
 
+        // Denotes the matrix R which contains
+        // values of roots
+        for( int i = 0 ; i < n ; i++ ) {
+            for( int j = 0 ; j < n ; j++ ) {
+                R[ i ][ j ] = 0;
+            }
+        }
+
         // Step 1 -> 
         // Set diagonal elements to 0
         // C_ii = 0 for all 0 <= i <= n
@@ -71,6 +83,7 @@ class OptimalBST {
         for( int i = 0 ; i < n - 1 ; i++ ) {
             int j = i + 1 ; 
             C[ i ][ j ] = freqs[ i ] ; 
+            R[ i ][ j ] = j ; 
         }
 
         // Step 3 -> 
@@ -82,13 +95,16 @@ class OptimalBST {
             // Here, we need to use the formula mentioned in
             // the beginning of this method
             int minCost = 1e+8 ; 
+            int minCostRoot = R[ i ][ j - 1 ] ; 
             for( int k = i + 1 ; k <= j ; k++ ) {
                 int cost = C[ i ][ k - 1 ] + C[ k ][ j ] ;
                 if( cost < minCost ) {
                     minCost = cost ; 
+                    minCostRoot = k ; 
                 }
             }
             C[ i ][ j ] = minCost + subarray_sum( freqs , i , j ) ; 
+            R[ i ][ j ] = minCostRoot ; 
         }
 
         // Step 4 -> 
@@ -99,13 +115,16 @@ class OptimalBST {
             // Here, we need to use the formula mentioned in
             // the beginning of this method
             int minCost = 1e+8 ; 
+            int minCostRoot = R[ i ][ j - 1 ] ; 
             for( int k = i + 1 ; k <= j ; k++ ) {
                 int cost = C[ i ][ k - 1 ] + C[ k ][ j ] ;
                 if( cost < minCost ) {
                     minCost = cost ; 
+                    minCostRoot = k ; 
                 }
             }
             C[ i ][ j ] = minCost + subarray_sum( freqs , i , j ) ; 
+            R[ i ][ j ] = minCostRoot ; 
         }
 
         // Step 5 ->
@@ -118,15 +137,16 @@ class OptimalBST {
         // Here, we need to use the formula mentioned in
         // the beginning of this method
         int minCost = 1e+8 ; 
-        int minCostK = 0 ;
+        int minCostRoot = R[ i ][ j - 1 ] ;
         for( int k = i + 1 ; k <= j ; k++ ) {
             int cost = C[ i ][ k - 1 ] + C[ k ][ j ] ;
             if( cost < minCost ) {
-                minCostK = k ; 
+                minCostRoot = k ; 
                 minCost = cost ; 
             }
         }
         C[ i ][ j ] = minCost + subarray_sum( freqs , i , j ) ; 
+        R[ i ][ j ] = minCostRoot ; 
     
 
         // (Optional) Print the matrix C
@@ -139,12 +159,42 @@ class OptimalBST {
         }
         cout << "Cost of OBST: " << C[ 0 ][ n - 1 ] << "\n" ;
 
-        cout << "Min cost k " << minCostK << "\n" ; 
-        minCostK = minCostK - 1 ; 
+        // (Optional) Print the matrix R
+        for( int i = 0 ; i < n ; i++ ) {
+            for( int j = 0 ; j < n ; j++ ) {
+                cout.width( 5 ) ; 
+                cout << R[ i ][ j ] << " " ; 
+            }
+            cout << "\n" ; 
+        } 
+
+        ROOT = new( Node ) ; 
+        ROOT = constructOBST( 0 , n - 1  , values ) ; 
 
     }
 
-    
+    Node* constructOBST( int i , int j , int values[] ) { 
+        cout << i << " " << j << "\n" ; 
+        if( i == j ) {
+            return nullptr ; 
+        }
+        else {
+            Node* p = new( Node ) ; 
+            p -> val = values[ R[ i ][ j ] - 1 ] ; 
+            p -> left = constructOBST( i , R[i][j] - 1, values ) ; 
+            p -> right = constructOBST( R[i][j] , j , values ) ; 
+            return p ; 
+        }
+    }
+
+    void inorder(Node* node) {
+        if( node == nullptr ) {
+            return;
+        }
+        inorder( node -> left ) ;
+        cout << node -> val << " " ; 
+        inorder( node -> right ) ;
+    }
 
 } ;
 
@@ -152,6 +202,7 @@ int main() {
     OptimalBST tree ; 
     int values[ 4 ] = { 10 , 20 , 30 , 40 } ; 
     int freqs[ 4 ] = { 4 , 2 , 6 , 3 } ;
-    tree.findOBST( values , freqs , 4 ) ; 
+    tree.findOBST( values , freqs , 4 ) ;  
+    tree.inorder( tree.ROOT ) ;
     return 0 ; 
 }
