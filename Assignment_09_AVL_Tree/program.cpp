@@ -245,23 +245,22 @@ public:
                 {
                     n = n->left;
                 }
-                n = node;
                 node->key = n->key;
-                node->right = deleteNode(node->right, node->key);
+                node->right = deleteNode(node->right, n->key);
             }
-            if (node->left == nullptr && node->right != nullptr)
+            if ( node -> key == x && node->left == nullptr && node->right != nullptr)
             {
                 Node *rightChild = node->right;
                 delete node;
                 return rightChild;
             }
-            else if (node->left != nullptr && node->right == nullptr)
+            else if (node -> key == x && node->left != nullptr && node->right == nullptr)
             {
                 Node *leftChild = node->left;
                 delete node;
                 return leftChild;
             }
-            else
+            else if( node -> key == x )
             {
                 delete node;
                 return nullptr;

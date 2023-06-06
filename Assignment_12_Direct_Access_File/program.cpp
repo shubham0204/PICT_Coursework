@@ -6,6 +6,7 @@ direct access file
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <vector>
 using namespace std ; 
 
 class Employee {
@@ -26,7 +27,7 @@ class Employee {
 
     string toString() {
         string output ; 
-        return output + to_string( id ) + " " + name + " " + to_string( experience ) + " " + to_string( salary ); 
+        return output + to_string( id ) + "-" + name + "-" + to_string( experience ) + "-" + to_string( salary ); 
     }
 
     friend class DirectAccessFile ; 
@@ -87,6 +88,42 @@ class DirectAccessFile {
         }
     }
 
+    void deleteRecord( int id ) {
+        // Append lines for the records whose
+		// id does not equal the given id
+		// in the list `lines`
+        fstream inputStream ; 
+		inputStream.open( filename , ios::in ) ;
+		vector<string> lines ;
+		while( !inputStream.eof() ) {
+			string record ;
+			inputStream >> record ;
+			if( (int(record[0]) - 48) != id ) {
+				lines.push_back( record ) ;
+			}
+		}
+		inputStream.close() ;
+
+        // reset hashtable
+         for( int i = 0 ; i < tableSize ; i++ ) {
+            hashTable[ i ] = -1 ; 
+        } 
+
+		// Clear all contents of the file (by opening it in ios::out mode)
+		// and rewrite all files
+        fstream outputStream ;
+		outputStream.open( filename , ios::out ) ;
+		for( int i = 0 ; i < lines.size() ; i++ ) {
+            string record = lines[ i ] ; 
+            int location = outputStream.tellp() ; 
+            int index = hash( int(record[0]) - 48 ) ;
+            hashTable[ index ] = location ; 
+			outputStream.write( lines[i].c_str() , lines[i].length() ) ; 
+            outputStream.write( "\n" , 1 ) ; 
+		}
+		outputStream.close() ;
+    }
+
     void printTable() {
         for( int i = 0 ; i < tableSize ; i++ ) {
             cout << i << " : " << hashTable[ i ] << "\n" ; 
@@ -97,12 +134,17 @@ class DirectAccessFile {
 
 int main() {
     DirectAccessFile file( "text.txt" , 10 ) ; 
-    file.insertRecord( Employee( 23 , "Shubham" , 2 , 34 ) ) ;
-    file.insertRecord( Employee( 24 , "kaustubh" , 3 , 35 ) ) ;
+    file.insertRecord( Employee( 3 , "Shubham" , 2 , 34 ) ) ;
+    file.insertRecord( Employee( 4 , "kaustubh" , 3 , 35 ) ) ;
     file.printTable() ; 
 
-    file.searchRecord( 24 ) ; 
-    file.searchRecord( 12 ) ; 
+    file.searchRecord( 3 ) ; 
+    file.searchRecord( 1 ) ; 
+
+    file.deleteRecord( 4 ) ; 
+    file.printTable() ; 
+
+    file.searchRecord( 4 ) ;
 
     return 0 ;
 }
