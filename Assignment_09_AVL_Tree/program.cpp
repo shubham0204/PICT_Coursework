@@ -1,358 +1,243 @@
 /*
-Name: Shubham Panchal
-Roll no: 21356 - G3
-A Dictionary stores keywords and its meanings. Provide facility for adding new
-keywords, deleting keywords, updating values of any entry. Provide facility to
-display whole data sorted in ascending/ Descending order. Also find how many
-maximum comparisons may require for finding any keyword. Use Height balance
-tree and find the complexity for finding a keyword
+A Dictionary stores keywords & its meanings.Provide facility for adding new keywords, deleting keywords,
+updating values of any entry.Provide facility to display whole data sorted in ascending/Descending order.
+Also find how many maximum comparisons may require for finding any keyword.Use Height balance tree and
+find the complexity for finding a keyword.
+
+Name : Advait Naik
+Roll No : 21354
 */
 
 #include <iostream>
-#include <cmath>
-#include <cstring>
-#include "linkedqueue.cpp"
+#include <queue>
+#include <vector>
 using namespace std;
 
-struct Node
-{
-    int key;
-    string value;
-    int height = 1; // Default height of a node w.r.t its parent would be one
-    Node *left = nullptr;
-    Node *right = nullptr;
+class Node{
+    int key, height = 1;
+    Node *left, *right;
+
+public:
+    Node(int val){
+        this -> key = val;
+        this -> left = nullptr;
+        this -> right = nullptr;
+    }
+
+    friend class AVL;
 };
 
-class AVLTree
-{
+class AVL{
+    Node *root = nullptr;
 
-    Node *ROOT = nullptr;
-
-    int getHeight(Node *node)
-    {
-        if (node == nullptr)
-        {
+    int getHeight(Node *node){
+        if(node == nullptr){
             return 0;
         }
-        return node->height;
+        return node -> height;
     }
 
-    int getBalanceFactor(Node *node)
-    {
-        // Balance factor is the difference between the heights of the left
-        // subtree and right subtree w.r.t to node
-        if (node == nullptr)
-        {
+    void changeHeight(Node *node){
+        node -> height = 1 + max(getHeight(node -> left) , getHeight(node -> right));
+    }
+
+    int balanceFactor(Node *node){
+        if(node == nullptr){
             return 0;
         }
-        return getHeight(node->left) - getHeight(node->right);
+        return getHeight(node -> left) - getHeight(node -> right);
     }
 
-    void updateHeight(Node *node)
-    {
-        node->height = 1 + max(getHeight(node->left), getHeight(node->right));
-    }
+    Node *llRotation(Node *node){
+        Node *newRoot = node -> left;
+        node -> left = newRoot -> right;
+        newRoot -> right = node;
 
-    Node *LLRotation(Node *node)
-    {
-
-        Node *newRoot = node->left;
-        node->left = newRoot->right;
-        newRoot->right = node;
-
-        // Updating the heights of node and newRoot
-        // to in-turn update balance factors of these nodes
-        updateHeight(node);
-        updateHeight(newRoot);
-
-        cout << "[Performed LL Rotation]"
-             << "\n";
+        changeHeight(node);
+        changeHeight(newRoot);
         return newRoot;
     }
 
-    Node *RRRotation(Node *node)
-    {
+    Node *rrRotation(Node *node){
+        Node *newRoot = node -> right;
+        node -> right = newRoot -> left;
+        newRoot -> left = node;
 
-        Node *newRoot = node->right;
-        node->right = newRoot->left;
-        newRoot->left = node;
-
-        // Updating the heights of node and newRoot
-        // to in-turn update balance factors of these nodes
-        updateHeight(node);
-        updateHeight(newRoot);
-
-        cout << "[Performed RR Rotation]"
-             << "\n";
+        changeHeight(node);
+        changeHeight(newRoot);
         return newRoot;
     }
 
-    Node *rotateRL(Node *node)
-    {
-        node->right = LLRotation(node->right);
-        return LLRotation(node);
+    Node *lrRotation(Node *node){
+        node -> left = rrRotation(node -> left);
+        return llRotation(node);
     }
 
-    Node *rotateLR(Node *node)
-    {
-        node->left = RRRotation(node->left);
-        return RRRotation(node);
+    Node *rlRotation(Node *node){
+        node -> right = llRotation(node -> right);
+        return rrRotation(node);
     }
 
-    Node *balance(Node *node)
-    {
-        if (getBalanceFactor(node) == 2)
-        {
-            // Left subtree has a greater height
-            // Possible rotations: LL, LR
-            if (getBalanceFactor(node->left) < 0)
-            {
-                // For left child, right subtree has greater height. Hence, use LR rotation
-                node = rotateLR(node);
+    Node *balanceNode(Node *node){
+        if(balanceFactor(node) == 2){
+            if(balanceFactor(node -> left) < 0){
+                node = lrRotation(node);
             }
-            else
-            {
-                // For left child, left subtree has greater height. Hence, use LL rotation
-                node = LLRotation(node);
+            else{
+                node = llRotation(node);
             }
         }
-        else if (getBalanceFactor(node) == -2)
-        {
-            // Right subtree has a greater height
-            // Possible rotations: RR, RL
-            if (getBalanceFactor(node->right) > 0)
-            {
-                // For left child, right subtree has greater height. Hence, use RL rotation
-                node = rotateRL(node);
+        else if(balanceFactor(node) == -2){
+            if(balanceFactor(node -> right) > 0){
+                node = rlRotation(node);
             }
-            else
-            {
-                // For left child, left subtree has greater height. Hence, use RR rotation
-                node = RRRotation(node);
+            else{
+                node = rrRotation(node);
             }
         }
-        updateHeight(node);
+
+        changeHeight(node);
         return node;
     }
 
-    void inorderRecursive(Node *curr)
-    {
-        if (curr == nullptr)
-        {
-            return;
+    Node *insertNode(Node *node,int val){
+        if(node == nullptr){
+            node = new Node(val);
+            return node;
         }
-        inorderRecursive(curr->left);
-        cout << curr->key << " ";
-        inorderRecursive(curr->right);
+
+        if(val < node -> key){
+            node -> left = insertNode(node -> left,val);
+        }
+        else if(val > node -> key){
+            node -> right = insertNode(node -> right,val);
+        }
+        else{
+            return node;
+        }
+        return balanceNode(node);
     }
 
-    Node *insertSubTree(Node *curr, int key, string value)
-    {
-        if (curr == nullptr)
-        {
-            Node *newNode = new Node();
-            newNode->key = key;
-            newNode->value = value;
-            return newNode;
-        }
-        if (curr->key > key)
-        {
-            curr->left = insertSubTree(curr->left, key, value);
-        }
-        else if (curr->key < key)
-        {
-            curr->right = insertSubTree(curr->right, key, value);
-        }
-        else
-        {
-            curr->value = value;
-            return curr;
-        }
-        return balance(curr);
-    }
-
-public:
-    void insert(int key, string value)
-    {
-        ROOT = insertSubTree(ROOT, key, value);
-    }
-
-    void inorder()
-    {
-        inorderRecursive(ROOT);
-        cout << "\n";
-    }
-
-    Node *search(int key)
-    {
-        Node *curr = ROOT;
-        while (curr != nullptr)
-        {
-            if (curr->key > key)
-            {
-                curr = curr->left;
-            }
-            else if (curr->key < key)
-            {
-                curr = curr->right;
-            }
-            else
-            {
-                return curr;
-            }
-        }
-        return nullptr;
-    }
-
-    void BFS()
-    {
-        LinkedQueue<Node *> q;
-        q.push(ROOT);
-        while (!q.isEmpty())
-        {
-            Node *poppedNode = q.front();
-            cout << poppedNode->key << " ";
-            q.pop();
-            if (poppedNode->left != nullptr)
-            {
-                q.push(poppedNode->left);
-            }
-            if (poppedNode->right != nullptr)
-            {
-                q.push(poppedNode->right);
-            }
-        }
-        cout << "\n";
-    }
-
-    void deleteVal(int val)
-    {
-        ROOT = deleteNode(ROOT, val);
-    }
-
-    Node *deleteNode(Node *node, int &x)
-    {
-        if (node == nullptr)
-        {
+    Node *deleteNode(Node *node,int x){
+        if(node == nullptr){
             return nullptr;
         }
-        if (node->key == x)
-        {
-            if (node->right != nullptr && node->left != nullptr)
-            {
-                Node *n = node->right;
-                while (n->left != nullptr)
-                {
-                    n = n->left;
+
+        if(node -> key == x){
+            if(node -> right != nullptr && node -> left != nullptr){
+                Node *smallestRST = node -> right;
+                while(smallestRST -> left != nullptr){
+                    smallestRST = smallestRST -> left;
                 }
-                node->key = n->key;
-                node->right = deleteNode(node->right, n->key);
+                node -> key = smallestRST -> key;
+                node -> right = deleteNode(node -> right,smallestRST -> key);
             }
-            if ( node -> key == x && node->left == nullptr && node->right != nullptr)
-            {
-                Node *rightChild = node->right;
+
+            if(node -> key == x && node -> left == nullptr && node -> right != nullptr){
+                Node *rightChild = node -> right;
                 delete node;
                 return rightChild;
             }
-            else if (node -> key == x && node->left != nullptr && node->right == nullptr)
-            {
-                Node *leftChild = node->left;
+            else if(node -> key == x && node -> left != nullptr && node -> right == nullptr){
+                Node *leftChild = node -> left;
                 delete node;
                 return leftChild;
             }
-            else if( node -> key == x )
-            {
+            else if(node -> key == x){
                 delete node;
                 return nullptr;
             }
         }
-        else
-        {
-            if (node->key < x)
-            {
-                node->right = deleteNode(node->right, x);
+        else{
+            if(x < node -> key){
+                node -> left = deleteNode(node -> left,x);
             }
-            else
-            {
-                node->left = deleteNode(node->left, x);
+            else{
+                node -> right = deleteNode(node -> right,x);
             }
-        }
-        int bf = getBalanceFactor(node);
-        if (bf != -2 && bf != 2)
-        {
+        } 
+
+        int bf = balanceFactor(node);
+        if(bf != 2 && bf != -2){
             return node;
-        }
-        else
-        {
-            node = balance(node);
+        } 
+        else{
+            node = balanceNode(node);
             return node;
         }
     }
+
+    Node* search( int value ) {
+        Node* current = this -> root ; 
+
+        while( current != nullptr ) {
+            if( current -> key > value ) {
+                current = current -> left ; 
+            }
+            else if( current -> key < value ) {
+                current = current -> right ; 
+            }
+            else {
+                return current ; 
+            }
+        }
+
+        return nullptr ; 
+    }
+
+public:
+    void insert(int val){
+        this -> root = insertNode(this -> root,val);
+    }
+
+    void bfs(){
+        queue <Node *> q;
+        q.push(this -> root);
+
+        while(!q.empty()){
+            Node *current = q.front();
+            cout<<current -> key<<" ";
+            q.pop();
+
+            if(current -> left != nullptr){
+                q.push(current -> left);
+            }
+            if(current -> right != nullptr){
+                q.push(current -> right);
+            }
+        }
+        cout<<endl;
+    }
+
+    void deleteKey(int val){
+        this -> root = deleteNode(this -> root , val);
+    }
+
+    void searchKey(int val){
+        Node *ans = search(val);
+        if(ans == nullptr){
+            cout<<"Key not present in tree."<<endl;
+        }
+        else{
+            cout<<"Key present in tree."<<endl;
+        }
+    }        
 };
 
-int main()
-{
-    AVLTree tree;
-    while (true)
-    {
-        int option;
-        cout << "Enter option: "
-             << "\n";
-        cout << "1. Insert key, value"
-             << "\n";
-        cout << "2. Inorder traversal"
-             << "\n";
-        cout << "3. Search"
-             << "\n";
-        cout << "4. Exit"
-             << "\n";
-        cout << "5. BFS"
-             << "\n";
-        cin >> option;
-        if (option == 1)
-        {
-            int key;
-            cout << "Enter key: "
-                 << "\n";
-            cin >> key;
-            string value;
-            cout << "Enter value: "
-                 << "\n";
-            cin >> value;
-            tree.insert(key, value);
-        }
-        else if (option == 2)
-        {
-            cout << "Inorder traversal -> ";
-            tree.inorder();
-        }
-        else if (option == 3)
-        {
-            int key;
-            cout << "Enter key to search: "
-                 << "\n";
-            cin >> key;
-            Node *result = tree.search(key);
-            if (result == nullptr)
-            {
-                cout << "Key not found"
-                     << "\n";
-            }
-            else
-            {
-                cout << "Key found, value is " << result->value << "\n";
-            }
-        }
-        else if (option == 4)
-        {
-            break;
-        }
-        else if (option == 5)
-        {
-            cout << "BFS traversal is ";
-            tree.BFS();
-        }
-    }
+int main(){
+    AVL t;
+    t.insert(23);
+    t.insert(12);
+    t.insert(46);
+    t.insert(57);
+    t.insert(90);
+    t.bfs();
+
+    t.searchKey(57);
+    t.searchKey(11);
+
+    t.deleteKey(23);
+    t.bfs();
 
     return 0;
 }

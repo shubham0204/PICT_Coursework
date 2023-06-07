@@ -200,8 +200,6 @@ int main() {
 
 	ThreadedBST tree;
 	tree.create( 50 ) ;
-	tree.insert( 10 ) ;
-	tree.insert( 60 ) ;
 	tree.inorder() ;
 	tree.preorder() ;
 
