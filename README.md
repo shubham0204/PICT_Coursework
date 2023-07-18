@@ -5,11 +5,19 @@
 
 ## Subjects
 
+
+### Semester 5
+1. [Laboratory Practice 1 (LP1)](https://github.com/shubham0204/PICT_Coursework/tree/lp-1)
+2. [Database Management Systems (DBMS)]
+3. [Computer Networks and Security (CNS)]
+
+### Semester 4
+1. [DSAL](https://github.com/shubham0204/PICT_Coursework/tree/dsal)
+2. [Microprocessor](https://github.com/shubham0204/PICT_Coursework/tree/mpl)
+
 ### Semester 3
 1. [DSL](https://github.com/shubham0204/PICT_Coursework/tree/dsl)
 2. [OOP](https://github.com/shubham0204/PICT_Coursework/tree/oop)
 3. [CG](https://github.com/shubham0204/PICT_Coursework/tree/cg)
 
-### Semester 4
-1. [DSAL](https://github.com/shubham0204/PICT_Coursework/tree/dsal)
-2. [Microprocessor](https://github.com/shubham0204/PICT_Coursework/tree/mpl)
+
