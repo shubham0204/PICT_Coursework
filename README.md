@@ -8,8 +8,8 @@
 
 ### Semester 5
 1. [Laboratory Practice 1 (LP1)](https://github.com/shubham0204/PICT_Coursework/tree/lp-1)
-2. [Database Management Systems (DBMS)]
-3. [Computer Networks and Security (CNS)]
+2. [Database Management Systems Laboratory(DBMSL)](https://github.com/shubham0204/PICT_Coursework/tree/dbmsl)
+3. [Computer Networks and Security Laboratory(CNS)](https://github.com/shubham0204/PICT_Coursework/tree/cnsl)
 
 ### Semester 4
 1. [DSAL](https://github.com/shubham0204/PICT_Coursework/tree/dsal)
