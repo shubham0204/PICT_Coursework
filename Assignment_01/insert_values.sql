@@ -9,3 +9,11 @@ values
 ( 'dreamers01' , 'some_abstract' , 'DSA' , 'software' ),
 ( 'achievers' , 'some_abstract' , 'BLOCKCHAIN' , 'hardware' ),
 ( 'players01' , 'some_abstract' , 'CN' , 'software' );
+
+/*
+Insert participants
+*/
+
+insert into participants( name, team_id, contact_number )
+values
+(),
