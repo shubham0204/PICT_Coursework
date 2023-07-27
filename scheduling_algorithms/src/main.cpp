@@ -1,4 +1,6 @@
 #include "first_come_first_serve.cpp"
+#include "shortest_job_first.cpp"
+#include "round_robin.cpp"
 #include "priority.cpp"
 #include "metrics.cpp"
 
@@ -16,15 +18,14 @@ int main() {
     }
 
     FirstComeFirstServe firstComeFirstServe( processes ); 
-    std::vector<Process> output = firstComeFirstServe.schedule() ; 
-    for( Process p : output ) {
-        std::cout << p << "\n" ; 
-    }
-    std::cout << "Avg TAT: " << Metrics::getAverageTAT( output ) << "\n" ; 
-    std::cout << "Avg WT: " << Metrics::getAverageWT( output ) << "\n" ; 
+    firstComeFirstServe.schedule() ; 
 
+    ShortestJobFirst shortestJobFirst( processes ) ; 
+    shortestJobFirst.schedule() ;
 
-    // Priority First
+    RoundRobin roundRobin( processes ) ;
+    roundRobin.schedule( 3L ) ; 
+
     int priorities[5] = { 1 , 4 , 5 , 2 , 3 } ; 
     std::vector<Process> processes2;
     for( int i = 0 ; i < 5 ; i++ ) {
@@ -37,13 +38,7 @@ int main() {
     }
 
     Priority priority( processes2 ); 
-    std::vector<Process> output2 = priority.schedule() ; 
-    for( Process p : output2 ) {
-        std::cout << p << "\n" ; 
-    }
-    std::cout << "Avg TAT: " << Metrics::getAverageTAT( output2 ) << "\n" ; 
-    std::cout << "Avg WT: " << Metrics::getAverageWT( output2 ) << "\n" ; 
-
+    priority.schedule() ; 
 
     return 0;
 }
