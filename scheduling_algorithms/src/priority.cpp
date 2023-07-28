@@ -13,37 +13,31 @@ class Priority {
     }
 
     void schedule() {
-        std::vector<Process> readyQueue;
-        std::vector<Process> output;
-        long time = 0 ; 
-        bool isExecuting = false ; 
-        Process currentProcess = processes[0]; 
-        int n = 0; 
+        std::vector<Process> readyQueue;  // We use vector as a queue here
+        std::vector<Process> output;    // Stores completed processes
+
+        long time = 0 ;
+        bool isExecuting = false ;      // A flag to check if a process is executing currently
+        Process currentProcess = processes[0];  // Stores the currently executing process
+        int n = 0;      // Indicates number of completed processes. Equals the size of `output`
+
+        // Loop till n < processes.size()
+        // and increment time at each iteration
         while( n < processes.size() ) {
 
-            // Add processes to ready queue if any arrives
+            // Add processes to readyQueue if any arrives
+            // To check if a process has arrived, match
+            // `time` with each process's arrivalTime
             for( Process p : processes ) {
                 if( p.arrivalTime == time ) {
                     readyQueue.push_back( p ) ; 
                 }
             }
-            
 
-            if( !isExecuting ) {
-                int maxPriority = -1;
-                int processIndex = 0 ;
-                for( int i = 0 ; i < readyQueue.size() ; i++ ) {
-                    if( readyQueue[i].priority > maxPriority ) {
-                        maxPriority = readyQueue[i].priority;
-                        currentProcess = readyQueue[i];
-                        processIndex = i;
-                    }
-                }
-                currentProcess.responseTime = time ; 
-                readyQueue.erase( readyQueue.begin() + processIndex );
-                isExecuting = true ; 
-            }
-
+            // If the CPU is in the executing state (i.e. isExecuting=true)
+            // and time = currentProcess's completion time, then store currentProcess
+            // in `output` after calculating the required parameters
+            // For FCFS and Priority scheduling, CT = RT + BT
             if( isExecuting && time == currentProcess.responseTime + currentProcess.burstTime ) {
                 isExecuting = false ; 
                 currentProcess.completionTime = time ; 
@@ -52,9 +46,30 @@ class Priority {
                 output.push_back( currentProcess ) ; 
                 n++ ; 
             }
+            
+            // If no process is executing currently
+            // schedule a process from the readyQueue by
+            // fetching the process with the highest priority (numerically least priority)
+            if( !readyQueue.empty() && !isExecuting ) {
+                int maxPriority = 1000;
+                int processIndex = 0 ;
+                for( int i = 0 ; i < readyQueue.size() ; i++ ) {
+                    if( readyQueue[i].priority < maxPriority ) {
+                        maxPriority = readyQueue[i].priority;
+                        currentProcess = readyQueue[i];
+                        processIndex = i;
+                    }
+                }
+                currentProcess.responseTime = time ; 
+                // Delete the process from the readyQueue
+                readyQueue.erase( readyQueue.begin() + processIndex );
+                isExecuting = true ; 
+            }
 
             time++ ; 
         }
+
+        // Compute average turnAroundTime and waitTime
         float avgTAT = 0.0f ; 
         float avgWT = 0.0f;
         for( Process p : output ) {

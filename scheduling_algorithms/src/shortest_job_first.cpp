@@ -1,6 +1,7 @@
 #include "process.hpp"
 #include <vector>
 #include <queue>
+#include <algorithm>
 #include <unordered_map>
 
 class ShortestJobFirst {
@@ -9,9 +10,11 @@ class ShortestJobFirst {
 
     public:
 
+
     ShortestJobFirst( std::vector<Process> processes ) {
         this -> processes = processes;
     }
+
 
     void schedule() {
 
@@ -38,44 +41,50 @@ class ShortestJobFirst {
                 }
             }
 
-            // Find minimum burst time process from ready queue
-            long minBurstTime = 100000L ;
-            int processIndex = -1 ;
-            for( int i = 0 ; i < readyQueue.size() ; i++ ) {
-                if( readyQueue[i].burstTime < minBurstTime ) {
-                    minBurstTime = readyQueue[i].burstTime;
-                    processIndex = i;
-                }
-            }
-
-            if( minBurstTime < currentProcessRemainingBT ) {
-                if( isExecuting ) {
-                    currentProcess.burstTime = currentProcessRemainingBT ; 
-                    readyQueue.push_back( currentProcess ) ; 
-                }
-                currentProcess = readyQueue[ processIndex ] ; 
-                if( currentProcess.responseTime == 0L ) currentProcess.responseTime = time ; 
-                readyQueue.erase( readyQueue.begin() + processIndex );
-                isExecuting = true ; 
-                currentProcessRemainingBT = currentProcess.burstTime;
-            }
-
-            if( !isExecuting ) {
-                currentProcess = readyQueue[ processIndex ] ; 
-                if( currentProcess.responseTime == 0L ) currentProcess.responseTime = time ; 
-                readyQueue.erase( readyQueue.begin() + processIndex );
-                isExecuting = true ; 
-                currentProcessRemainingBT = currentProcess.burstTime;
-            }
-
             if( currentProcessRemainingBT == 0L ) {
-                isExecuting = false ; 
                 currentProcess.burstTime = burstTimes[currentProcess.name];
                 currentProcess.completionTime = time ; 
                 currentProcess.turnAroundTime = currentProcess.completionTime - currentProcess.arrivalTime;
                 currentProcess.waitTime = currentProcess.turnAroundTime - currentProcess.burstTime;
                 output.push_back( currentProcess ) ; 
-                n++ ; 
+                n++ ;
+                isExecuting = false ; 
+
+                if( !readyQueue.empty() ) {
+
+                    std::sort( readyQueue.begin() , readyQueue.end() , []( const Process& p1 , const Process& p2 ){
+                        return p1.burstTime < p2.burstTime ;
+                    });
+                    if( readyQueue[0].responseTime == 0L ) readyQueue[0].responseTime = time;
+                    currentProcessRemainingBT = readyQueue[0].burstTime ; 
+                    currentProcess = readyQueue[0];
+                    readyQueue.erase( readyQueue.begin() ) ; 
+                    isExecuting = true;
+                }
+            }
+            else {
+                if( !readyQueue.empty() ) {
+                    std::sort( readyQueue.begin() , readyQueue.end() , []( const Process& p1 , const Process& p2 ){
+                        return p1.burstTime < p2.burstTime ;
+                    });
+                    if( isExecuting ) {
+                        if( readyQueue[0].burstTime < currentProcessRemainingBT ) {
+                            currentProcess.burstTime = currentProcessRemainingBT ; 
+                            readyQueue.push_back( currentProcess ) ; 
+                            currentProcess = readyQueue[ 0 ] ; 
+                            readyQueue.erase( readyQueue.begin() ) ; 
+                            currentProcessRemainingBT = currentProcess.burstTime ; 
+                            isExecuting = true;
+                        } 
+                    }
+                    else {
+                        currentProcess = readyQueue[ 0 ] ; 
+                        readyQueue.erase( readyQueue.begin() ) ; 
+                        currentProcessRemainingBT = currentProcess.burstTime ; 
+                        isExecuting = true;
+                    }
+                
+                }
             }
 
             if( isExecuting ) {
