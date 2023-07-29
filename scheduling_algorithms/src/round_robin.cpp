@@ -58,6 +58,7 @@ class RoundRobin {
 
                 // Insert `currentProcess` in `output`
                 // and set isExecuting=false as the CPU becomes idle
+                currentProcess.responseTime -= currentProcess.arrivalTime;
                 currentProcess.completionTime = time ; 
                 currentProcess.burstTime = burstTimes[ currentProcess.name ] ; 
                 currentProcess.turnAroundTime = currentProcess.completionTime - currentProcess.arrivalTime;

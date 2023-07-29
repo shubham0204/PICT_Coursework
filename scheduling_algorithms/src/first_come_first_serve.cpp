@@ -41,6 +41,7 @@ class FirstComeFirstServe {
             // For FCFS, CT = RT + BT
             if( isExecuting && time == currentProcess.responseTime + currentProcess.burstTime ) {
                 isExecuting = false ; 
+                currentProcess.responseTime -= currentProcess.arrivalTime;
                 currentProcess.completionTime = time ; 
                 currentProcess.turnAroundTime = currentProcess.completionTime - currentProcess.arrivalTime;
                 currentProcess.waitTime = currentProcess.turnAroundTime - currentProcess.burstTime;

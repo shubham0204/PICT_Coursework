@@ -57,6 +57,7 @@ class ShortestJobFirst {
 
                 // Insert `currentProcess` in `output`
                 // and set isExecuting=false as the CPU becomes idle
+                currentProcess.responseTime -= currentProcess.arrivalTime;
                 currentProcess.burstTime = burstTimes[currentProcess.name];
                 currentProcess.completionTime = time ; 
                 currentProcess.turnAroundTime = currentProcess.completionTime - currentProcess.arrivalTime;
