@@ -14,6 +14,8 @@ class RoundRobin {
     }
 
     void schedule( long quantum ) {
+        // `quantum` is the time-interval when processes should be preempted
+        // if their execution is not complete.
 
         // For preemptive scheduling algorithms, the burstTime of `processes`
         // will be modified in further steps,
@@ -31,8 +33,10 @@ class RoundRobin {
         bool isExecuting = false ;      // A flag to check if a process is executing currently
         Process currentProcess = processes[0];  // Stores the currently executing process
         int n = 0;      // Indicates number of completed processes. Equals the size of `output`
-        int step = 0 ;
-        long currentProcessRemainingBT = 1000L;
+        int step = 0 ;    // Indicates the time when the currentProcess should be preempted
+                          // and a new process should be scheduled
+        long currentProcessRemainingBT = 1000L;     // The burstTime (execution time) remaining
+        // for currentProcess. It is decremented by 1 at each time-step.
 
         // Loop till n < processes.size()
         // and increment time at each iteration
@@ -76,11 +80,18 @@ class RoundRobin {
                 }
             }
 
+            // If a process is currently executing, and `time`
+            // equals `step`, then we need to preempt the current process
             if( isExecuting ) {
                 if( time == step ) {
+                    // Update currentProcess's burstTime and push it 
+                    // to the readyQueue
                     currentProcess.burstTime = currentProcessRemainingBT ; 
                     readyQueue.push_back( currentProcess ) ; 
 
+                    // If readyQueue is not empty, schedule a new process
+                    // from the readyQueue. Increment `step` with the given
+                    // time quantum.
                     if( !readyQueue.empty() ) {
                         currentProcess = readyQueue[0] ; 
                         if( currentProcess.responseTime == 0L ) currentProcess.responseTime = time;
@@ -92,6 +103,9 @@ class RoundRobin {
                 }
             }
             else {
+                // If no process is executing currently,
+                // and the readyQueue is not empty,
+                // schedule a process from the readyQueue
                 if( !readyQueue.empty() ) {
                         currentProcess = readyQueue[0] ; 
                         currentProcessRemainingBT = currentProcess.burstTime ; 
@@ -101,11 +115,12 @@ class RoundRobin {
                     }
             }
             
-           
-
+            // Decrement currentProcessRemainingBT only if a process
+            // is executing currently
             if( isExecuting ) {
                 currentProcessRemainingBT-- ; 
             }
+
             time++ ; 
         }
 

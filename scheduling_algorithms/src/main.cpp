@@ -4,8 +4,10 @@
 #include "priority.cpp"
 
 void algorithm_1() {
-    long burstTimes[5] = { 6 , 2 , 8 , 3 , 4 } ; 
-    long arrivalTimes[5] = { 2 , 5 , 1 , 0 , 4 } ; 
+    // Problem source: 
+    // https://www.geeksforgeeks.org/first-come-first-serve-cpu-scheduling-non-preemptive/
+    long burstTimes[5] = { 4 , 3 , 1 , 2 , 5 } ; 
+    long arrivalTimes[5] = { 0 , 1 , 2 , 3 , 4 } ; 
     std::vector<Process> processes;
     for( int i = 0 ; i < 5 ; i++ ) {
         Process p; 
@@ -21,6 +23,8 @@ void algorithm_1() {
 
 
 void algorithm_2() {
+    // Problem source:
+    // https://www.geeksforgeeks.org/shortest-remaining-time-first-preemptive-sjf-scheduling-algorithm/
     long burstTimes[5] = { 6 , 2 , 8 , 3 , 4 } ; 
     long arrivalTimes[5] = { 2 , 5 , 1 , 0 , 4 } ; 
     std::vector<Process> processes;
@@ -37,6 +41,8 @@ void algorithm_2() {
 }
 
 void algorithm_3() {
+    // Problem source:
+    // https://www.geeksforgeeks.org/round-robin-scheduling-with-different-arrival-times/
     long burstTimes[4] = { 5 , 4 , 2 , 1 } ; 
     long arrivalTimes[4] = { 0 , 1 , 2 , 3 } ; 
     std::vector<Process> processes;
@@ -53,9 +59,11 @@ void algorithm_3() {
 }
 
 void algorithm_4() {
-    long burstTimes[5] = { 6 , 2 , 8 , 3 , 4 } ; 
-    long arrivalTimes[5] = { 2 , 5 , 1 , 0 , 4 } ; 
-    int priorities[5] = { 1 , 4 , 5 , 2 , 3 } ; 
+    // Problem source:
+    // https://www.geeksforgeeks.org/priority-cpu-scheduling-with-different-arrival-time-set-2/
+    long burstTimes[5] = { 3 , 6 , 1 , 2 , 4 } ; 
+    long arrivalTimes[5] = { 0 , 1 , 3 , 2 , 4 } ; 
+    int priorities[5] = { 3 , 4 , 9 , 7 , 8 } ; 
     std::vector<Process> processes;
     for( int i = 0 ; i < 5 ; i++ ) {
         Process p; 
