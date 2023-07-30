@@ -75,7 +75,7 @@ class RoundRobin {
                     // set its responseTime to `time`
                     if( currentProcess.responseTime == 0L ) currentProcess.responseTime = time;
                     currentProcessRemainingBT = currentProcess.burstTime ; 
-                    step = step + quantum ; 
+                    step = time + quantum ; 
                     isExecuting = true;
                     readyQueue.erase( readyQueue.begin() ) ;
                 }
@@ -97,7 +97,7 @@ class RoundRobin {
                         currentProcess = readyQueue[0] ; 
                         if( currentProcess.responseTime == 0L ) currentProcess.responseTime = time;
                         currentProcessRemainingBT = currentProcess.burstTime ; 
-                        step = step + quantum ; 
+                        step = time + quantum ; 
                         isExecuting = true;
                         readyQueue.erase( readyQueue.begin() ) ;
                     }
@@ -110,7 +110,7 @@ class RoundRobin {
                 if( !readyQueue.empty() ) {
                         currentProcess = readyQueue[0] ; 
                         currentProcessRemainingBT = currentProcess.burstTime ; 
-                        step = step + quantum ; 
+                        step = time + quantum ; 
                         isExecuting = true;
                         readyQueue.erase( readyQueue.begin() ) ;
                     }
