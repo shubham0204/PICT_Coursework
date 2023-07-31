@@ -8,7 +8,6 @@ Consider the following relational Schema.
  Training ( T_id,Tcompany_name,T_Fee,T_year) 
 Note: Use referential integrity constraints while creating tables with on delete cascade options. 
  Create view(simple), index, sequence and synonym based on above tables.  
-
 */
 
 create table placement_drives(
@@ -32,8 +31,8 @@ create table students(
 	name varchar(255),
 	cgpa float,
 	branch varchar(255)	,
-	foreign key( drive_id ) references placement_drives(id),
-	foreign key( training_id ) references training(id)
+	foreign key( drive_id ) references placement_drives(id) on delete cascade,
+	foreign key( training_id ) references training(id) on delete cascade
 ) ;
 
 /*
@@ -48,9 +47,3 @@ alter table students
 add constraint student_training
 foreign key(training_id) references training(id);
 */
-
-
-
-
-
-

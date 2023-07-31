@@ -1,7 +1,3 @@
-/*
-Insert values
-*/
-
 insert into placement_drives(company_name,package,location)
 values
 ( 'imocha' , 20 , 'pune' ) ,
@@ -30,11 +26,3 @@ values
 ( 2 , 5 , 'Suma Meghana' , 7.8 , 'ENTC' ),
 ( 5 , 5 , 'Chinmay Patil' , 7.9 , 'CE' ),
 ( 4 , 4 , 'Anushka Joshi' , 7.6 , 'CE' );
-
-
-
-
-
-
-
-
