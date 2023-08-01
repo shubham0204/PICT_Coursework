@@ -7,7 +7,7 @@ project(
 
 set(
     SOURCES 
-    src/main.cpp src/process.hpp src/first_come_first_serve.cpp src/priority.cpp src/shortest_job_first.cpp src/round_robin.cpp
+    src/main.cpp src/assembler.cpp
 )
 
-add_executable( schedulers ${SOURCES} )
+add_executable( assembler ${SOURCES} )
