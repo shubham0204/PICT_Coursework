@@ -8,31 +8,35 @@ class MnemonicClass( Enum ):
 
 class Mnemonic:
 
-    def __init__( self , mnemonic_class: MnemonicClass, opcode: int ):
+    def __init__( self , name: str, mnemonic_class: MnemonicClass, opcode: int ):
+        self.name = name
         self.mnemonic_class = mnemonic_class
         self.opcode = opcode
+
+    def __str__(self) -> str:
+        return self.name
 
 class MnemonicTable:
 
     mnemonics: Dict[ str , Mnemonic ] = {
-         "STOP"     : Mnemonic( MnemonicClass.IS , 0 ) , 
-         "ADD"      : Mnemonic( MnemonicClass.IS , 1 ) ,
-         "SUBTRACT" : Mnemonic( MnemonicClass.IS , 2 ) ,
-         "MULT"     : Mnemonic( MnemonicClass.IS , 3 ) ,
-         "MOVER"    : Mnemonic( MnemonicClass.IS , 4 ) ,
-         "MOVEM"    : Mnemonic( MnemonicClass.IS , 5 ) ,
-         "COMP"     : Mnemonic( MnemonicClass.IS , 6 ) ,
-         "BC"       : Mnemonic( MnemonicClass.IS , 7 ) ,
-         "DIV"      : Mnemonic( MnemonicClass.IS , 8 ) ,
-         "READ"     : Mnemonic( MnemonicClass.IS , 9 ) ,
-         "PRINT"    : Mnemonic( MnemonicClass.IS , 10 ) ,
-         "START"    : Mnemonic( MnemonicClass.AD , 1 ) ,
-         "END"      : Mnemonic( MnemonicClass.AD , 2 ) ,
-         "ORIGIN"   : Mnemonic( MnemonicClass.AD , 3 ) ,
-         "EQU"      : Mnemonic( MnemonicClass.AD , 4 ) ,
-         "LTORG"    : Mnemonic( MnemonicClass.AD , 5 ) ,
-         "DC"       : Mnemonic( MnemonicClass.DL , 1 ) ,
-         "DS"       : Mnemonic( MnemonicClass.DL , 2 ) ,
+         "STOP"     : Mnemonic( "STOP"     , MnemonicClass.IS , 0 ) , 
+         "ADD"      : Mnemonic( "ADD"      , MnemonicClass.IS , 1 ) ,
+         "SUBTRACT" : Mnemonic( "SUBTRACT" , MnemonicClass.IS , 2 ) ,
+         "MULT"     : Mnemonic( "MULT"     , MnemonicClass.IS , 3 ) ,
+         "MOVER"    : Mnemonic( "MOVER"    , MnemonicClass.IS , 4 ) ,
+         "MOVEM"    : Mnemonic( "MOVEM"    , MnemonicClass.IS , 5 ) ,
+         "COMP"     : Mnemonic( "COMP"     , MnemonicClass.IS , 6 ) ,
+         "BC"       : Mnemonic( "BC"       , MnemonicClass.IS , 7 ) ,
+         "DIV"      : Mnemonic( "DIV"      , MnemonicClass.IS , 8 ) ,
+         "READ"     : Mnemonic( "READ"     , MnemonicClass.IS , 9 ) ,
+         "PRINT"    : Mnemonic( "PRINT"    , MnemonicClass.IS , 10 ) ,
+         "START"    : Mnemonic( "START"    , MnemonicClass.AD , 1 ) ,
+         "END"      : Mnemonic( "END"      , MnemonicClass.AD , 2 ) ,
+         "ORIGIN"   : Mnemonic( "ORIGIN"   , MnemonicClass.AD , 3 ) ,
+         "EQU"      : Mnemonic( "EQU"      , MnemonicClass.AD , 4 ) ,
+         "LTORG"    : Mnemonic( "LTORG"    , MnemonicClass.AD , 5 ) ,
+         "DC"       : Mnemonic( "DC"       , MnemonicClass.DL , 1 ) ,
+         "DS"       : Mnemonic( "DS"       , MnemonicClass.DL , 2 ) ,
     } 
 
     @staticmethod
