@@ -1,4 +1,0 @@
-add areg N
-jmplabel mult breg
-movem areg breg
-jmplabel mult areg breg

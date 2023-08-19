@@ -2,18 +2,19 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
+using std::vector, std::string, std::cout;
 
 class SymbolTable {
 
-    std::vector<std::pair<std::string,int>> symbols ; 
-    std::vector<std::string> symbol_values;
+    vector<std::pair<string,int>> symbols ; 
+    vector<string> symbol_values;
 
     public:
 
     SymbolTable() {
     }
 
-    bool find( std::string& symbol_name ) {
+    bool find( string& symbol_name ) {
         for( int i = 0 ; i < symbols.size() ; i++ ) {
             if( symbols[i].first == symbol_name ) {
                 return true;
@@ -22,16 +23,16 @@ class SymbolTable {
         return false;
     }
 
-    int getSymbolIndex( std::string& symbol_name ) {
+    int getSymbolIndex( string& symbol_name ) {
         for( int i = 0 ; i < symbols.size() ; i++ ) {
             if( symbols[i].first == symbol_name ) {
                 return i+1;
             }
         }
-        return -1 ; 
+        return -1; 
     }
 
-    int getSymbolAddress( std::string& symbol_name ) {
+    int getSymbolAddress( string& symbol_name ) {
         for( int i = 0 ; i < symbols.size() ; i++ ) {
             if( symbols[i].first == symbol_name ) {
                 return symbols[i].second;
@@ -40,7 +41,7 @@ class SymbolTable {
         return -1 ; 
     }
 
-    void setSymbol( std::string& symbol_name , int address ) {
+    void setSymbol( string& symbol_name , int address ) {
         for( int i = 0 ; i < symbols.size() ; i++ ) {
             if( symbols[i].first == symbol_name ) {
                 symbols[i].second = address ; 
@@ -50,7 +51,7 @@ class SymbolTable {
         symbols.push_back( { symbol_name , address } ) ; 
     }
 
-    void setSymbolValue( std::string& symbol_name , std::string value ) {
+    void setSymbolValue( string& symbol_name , string value ) {
         for( int i = 0 ; i < symbols.size() ; i++ ) {
             if( symbols[i].first == symbol_name ) {
                 //symbols[i].second = address ; 
@@ -61,7 +62,7 @@ class SymbolTable {
 
     void print() {
         for( int i = 0 ; i < symbols.size() ; i++ ) {
-            std::cout << (i+1) << " => " << symbols[i].first << " => " << symbols[i].second << "\n" ; 
+            cout << (i+1) << " => " << symbols[i].first << " => " << symbols[i].second << "\n" ; 
         }
     }
 

@@ -1,5 +1,6 @@
 #include <string>
 #include <unordered_map>
+using std::string, std::unordered_map;
 
 enum MnemonicClass {
     IS,
@@ -23,7 +24,7 @@ class Mnemonic {
         this -> opCode = opCode;
     }
 
-    std::string getClass() {
+    string getClass() {
         if( mclass == MnemonicClass::IS ) {
             return "IS" ; 
         }
@@ -42,10 +43,10 @@ class Mnemonic {
 
 class MnemonicTable {
 
-    std::unordered_map<std::string,Mnemonic> mnemonics = {
+    unordered_map<string,Mnemonic> mnemonics = {
          { "STOP" , Mnemonic( MnemonicClass::IS , 0 ) } , 
          { "ADD" , Mnemonic( MnemonicClass::IS , 1 ) } ,
-         { "SUBTRACT" , Mnemonic( MnemonicClass::IS , 2 ) } ,
+         { "SUB" , Mnemonic( MnemonicClass::IS , 2 ) } ,
          { "MULT" , Mnemonic( MnemonicClass::IS , 3 ) } ,
          { "MOVER" , Mnemonic( MnemonicClass::IS , 4 ) } ,
          { "MOVEM" , Mnemonic( MnemonicClass::IS , 5 ) } ,
@@ -67,11 +68,11 @@ class MnemonicTable {
 
     public:
 
-    Mnemonic getMnemonic( std::string name ) {
+    Mnemonic getMnemonic( string name ) {
         return mnemonics[ name ] ; 
     }
 
-    bool isMnemonic( std::string token ) {
+    bool isMnemonic( string token ) {
         return mnemonics.find( token ) != mnemonics.end() ; 
     }
 

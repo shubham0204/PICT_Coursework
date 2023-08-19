@@ -1,8 +1,9 @@
-#include <string.h>
+#include <string>
 #include <vector>
 #include <sstream>
 #include <iostream>
 #include "mnemonic_table.cpp"
+using std::vector, std::stringstream;
 
 class Tokenizer {
 
@@ -10,15 +11,15 @@ class Tokenizer {
 
     public:
 
-    std::vector<std::string> getTokens( std::string instruction ) {
-        std::stringstream stream( instruction ) ; 
-        std::string token;
-        std::vector<std::string> tokens;
+    vector<string> getTokens( string instruction ) {
+        stringstream stream( instruction ) ; 
+        string token;
+        vector<string> tokens;
         while( stream >> token ) {
             tokens.push_back( token ) ; 
         }
 
-        std::string label, mnemonic, operand1, operand2;
+        string label, mnemonic, operand1, operand2;
         if( mnemonicTable.isMnemonic( tokens[0] ) ) {
             mnemonic = tokens[0] ; 
             if( tokens.size() == 2 ) {
