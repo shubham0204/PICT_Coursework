@@ -12,12 +12,7 @@ class Tokenizer {
     public:
 
     vector<string> getTokens( string instruction ) {
-        stringstream stream( instruction ) ; 
-        string token;
-        vector<string> tokens;
-        while( stream >> token ) {
-            tokens.push_back( token ) ; 
-        }
+        vector<string> tokens = Tokenizer::splitBySpace( instruction ) ; 
 
         string label, mnemonic, operand1, operand2;
         if( mnemonicTable.isMnemonic( tokens[0] ) ) {
@@ -43,6 +38,16 @@ class Tokenizer {
         }
 
         return { label , mnemonic , operand1 , operand2 };
+    }
+
+    static vector<string> splitBySpace( const string& line ) {
+        stringstream stream( line ) ; 
+        string token = "";
+        vector<string> tokens;
+        while( stream >> token ) {
+            tokens.push_back( token ) ; 
+        }
+        return tokens;
     }
 
 

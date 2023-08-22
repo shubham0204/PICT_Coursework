@@ -7,7 +7,7 @@ project(
 
 set(
     SOURCES 
-    src/main.cpp src/assembler.cpp
+    src/main.cpp
 )
 
 add_executable( assembler ${SOURCES} )

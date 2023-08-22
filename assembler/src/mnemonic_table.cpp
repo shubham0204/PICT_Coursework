@@ -16,7 +16,6 @@ class Mnemonic {
     int opCode;
 
     Mnemonic(){
-
     }
 
     Mnemonic( MnemonicClass mclass , int opCode ) {

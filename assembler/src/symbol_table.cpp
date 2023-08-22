@@ -2,11 +2,11 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
-using std::vector, std::string, std::cout;
+using std::vector, std::string, std::cout, std::pair;
 
 class SymbolTable {
 
-    vector<std::pair<string,int>> symbols ; 
+    vector<pair<string,int>> symbols ; 
     vector<string> symbol_values;
 
     public:
@@ -39,6 +39,14 @@ class SymbolTable {
             }
         }
         return -1 ; 
+    }
+
+    int getSymbolAddressFromIndex( int index ) {
+        for( int i = 0 ; i < symbols.size() ; i++ ) {
+            if( i == (index-1) ) {
+                return symbols[i].second ; 
+            }
+        }
     }
 
     void setSymbol( string& symbol_name , int address ) {

@@ -47,6 +47,14 @@ class LiteralTable {
         poolIndices.push_back( litTabPtr ) ; 
     }
 
+    int getLiteralAddressFromIndex( int index ) {
+        for( int i = 0 ; i < literals.size() ; i++ ) {
+            if( i == (index-1) ) {
+                return literals[i].second ; 
+            }
+        }
+    }
+
     void setLiteral( string& literalName , int address ) {
         for( int i = searchIndex + 1 ; i < literals.size() ; i++ ) {
             if( literals[i].first == literalName ) {
