@@ -1,7 +1,8 @@
 #include <vector>
 #include <string>
+#include <fstream>
 #include <iostream>
-using std::vector, std::string, std::cout, std::pair;
+using std::vector, std::string, std::cout, std::pair, std::fstream, std::ios;
 
 class LiteralTable {
 
@@ -53,6 +54,7 @@ class LiteralTable {
                 return literals[i].second ; 
             }
         }
+        return -1;
     }
 
     void setLiteral( string& literalName , int address ) {
@@ -83,6 +85,29 @@ class LiteralTable {
         for( int i = 0 ; i < poolIndices.size() ; i++ ) {
             cout << "Pool #" << (i+1) << " => index in literal table => " << poolIndices[i] << "\n" ; 
         }
+    }
+
+    void saveTable( string filepath ) {
+        fstream outputStream( filepath , ios::out ) ;
+        outputStream << literals.size() << " " ; 
+        for( const pair<string,int>& literal : literals ) {
+            outputStream << literal.first << " " << literal.second << " " ; 
+        }
+        outputStream.close() ; 
+    }
+
+    void loadTable( string& filepath ) {
+        literals.clear() ; 
+        fstream inputStream( filepath , ios::in ) ; 
+        int size = 0 ; 
+        inputStream >> size ; 
+        for( int i = 0 ; i < size ; i++ ) {
+            string name ; 
+            int address ; 
+            inputStream >> name >> address ; 
+            literals.push_back( { name , address } ) ;
+        }
+        inputStream.close() ;
     }
 
 } ; 

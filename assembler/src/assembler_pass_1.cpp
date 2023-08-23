@@ -32,15 +32,29 @@ class AssemblerPass1 {
     MnemonicTable mnemonicTable;
     LiteralTable literalTable;
 
+    string symbolTableFilepath ; 
+    string literalTableFilepath ; 
+    string icFilepath;
+
     public:
 
-    AssemblerPass1( string sourceFilepath ) {
+    AssemblerPass1( 
+        string sourceFilepath , 
+        string icFilepath,
+        string symbolTableFilepath,
+        string literalTableFilepath
+        ) {
+
+        this -> icFilepath = icFilepath ; 
+        this -> symbolTableFilepath = symbolTableFilepath ; 
+        this -> literalTableFilepath = literalTableFilepath ;   
+
         string sourceContents = readTextFile( sourceFilepath ) ;
         vector<string> lines = readLines( sourceContents ) ; 
         for( string line : lines ) {
             instruction_tokens.push_back( tokenizer.getTokens( line ) );
         }
-        icOutputStream = fstream( "ic.txt",ios::out ) ; 
+        icOutputStream = fstream( icFilepath ,ios::out ) ; 
         mnemonicTable = MnemonicTable() ; 
         symbolTable = SymbolTable() ; 
         literalTable = LiteralTable() ; 
@@ -158,8 +172,10 @@ class AssemblerPass1 {
             }
             else if( mnemonic.mclass == MnemonicClass::DL ) {
                 symbolTable.setSymbol( instruction[0],locationCounter ) ;
+                string constantVal = instruction[2] ; 
+                // TODO: Remove quotes from constantVal 
                 icOutputStream << locationCounter << " (" << mnemonic.getClass() << "," 
-                    << mnemonic.opCode << ") (" << "S," << symbolTable.getSymbolIndex(instruction[0]) << ") (C," <<  instruction[2] << ")"  << LBR ;
+                    << mnemonic.opCode << ") (" << "S," << symbolTable.getSymbolIndex(instruction[0]) << ") (C," << constantVal << ")"  << LBR ;
                 if( instruction[1] == "DS" ) {
                     locationCounter += stoi( instruction[2] ) ;
                 }
@@ -201,7 +217,7 @@ class AssemblerPass1 {
     }
 
     void printIC() {
-        string sourceContents = readTextFile( "../ic.txt" ) ;
+        string sourceContents = readTextFile( icFilepath ) ;
         cout << sourceContents << LBR ; 
     }
 
@@ -228,12 +244,8 @@ class AssemblerPass1 {
 
 
     void saveTables( SymbolTable symbolTable,LiteralTable literalTable ) {
-        fstream outputStream( "symbol_table.dat",ios::out ) ;
-        outputStream.write( (char*) &symbolTable,sizeof( symbolTable ) ) ;
-        outputStream.close() ; 
-        outputStream.open( "literal_table.dat",ios::out ) ; 
-        outputStream.write( (char*) &literalTable,sizeof( literalTable ) ) ;
-        outputStream.close() ; 
+        symbolTable.saveTable( symbolTableFilepath ) ; 
+        literalTable.saveTable( literalTableFilepath ) ;
     }
 } ;
 

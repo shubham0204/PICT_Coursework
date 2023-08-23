@@ -12,27 +12,21 @@ class AssemblerPass2 {
 
 public:
 
-    AssemblerPass2() {
-        cout << "Read IC" << LBR ; 
-        pair<SymbolTable,LiteralTable> tables = loadTables() ;
+    AssemblerPass2(
+        string icFilepath,
+        string symbolTableFilepath,
+        string literalTableFilepath
+    ) {
+
+        pair<SymbolTable,LiteralTable> tables = loadTables( symbolTableFilepath , literalTableFilepath ) ;
         symbolTable = tables.first ; 
         literalTable = tables.second ;  
         
-        string icContent = AssemblerPass1::readTextFile( "ic.txt" ) ; 
+        string icContent = AssemblerPass1::readTextFile( icFilepath ) ; 
         icLines = AssemblerPass1::readLines( icContent ) ;
 
         for( const string& line : icLines ) {
             icTokens.push_back( Tokenizer::splitBySpace( line ) ) ;
-        }
-
-        for( const vector<string>& tokens : icTokens ) {
-            if( tokens.size() == 4 ) {
-                cout << tokens[1] << LBR ; 
-                for( const string& item : parseStringTuple( tokens[2] ) ) {
-                    cout << item << " " ;
-                }
-                cout << LBR ; 
-            }
         }
     }
 
@@ -50,6 +44,7 @@ public:
                     if( operand2Tuple[0] == "S" ) {
                         int index = std::stoi( operand2Tuple[1] ) ;
                         operand2 = symbolTable.getSymbolAddressFromIndex( index ) ;
+                        cout << operand2 << LBR;
                     }
                 }
                 else {
@@ -67,27 +62,46 @@ public:
                     operand3 = literalTable.getLiteralAddressFromIndex( index ) ;
                 }
                 else if( operand3Tuple[0] == "C" ) {
-                    operand3 = std::stoi( operand3Tuple[1] ) ;
+                    string value = operand3Tuple[1] ; 
+                    if( value.find( "\'" ) != string::npos ) {
+                        value.erase( value.begin() , value.begin() + 1 ) ; 
+                        value.erase( value.end() - 1 , value.end() ) ;
+                    }
+                    operand3 = std::stoi( value ) ;
                 }
 
                 cout << locationCounter << " " << operand1 << " " << operand2 << " " << operand3 << LBR ; 
             }
             else if ( tokensSize == 2 ) {
-                /*
-                string operand1 = parseStringTuple( lineTokens[1] )[1] ; 
+                
+                string operand1 = parseStringTuple( lineTokens[0] )[1] ; 
+
                 int operand2 = 0 ; 
-                vector<string> operand2Tuple = parseStringTuple( lineTokens[2] ) ;
+                vector<string> operand2Tuple = parseStringTuple( lineTokens[1] ) ;
                 if( operand2Tuple.size() == 2 ) {
                     if( operand2Tuple[0] == "S" ) {
                         int index = std::stoi( operand2Tuple[1] ) ;
                         operand2 = symbolTable.getSymbolAddressFromIndex( index ) ;
                     }
+                    else {
+                        operand2 = std::stoi( operand2Tuple[1] ) ;
+                    }
                 }
                 else {
-                    operand2 = std::stoi( operand2Tuple[0] ) ;
+                    string value = operand2Tuple[1] ; 
+                    if( value.find( "\'" ) != string::npos ) {
+                        value.erase( value.begin() , value.begin() + 1 ) ; 
+                        value.erase( value.end() - 1 , value.end() ) ;
+                        cout << value << LBR ; 
+                        operand2 = -1 ;
+                    }
+                    else {
+                        operand2 = std::stoi( value ) ;
+                    }
+                    
                 }
-                cout << operand1 << " " << operand2 << LBR ; 
-                */
+                cout << operand1 << " " << operand2 << LBR ;
+                
                 
             }
         }
@@ -111,15 +125,12 @@ public:
         return items;
     }
 
-    pair<SymbolTable,LiteralTable> loadTables() {
-        SymbolTable symbolTable ; 
-        LiteralTable literalTable ; 
-        fstream inputStream( "symbol_table.dat" , ios::in ) ;
-        inputStream.read( (char*) &symbolTable , sizeof( symbolTable ) ) ;
-        inputStream.close() ; 
-        inputStream.open( "literal_table.dat", ios::in ) ; 
-        inputStream.read( (char*) &literalTable , sizeof( literalTable ) ) ;
-        inputStream.close() ; 
+    pair<SymbolTable,LiteralTable> loadTables(
+        string symbolTableFilepath , 
+        string literalTableFilepath
+    ) {
+        symbolTable.loadTable( symbolTableFilepath ) ; 
+        literalTable.loadTable( literalTableFilepath ) ;
         return { symbolTable , literalTable }; 
     }
 
