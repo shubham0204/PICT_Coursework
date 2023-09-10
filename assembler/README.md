@@ -5,7 +5,7 @@
 ```commandline
 $> mkdir build
 $> cd build
-$ build> cmake ..
-$ build> make
-$ build> ./schedulers
+$build> cmake ..
+$build> make
+$build> ./assembler
 ```
