@@ -6,5 +6,5 @@ create table student_marks(
 create table result(
     name varchar(20),
     rollno int,
-    marks int
+    class varchar(20)
 ) ;
