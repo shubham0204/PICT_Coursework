@@ -5,9 +5,9 @@ values ('Shubham' , 1000) ,
 ( 'Swaraj' , 1200 ) , 
 ( 'Chinmay' , 1300 ) ; 
 
-insert into result(name, rollno) 
-values ( 'Shubham' , 54 ) , 
-( 'Advait' , 52 ) , 
-( 'Kaustubh' , 53 ) , 
-( 'Swaraj' , 28 ) , 
-( 'Chinmay' , 50 ) ; 
+insert into result(name, class) 
+values ( 'Shubham' , '' ) , 
+( 'Advait' , '' ) , 
+( 'Kaustubh' , '' ) , 
+( 'Swaraj' , '' ) , 
+( 'Chinmay' , '' ) ; 

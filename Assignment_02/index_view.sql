@@ -14,7 +14,7 @@ on placement_drives(package);
 create index index_text_students_name
 on students(name(10))
 
--- Creeate views
+-- Create views
 create view comp_students as
 select * from students
 where branch = 'CE';

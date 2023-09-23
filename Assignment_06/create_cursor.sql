@@ -5,7 +5,7 @@ begin
 declare empid_2 int;
 declare exit_loop boolean;
 
-declare cursor c1 for select eid from old_employees where eid > employee_id;
+declare c1 cursor for select eid from old_employees where eid > employee_id;
 declare continue handler for not found set exit_loop = true;
 
 open c1;
