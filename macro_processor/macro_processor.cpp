@@ -9,20 +9,22 @@ using namespace std;
 
 #define LBR '\n'
 
-class Pass1 {
+class MacroProcessor {
 
     vector<tuple<string,int,int,int,int>> mntab ; 
     vector<tuple<string,string>> kpdtab ;
     vector<string> pntab ; 
+    vector<vector<string>> mdtab ; 
+
     vector<string> aptab ; 
     vector<vector<string>> tokens ; 
-
+    
     public:
 
-    Pass1( string filepath ) {
-        vector<string> lines = Pass1::readLines( Pass1::readTextFile( filepath ) ) ;
+    MacroProcessor( string filepath ) {
+        vector<string> lines = MacroProcessor::readLines( MacroProcessor::readTextFile( filepath ) ) ;
         for( const string& line : lines ) {
-            tokens.push_back( Pass1::splitBySpace( line ) ) ; 
+            tokens.push_back( MacroProcessor::splitBySpace( line ) ) ; 
         }
     }
 
@@ -53,22 +55,39 @@ class Pass1 {
                 }
                 mntab.push_back( { macroName , numPP , numKPD , 0 , 0  } ) ; 
             }
-            else {
-                cout << lineTokens[0] << " " ; 
+            else if( lineTokens[0] != "MACRO" ) {
+                vector<string> mdtabEntry ;
+                mdtabEntry.push_back( lineTokens[0] ) ; 
                 for( int j = 1 ; j < lineTokens.size() ; j++ ) {
                     if( lineTokens[j][0] == '&' ) {
-                        int index = std::find( pntab.begin() , pntab.end() , lineTokens[j] ) - pntab.begin() ; 
+                        int index = std::find( pntab.begin() , pntab.end() , lineTokens[j] ) - pntab.begin() + 1 ; 
                         if( index >= 0 ) {
-                            cout << "( P , " << index+1 << " )" << " " ; 
+                            stringstream parameter ; 
+                            parameter << "( P , " << index << " ) " ; 
+                            mdtabEntry.push_back( parameter.str() ) ;
                         }
                     }
                 }
+                // cout << mdtabEntry[0] << "\n" ; 
+                mdtab.push_back( mdtabEntry ) ; 
                 cout << LBR ; 
             }
         }
+        printMDTAB() ; 
         printMNTAB() ; 
         printKPDTAB() ;
         printPNTAB() ;  
+    }
+
+    void parseCall( const string call , const string expandedCodeFilepath ) {
+        string parameters = call.substr( call.find( "(" ) , call.find( ")" ) ) ; 
+        stringstream stream( parameters ) ; 
+        vector<string> actualParameters ; 
+        while( stream.good() ) {
+            string param ; 
+            std::getline( stream , param , ',' ) ;
+            actualParameters.push_back( param ) ; 
+        }
     }
 
     void printMNTAB() {
@@ -82,7 +101,17 @@ class Pass1 {
         }
     }
 
-     void printPNTAB() {
+    void printMDTAB() {
+        for( const vector<string>& entry: mdtab ) {
+            cout << "Printed " ; 
+            for( const string& token : entry ) {
+                cout << token << " " ; 
+            }
+            cout << "\n" ; 
+        }
+    }
+
+    void printPNTAB() {
         for( const string entry : pntab ) {
             cout << entry << LBR ; 
         }

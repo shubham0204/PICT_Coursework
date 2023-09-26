@@ -1,0 +1,2 @@
+javac Main.java macro_processor/Pass1.java macro_processor/Pass2.java -d build
+java -classpath build Main
