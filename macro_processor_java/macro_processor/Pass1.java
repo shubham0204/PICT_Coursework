@@ -43,7 +43,7 @@ public class Pass1 implements Serializable {
     private ArrayList<MDTabEntry> mdtab = new ArrayList<>() ; 
     private String currentMacroName ; 
 
-    private HashMap<String,ArrayList<String>> pntabMap = new HashMap<>() ; 
+    private HashMap<String,List<String>> pntabMap = new HashMap<>() ; 
 
     public Pass1( String sourceFilepath ) {
         ArrayList<String> lines = readLines( sourceFilepath ) ; 
@@ -60,7 +60,8 @@ public class Pass1 implements Serializable {
                 currentMacroName = lineTokens[ 0 ] ; 
                 int numKPD = 0 ; 
                 int numPP = 0 ; 
-                for( int j = 0 ; j < lineTokens.length ; j++ ) {
+                pntab.clear();
+                for( int j = 1 ; j < lineTokens.length ; j++ ) {
                     String parameter = lineTokens[ j ] ; 
                     if( parameter.contains( "=" ) ) {
                         kpdtab.add( parameter.split( "=" ) ); 
@@ -69,16 +70,18 @@ public class Pass1 implements Serializable {
                     else {
                         numPP++ ; 
                     }
-                    pntab.add( parameter ) ; 
+                    System.out.println( "Parameter added : " + parameter ) ; 
+                    pntab.add( parameter.split("=")[0] ) ; 
                 }
                 mntab.add( new MNTabEntry( currentMacroName , numKPD , numPP , 0 , 0 ) ) ;
+                System.out.println( "Added to map : " + currentMacroName ) ; 
                 pntabMap.put( currentMacroName , pntab ) ;  
             }
             else if( !lineTokens[0].equals( "MACRO" ) &&
              !lineTokens[0].equals( "MEND" ) ) {
                 MDTabEntry entry = new MDTabEntry(); 
                 entry.mnemonic = lineTokens[0] ;   
-                ArrayList<String> currentPntab = pntabMap.get( currentMacroName ) ; 
+                List<String> currentPntab = pntabMap.get( currentMacroName ) ; 
                 if( lineTokens[1].startsWith( "&" ) ) {
                     int index = currentPntab.indexOf(lineTokens[1]) ; 
                     entry.operand1 = lineTokens[1] ;
@@ -96,10 +99,16 @@ public class Pass1 implements Serializable {
                 mdtab.add( entry ) ; 
             }
         }
+
         saveTable( mntab , "mntab.dat" ) ;
         saveTable( kpdtab , "kpdtab.dat" ) ;
         saveTable( pntab , "pntab.dat" ) ;
         saveTable( mdtab , "mdtab.dat" ) ;
+
+        printPNTAB();
+        printMNTAB();
+        printKPDTAB();
+        
     }
 
     private static void saveTable( Object table , String filepath ) {
@@ -141,6 +150,35 @@ public class Pass1 implements Serializable {
             e.printStackTrace();
         }
         return lines ; 
+    }
+
+    private void printMNTAB() {
+        for( MNTabEntry entry : mntab ) {
+            System.out.println( 
+                entry.macroName + " " + 
+                entry.numKPD + " " + 
+                entry.numPP + " " + 
+                entry.mdtabPtr + " " + 
+                entry.kpdtabPtr );
+        }
+    }
+
+    private void printKPDTAB() {
+        for( String[] entry : kpdtab ) {
+            System.out.println( entry[0] + " " + entry[1] );
+        }
+    }
+
+    private void printPNTAB() {
+        Iterator<String> it = pntabMap.keySet().iterator() ; 
+        while( it.hasNext() ) {
+            String macroName = it.next() ; 
+            System.out.println( "Macro Name: " + macroName ) ; 
+            List<String> params = pntabMap.get( macroName ) ; 
+            for( String param : params ) {
+                System.out.println( param ) ; 
+            }
+        }
     }
 
 }
