@@ -9,13 +9,12 @@ import java.sql.ResultSet;
 public class BlogsTable {
 
     private Connection databaseConnection ; 
-    private String databaseUrl = "jdbc:mysql://localhost:3306/assignment_08" ; 
+    private String databaseUrl = "jdbc:mariadb://localhost:3306/assignment_08" ; 
     private String databaseUser = "root" ; 
     private String databasePassword = "root" ; 
 
     public BlogsTable() {
         try {
-            Class.forName( "com.mysql.cj.jdbc.Driver" ) ; 
             databaseConnection = DriverManager.getConnection(
                 databaseUrl , 
                 databaseUser,
@@ -28,9 +27,9 @@ public class BlogsTable {
             }
             databaseConnection.close();
         }
-        catch( ClassNotFoundException e ) {
-            e.printStackTrace();
-        }
+        // catch( ClassNotFoundException e ) {
+           // e.printStackTrace();
+        // }
         catch( SQLException e ) {
             e.printStackTrace();
         }
