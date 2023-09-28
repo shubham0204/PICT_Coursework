@@ -1,4 +1,4 @@
-
+import math
 
 def decimal_to_binary( x: int ) -> list[int]:
     p = x
@@ -65,15 +65,19 @@ def iterate_over_subnet( starting_ip_octets: list[int] , n: int ) -> list[tuple[
 input_ip_str = input( "Enter an IPv4 address: " ) 
 octets = list(map( int , input_ip_str.split( "." )))
 ip_bin = []
+ip_class = ""
 for octet in octets:
     ip_bin += decimal_to_binary( octet ) 
 if octets[0] >= 0 and octets[0] <= 126:
+    ip_class = "A"
     print( "Class of given IP: Class A" )
     print( "Default subnet mask: 255.0.0.0" )
 elif octets[0] >= 128 and octets[0] <= 191:
+    ip_class = "B"
     print( "Class of given IP: Class B" )
     print( "Default subnet mask: 255.255.0.0" )
 elif octets[0] >= 192 and octets[0] <= 223:
+    ip_class = "C"
     print( "Class of given IP: Class C" )
     print( "Default subnet mask: 255.255.255.0" )
 elif octets[0] >= 224 and octets[0] <= 239:
@@ -84,7 +88,8 @@ elif octets[0] >= 240 and octets[0] <= 254:
 while True:
     print("""
         Options: 
-        1. Enter CIDR Number (ex. 27)
+        1. CIDR Number (ex. 27)
+        2. Number of subnets (ex. 8)
         """)
     option = int( input( "Enter option: " ) )
     if option == 1:
@@ -100,3 +105,20 @@ while True:
         ip_addresses = iterate_over_subnet( result_octets , num_hosts )
         print( "Network address: " , ip_addresses[0] )
         print( "Broadcast address: " , ip_addresses[-1] ) 
+
+    elif option == 2:
+
+        num_subnets = int( input( "Enter number of subnets: " ) )
+        num_hosts_per_class = {
+            "A": 256 * 256 * 256 , 
+            "B": 256 * 256 , 
+            "C": 256
+        }
+        num_hosts_per_subnet = num_hosts_per_class[ ip_class ] // num_subnets
+        num_host_bits = int( math.log2( num_hosts_per_subnet ) )
+        num_network_bits = 32 - num_host_bits
+        subnet_mask = generate_mask_from_cidr( num_network_bits )
+        print( "Maximum hosts possible in this IP class: " , num_hosts_per_class[ ip_class ] )
+        print( "Number of hosts per subnet (all): " , num_hosts_per_subnet ) 
+        print( "Number of hosts per subnet (usable): " , num_hosts_per_subnet - 2 ) 
+        print( "Subnet mask required: " , bin_ip_to_decimal_str( subnet_mask ) , "/" , num_network_bits )
