@@ -3,8 +3,6 @@ package macro_processor;
 import java.io.* ;
 import java.util.*;
 
-import javax.swing.Painter; 
-
 public class Pass2 {
 
     class MNTabEntry implements Serializable {
