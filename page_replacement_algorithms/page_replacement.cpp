@@ -23,6 +23,8 @@ class PageReplacement {
         deque<int> q; 
         int pageFaultCount = 0;
         for( int i = 0 ; i < pageNumbers.size() ; i++ ) {
+            for( int page : q ) { cout << page << " " ; }
+            cout << "\n" ; 
             if( find( q.begin() , q.end() , pageNumbers[i] ) == q.end() ) {
                 // Page fault occurred
                 pageFaultCount++ ; 
@@ -39,6 +41,8 @@ class PageReplacement {
         int pageFaultCount = 0;
 
         for( int i = 0 ; i < pageNumbers.size() ; i++ ) {
+            for( int page : v ) { cout << page << " " ; }
+            cout << "\n" ; 
 
             std::for_each( ages.begin() , ages.end() , []( int& element ) {
                 element++ ; 
@@ -72,7 +76,8 @@ class PageReplacement {
         vector<int> v; 
         int pageFaultCount = 0;
         for( int i = 0 ; i < pageNumbers.size() ; i++ ) {
-
+            for( int page : v ) { cout << page << " " ; }
+            cout << "\n" ; 
             if( find( v.begin() , v.end() , pageNumbers[i] ) == v.end() ) {
                 // Page fault occurred
                 pageFaultCount++ ; 
@@ -109,17 +114,20 @@ class PageReplacement {
 
 int main( int arg , char* argv[] ) {
 
-    vector<int> frameNumbers = { 7 , 0 , 1 , 2 , 0 , 3 , 0 , 4 , 2 , 3 , 0 , 3 , 2 , 1 , 2 , 0 , 1 , 7 , 4 , 4 , 3 , 3 , 0 , 5 } ; 
+    vector<int> frameNumbers = { 1 , 3 , 0 , 3 , 5 , 6 , 3 , 4 , 7 , 1 , 0 , 8 } ; 
     PageReplacement algo( frameNumbers , 3 ) ; 
 
+    cout << "First In First Out (FIFO): " << '\n' ; 
     float fifoRatio = algo.firstInFirstOut() ; 
-    cout << fifoRatio << '\n' ; 
+    cout << "Miss Ratio: " << fifoRatio << '\n' ; 
 
+    cout << "Least Recently Used (LRU): " << '\n' ; 
     float lruRatio = algo.leastRecentlyUsed() ; 
-    cout << lruRatio << '\n' ;  
+    cout << "Miss Ratio: " << lruRatio << '\n' ;  
 
+    cout << "Optimal: " << '\n' ; 
     float optimalRatio = algo.optimal() ; 
-    cout << optimalRatio << '\n' ; 
+    cout << "Miss Ratio: " << optimalRatio << '\n' ; 
 
     return 0;
 }
