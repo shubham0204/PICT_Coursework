@@ -20,27 +20,33 @@ random.choice( process_pool ).coordinate = True
 # an election is held
 num_iterations = 100
 for _ in range( num_iterations ):
+
     p1 = random.choice( process_pool )
     p2 = random.choice( process_pool )
     response = send_message( "hello_world" , p1 , p2 )
     print( "{} {} talking...".format( p1 , p2 ) )
+
     if response == Process.MESSAGE_NOT_OK and p2.coordinate:
         print( "Coordinator {} not responding. Holding election...".format( p2 ) )
 
-        # Hold election
-        # 1. Send ELECTION messages to all higher processes
-        # 2. If any one of them responds with OK, select that process as coordinator
-
-        index = process_pool.index( p2 )
-        higher_processes = process_pool[ index + 1 : ]
-        for process in higher_processes:
-            print( "Sent ELECTION message to {}".format( process ) ) 
-            response = send_message( Process.MESSAGE_ELECTION , p2 , process )
+        index = process_pool.index( p1 )
+        initiator = process_pool[ index ]
+        initiator.coordinate = False
+    
+        process_list = []
+        cntr = index + 1
+        curr_process = process_pool[ cntr ]
+        while curr_process.identifier != initiator.identifier:
+            print( "Sent ELECTION message to {}".format( curr_process ) )
+            response = send_message( Process.MESSAGE_ELECTION , initiator , curr_process )
             if response == Process.MESSAGE_OK:
-                print( "New coordinator chosen as {}".format( process ) ) 
-                process.coordinate = True
-                break
+                process_list.append( curr_process )
+                print( "Positive response from {}. Adding to message list...".format( curr_process ) )
             else:
-                print( "Negative response from {}".format( process ) )
-                
-        p2.coordinate = False
+                print( "Negative response from {}. Skipped.".format( curr_process ) )
+            cntr = ( cntr + 1 ) % process_pool_size
+            curr_process = process_pool[ cntr ]
+
+        max_identifier_process = max( process_list , key=lambda process: process.identifier )
+        max_identifier_process.coordinate = True
+        print( "Max identifier process is {}, the new coordinator".format( max_identifier_process ) )
