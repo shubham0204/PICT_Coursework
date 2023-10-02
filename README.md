@@ -1,14 +1,21 @@
-# PICT Coursework - Shubham Panchal
+# 🎓 PICT Coursework - Shubham Panchal
 > A collection of all assignments for computer engineering w.r.t. SPPU Pune
 
-**For suggestions or improvements, [open an issue](https://github.com/shubham0204/PICT_Coursework/issues/new) or [start a discussion](https://github.com/shubham0204/PICT_Coursework/discussions/new/choose)**
+```
+The objective of building this repository is to help my batchmates
+with college assignments. Refer these assignments only to understand the flow/structure of
+the solution, and not for the sake of completion or submissions, as it would not polish your programming skills.
+If you feel a particular piece of code can be improved, do [open an issue] or [start a discussion] here.
+You may also consider opening a pull request.
+Best of luck 👍
+```
 
-## Contributors
+## 🛠️ Contributors
 
 - [Shubham Panchal](https://github.com/shubham0204)
 - [Swaraj Gosavi](https://github.com/swarajgosavi)
 
-## Subjects
+## 📑 Subjects
 
 ### Semester 5
 1. [LP 01](https://github.com/shubham0204/PICT_Coursework/tree/lp-1)
