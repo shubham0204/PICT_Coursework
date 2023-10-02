@@ -1,14 +1,14 @@
 from process import Process
 import random
 
-Process.ACTIVE_PROB = 0.6
+Process.ACTIVE_PROB = float( input( "Enter active process probability: " ) )
 
 def send_message( message: str , sender: Process , receiver: Process ) -> str:
     return receiver.process_message( sender_identifier=sender.identifier , incoming_message=message )
 
 # Initialize a pool of processes and choose a 
 # coordinator randomly
-process_pool_size = 10
+process_pool_size = int( input( "Enter process pool size: " ) )
 process_pool: list[Process] = []
 for i in range( process_pool_size ):
     process_pool.append( Process( i ) )
@@ -20,8 +20,14 @@ random.choice( process_pool ).coordinate = True
 # an election is held
 num_iterations = 100
 for _ in range( num_iterations ):
-    p1 = random.choice( process_pool )
-    p2 = random.choice( process_pool )
+    p1_index = random.randint( 0 , process_pool_size - 1 )
+    p2_index = random.randint( 0 , process_pool_size - 1 )
+
+    if p1_index == p2_index:
+        continue
+
+    p1 = process_pool[ p1_index ]
+    p2 = process_pool[ p2_index ]
     response = send_message( "hello_world" , p1 , p2 )
     print( "{} {} talking...".format( p1 , p2 ) )
     if response == Process.MESSAGE_NOT_OK and p2.coordinate:
@@ -31,8 +37,7 @@ for _ in range( num_iterations ):
         # 1. Send ELECTION messages to all higher processes
         # 2. If any one of them responds with OK, select that process as coordinator
 
-        index = process_pool.index( p2 )
-        higher_processes = process_pool[ index + 1 : ]
+        higher_processes = process_pool[ p1_index + 1 : ]
         for process in higher_processes:
             print( "Sent ELECTION message to {}".format( process ) ) 
             response = send_message( Process.MESSAGE_ELECTION , p2 , process )
