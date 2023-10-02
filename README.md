@@ -3,8 +3,12 @@
 
 **For suggestions or improvements, [open an issue](https://github.com/shubham0204/PICT_Coursework/issues/new) or [start a discussion](https://github.com/shubham0204/PICT_Coursework/discussions/new/choose)**
 
-## Subjects
+## Contributors
 
+- [Shubham Panchal](https://github.com/shubham0204)
+- [Swaraj Gosavi](https://github.com/swarajgosavi)
+
+## Subjects
 
 ### Semester 5
 1. [LP 01](https://github.com/shubham0204/PICT_Coursework/tree/lp-1)
