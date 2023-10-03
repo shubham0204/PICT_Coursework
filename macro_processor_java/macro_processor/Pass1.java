@@ -53,6 +53,8 @@ public class Pass1 implements Serializable {
     }
 
     public void perform() {
+        int mdtabPtr = 0 ;
+        int kpdtabPtr = 0 ;
         for( int i = 1 ; i < tokens.size() ; i++ ) { 
             String[] lineTokens = tokens.get( i ) ; 
             System.out.println( Arrays.toString( lineTokens ) ) ;
@@ -73,8 +75,9 @@ public class Pass1 implements Serializable {
                     System.out.println( "Parameter added : " + parameter ) ; 
                     pntab.add( parameter.split("=")[0] ) ; 
                 }
-                mntab.add( new MNTabEntry( currentMacroName , numKPD , numPP , 0 , 0 ) ) ;
+                mntab.add( new MNTabEntry( currentMacroName , numKPD , numPP , mdtabPtr , kpdtabPtr ) ) ;
                 System.out.println( "Added to map : " + currentMacroName ) ; 
+                kpdtabPtr += numKPD ; 
                 pntabMap.put( currentMacroName , pntab ) ;  
             }
             else if( !lineTokens[0].equals( "MACRO" ) &&
@@ -98,11 +101,17 @@ public class Pass1 implements Serializable {
                 }
                 mdtab.add( entry ) ; 
             }
+            else if( lineTokens[0].equals( "MEND" ) ) {
+                MDTabEntry entry = new MDTabEntry(); 
+                entry.mnemonic = "MEND" ;
+                mdtab.add(entry) ;    
+            }
+            mdtabPtr++ ; 
         }
 
         saveTable( mntab , "mntab.dat" ) ;
         saveTable( kpdtab , "kpdtab.dat" ) ;
-        saveTable( pntab , "pntab.dat" ) ;
+        saveTable( pntabMap , "pntab.dat" ) ;
         saveTable( mdtab , "mdtab.dat" ) ;
 
         printPNTAB();

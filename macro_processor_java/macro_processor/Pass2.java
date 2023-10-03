@@ -2,66 +2,69 @@ package macro_processor;
 
 import java.io.* ;
 import java.util.*;
+import macro_processor.Pass1.MDTabEntry;
+import macro_processor.Pass1.MNTabEntry;
 
 public class Pass2 {
-
-    class MNTabEntry implements Serializable {
-
-        public String macroName ; 
-        public int numKPD = 0 ;
-        public int numPP = 0 ;
-        public int mdtabPtr = 0;
-        public int kpdtabPtr = 0;
-
-        public MNTabEntry() {
-        }
-        
-        public MNTabEntry( String macroName , int numKPD , int numPP , int mdtabPtr , int kpdtabPtr ) {
-            this.macroName = macroName ; 
-            this.numKPD = numKPD ; 
-            this.numPP = numPP ; 
-            this.mdtabPtr = mdtabPtr ; 
-            this.kpdtabPtr = kpdtabPtr ; 
-        }
-
-    }
-
-    class MDTabEntry implements Serializable {
-
-        public String mnemonic ; 
-        public String operand1 ; 
-        public String operand2 ; 
-        public int operand1Index = -1; 
-        public int operand2Index = -1; 
-    
-    }
 
     private HashMap<String,List<String>> pntabMap ; 
     private ArrayList<String[]> kpdtab ; 
     private ArrayList<MNTabEntry> mntab ; 
     private ArrayList<MDTabEntry> mdtab ; 
-    private ArrayList<String[]> aptab ; 
+    private ArrayList<String[]> aptab = new ArrayList<>(); 
 
     public Pass2( String mntabFilepath , String kpdtabFilepath , String pntabMapFilepath , String mdtabFilepath ) {
-        mntab = (ArrayList<MNTabEntry>) loadTable(mdtabFilepath) ; 
+        mntab = (ArrayList<MNTabEntry>) loadTable(mntabFilepath) ; 
         kpdtab = (ArrayList<String[]>) loadTable(kpdtabFilepath) ; 
         pntabMap = (HashMap<String,List<String>>) loadTable(pntabMapFilepath) ; 
         mdtab = (ArrayList<MDTabEntry>) loadTable(mdtabFilepath) ; 
     }
 
     public void processCall( String call ) {
-        String macroName = call.split( "(" )[0] ; 
+        String macroName = call.split( "[(]" )[0] ; 
         List<String> pntab = pntabMap.get( macroName ) ; 
-        String[] actualParams = call.split( "(" )[1].split( ")" )[0].split( "," ) ;
+        String[] actualParams = call.split( "[(]" )[1].split( "[)]" )[0].split( "[,]" ) ;
         for( int i = 0 ; i < actualParams.length ; i++ ) {
             if( actualParams[i].contains( "=" ) )  {
                 // Handle default parameter
-                
+                aptab.add( new String[]{ pntab.get(i) , actualParams[i].split("[=]")[1] } ) ;
             } 
             else {
                 // Positional parameter
-
+                aptab.add( new String[]{ pntab.get(i) , actualParams[i] } ) ;
             }
+        }
+
+        int mdtabPtr = 0 ;
+        for( MNTabEntry entry : mntab ) {
+            if( entry.macroName == macroName ) {
+                mdtabPtr = entry.mdtabPtr ; 
+                break ; 
+            }
+        }
+
+        MDTabEntry currentEntry = mdtab.get(mdtabPtr) ; 
+        while( !currentEntry.mnemonic.equals( "MEND" ) ) {
+
+            String op1 = "" ; 
+            if( currentEntry.operand1Index != -1 ) {
+                op1 = aptab.get( currentEntry.operand1Index )[1]; 
+            }
+            else {
+                op1 = currentEntry.operand1 ; 
+            }
+
+            String op2 = "" ; 
+            if( currentEntry.operand2Index != -1 ) {
+                op2 = aptab.get( currentEntry.operand2Index )[1]; 
+            }
+            else {
+                op2 = currentEntry.operand2 ; 
+            }
+
+            System.out.println( currentEntry.mnemonic + " " + op1 + " " + op2 ) ;  
+            mdtabPtr++ ; 
+            currentEntry = mdtab.get( mdtabPtr ) ; 
         }
     } 
     
