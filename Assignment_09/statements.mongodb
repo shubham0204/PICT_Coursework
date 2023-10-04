@@ -1,0 +1,10 @@
+use assignment_09;
+db.createCollection( "blogs" );
+db.blogs.insertOne( {
+    "author_id": "1"
+    "title": "hello" , 
+    "content": "rust" , 
+    "num_likes": 0 , 
+    "num_comments": 0 ,
+    "publish_date": new Date()
+} ) ;
