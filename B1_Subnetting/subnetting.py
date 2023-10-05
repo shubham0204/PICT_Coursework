@@ -122,3 +122,11 @@ while True:
         print( "Number of hosts per subnet (all): " , num_hosts_per_subnet ) 
         print( "Number of hosts per subnet (usable): " , num_hosts_per_subnet - 2 ) 
         print( "Subnet mask required: " , bin_ip_to_decimal_str( subnet_mask ) , "/" , num_network_bits )
+
+        subnet_mask = generate_mask_from_cidr( num_host_bits ) 
+        result = boolean_and( ip_bin , subnet_mask )
+        result_octets = bin_ip_to_octets( result )
+        ip_addresses = iterate_over_subnet( result_octets , num_hosts_per_subnet * num_subnets )
+        print( "Subnet ranges are: " )
+        for i in range( 0 , len(ip_addresses) , num_hosts_per_subnet ):
+            print( ip_addresses[i] , " - " , ip_addresses[i+num_hosts_per_subnet-1] ) 
