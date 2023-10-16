@@ -75,7 +75,7 @@ public class Pass2 {
             Object table = inputStream.readObject() ; 
             inputStream.close();
             fin.close();
-            return table ;
+            return table;
         }
         catch( ClassNotFoundException e ){
             e.printStackTrace();

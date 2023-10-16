@@ -117,7 +117,6 @@ public class Pass1 implements Serializable {
         printPNTAB();
         printMNTAB();
         printKPDTAB();
-        
     }
 
     private static void saveTable( Object table , String filepath ) {
