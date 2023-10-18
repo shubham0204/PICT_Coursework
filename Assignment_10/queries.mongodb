@@ -1,0 +1,43 @@
+// Compute average INSEM and ENDSEM marks
+db.students.aggregate( [
+    {
+        $group: {
+            _id: null,
+            avg_insem_marks: { $avg: "$insem_marks" } , 
+            avg_endsem_marks: { $avg: "$endsem_marks" }
+        }
+    }
+] ) ; 
+
+// Compute average INSEM and ENDSEM marks by department
+db.students.aggregate( [
+    {
+        $group: {
+            _id: "$department" , 
+            avg_insem_marks: { $avg: "$insem_marks" } , 
+            avg_endsem_marks: { $avg: "$endsem_marks" }
+        }
+    }
+] ) ; 
+
+// Compute sum of INSEM and ENDSEM marks for each student
+db.students.aggregate( [
+    {
+        $group: {
+            _id: {
+                name: "$name" , 
+                department: "$department"
+            } , 
+            total_marks: { 
+                $sum: { 
+                    $add: [ "$insem_marks" , "$endsem_marks" ]
+                }
+            }
+        }
+    } , 
+    {
+        $sort: {
+            total_marks: -1
+        }
+    }
+]) ;

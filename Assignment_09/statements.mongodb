@@ -1,10 +1,123 @@
 use assignment_09;
+
+// Create operations
 db.createCollection( "blogs" );
 db.blogs.insertOne( {
-    "author_id": "1"
-    "title": "hello" , 
-    "content": "rust" , 
-    "num_likes": 0 , 
-    "num_comments": 0 ,
-    "publish_date": new Date()
+    "title": "t1" , 
+    "content": "Rust" , 
+    "num_likes": 5 , 
+    "num_comments": 1 
 } ) ;
+db.blogs.insertMany(
+    [
+        {
+            "title": "t2" , 
+            "content": "C++" , 
+            "num_likes": 100 , 
+            "num_comments": 13
+        } , 
+        {
+            "title": "t3" , 
+            "content": "Java" , 
+            "num_likes": 100000 , 
+            "num_comments": 500 
+        } , 
+        {
+            "title": "t4" , 
+            "content": "Kotlin" , 
+            "num_likes": 2000 , 
+            "num_comments": 12 
+        } , 
+        {
+            "title": "t5" , 
+            "content": "Python" , 
+            "num_likes": 1380 , 
+            "num_comments": 34 
+        } , 
+        {
+            "title": "t6" , 
+            "content": "C" , 
+            "num_likes": 189 , 
+            "num_comments": 2 
+        } , 
+        {
+            "title": "t7" , 
+            "content": "Assembly" , 
+            "num_likes": 2 , 
+            "num_comments": 0
+        } , 
+    ]
+) ;
+
+
+// Read Operations
+// select * from <table>
+db.blogs.find().pretty() ; 
+// select * from <table>
+// where col=<val>
+db.blogs.find( { 
+    "content": "Java"
+} ); 
+// find with logical operators and projection
+db.blogs.find( 
+    {
+        $and: [
+            { "num_comments": { $gt: 1 } } , 
+            { "num_likes": { $gt: 10000 } }
+        ]
+    } , 
+    { "title": 1 , "content": 1 } // Projection
+) ;
+
+
+// Update Operations
+// update <table>
+// set title='Updated Hello To' , constent='Rust'
+// where content='Java' ; 
+db.blogs.updateOne(
+    { "content": "Java" } , 
+    { 
+        $set: {
+            "title": "Updated Hello to" , 
+            "content": "Rust"
+        }
+    }
+) ; 
+
+
+// Delete Operations
+// delete from blogs
+// where content='c++' ; 
+db.blogs.deleteOne( 
+    { "content": "c++" } 
+) ; 
+// Drop Collection
+db.blog.drop();
+
+
+// Counting Documents In A Collection
+// Precise count
+db.blogs.countDocuments() ;
+// Count based on collection metadata
+db.blogs.estimatedDocumentCount() ; 
+
+
+// Logical Operators
+// $and, $or, $not, $nor
+db.blogs.find( {
+    $and: [
+        { "title": "hello" } ,
+        { "num_likes" : 5 } , 
+        { "num_comments" : 2 } 
+    ]
+} ) ;
+
+// Comparison Operators
+// $eq, $gt, $lt, $lte, $gte, $ne
+db.blogs.find( {
+    "num_likes": { 
+        $gt: 100
+    }
+} ) ; 
+
+// Membership operators
