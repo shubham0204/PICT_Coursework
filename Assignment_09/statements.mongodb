@@ -1,95 +1,125 @@
-use assignment_09;
-
-// Create operations
-db.createCollection( "blogs" );
-db.blogs.insertOne( {
-    "title": "t1" , 
-    "content": "Rust" , 
-    "num_likes": 5 , 
-    "num_comments": 1 
-} ) ;
-db.blogs.insertMany(
-    [
-        {
-            "title": "t2" , 
-            "content": "C++" , 
-            "num_likes": 100 , 
-            "num_comments": 13
+db.createCollection( "students" ) ;
+db.students.insertOne( 
+    {
+        "name": "Shubham" , 
+        "department": "COMP" , 
+        "age": 19 , 
+        "year": "TE" , 
+        "city": "Pune" , 
+        "insem_marks": 130 ,
+        "endsem_marks": 280 ,
+        "scores": {
+            "mhtcet": 99.4 , 
+            "jee": 81.8
         } , 
-        {
-            "title": "t3" , 
-            "content": "Java" , 
-            "num_likes": 100000 , 
-            "num_comments": 500 
+        "technologies": [ "java" , "kotlin" , "python" , "rust" , "c++" ]
+    } , 
+) ; 
+db.students.insertMany( [  
+    {
+        "name": "Kaustubh" , 
+        "department": "IT" , 
+        "age": 23 , 
+        "year": "TE" , 
+        "city": "Jalgaon" , 
+        "insem_marks": 135 ,
+        "endsem_marks": 310 ,
+        "scores": {
+            "mhtcet": 93.4 , 
+            "jee": 86.8
         } , 
-        {
-            "title": "t4" , 
-            "content": "Kotlin" , 
-            "num_likes": 2000 , 
-            "num_comments": 12 
+        "technologies": [ "python" , "c++" ]
+    } , 
+    {
+        "name": "Advait" , 
+        "department": "ENTC" , 
+        "age": 18 , 
+        "year": "TE" , 
+        "city": "Pune" , 
+        "insem_marks": 125 ,
+        "endsem_marks": 340 , 
+        "scores": {
+            "mhtcet": 89.4 , 
+            "jee": 95.8
         } , 
-        {
-            "title": "t5" , 
-            "content": "Python" , 
-            "num_likes": 1380 , 
-            "num_comments": 34 
+        "technologies": [ "java" , "kotlin" , "python" , "js" ]
+    } , 
+    {
+        "name": "Swaraj" , 
+        "department": "COMP" , 
+        "age": 22 , 
+        "year": "SE" , 
+        "city": "Pune" , 
+        "insem_marks": 145 ,
+        "endsem_marks": 320 , 
+        "scores": {
+            "mhtcet": 99.4 , 
+            "jee": 97.8
         } , 
-        {
-            "title": "t6" , 
-            "content": "C" , 
-            "num_likes": 189 , 
-            "num_comments": 2 
+        "technologies": [ "python" , "rust" , "c++" ]
+    } , 
+    {
+        "name": "Manthan" , 
+        "department": "IT" , 
+        "age": 21 , 
+        "year": "BE" , 
+        "city": "Pune" , 
+        "insem_marks": 150 ,
+        "endsem_marks": 150 , 
+        "scores": {
+            "mhtcet": 94.4 , 
+            "jee": 79.8
         } , 
-        {
-            "title": "t7" , 
-            "content": "Assembly" , 
-            "num_likes": 2 , 
-            "num_comments": 0
+        "technologies": [ "python" , "c++" ]
+    } , 
+    {
+        "name": "Ayush" , 
+        "department": "COMP" , 
+        "age": 20 , 
+        "year": "BE" , 
+        "city": "Chandrapur" , 
+        "insem_marks": 110 ,
+        "endsem_marks": 180 , 
+        "scores": {
+            "mhtcet": 91.4 , 
+            "jee": 95.7
         } , 
-    ]
-) ;
+        "technologies": [ "java" , "c++" ]
+    } , 
+] ) ; 
 
 
 // Read Operations
-// select * from <table>
-db.blogs.find().pretty() ; 
-// select * from <table>
-// where col=<val>
-db.blogs.find( { 
-    "content": "Java"
+db.students.find().pretty() ; 
+db.students.find( { 
+    "city": "Pune"
 } ); 
 // find with logical operators and projection
-db.blogs.find( 
+db.students.find( 
     {
         $and: [
-            { "num_comments": { $gt: 1 } } , 
-            { "num_likes": { $gt: 10000 } }
+            { "insem_marks": { $gt: 120 } } , 
+            { "endsem_marks": { $lt: 150 } }
         ]
     } , 
-    { "title": 1 , "content": 1 } // Projection
+    { "name": 1 , "year": 1 } // Projection
 ) ;
 
 
 // Update Operations
-// update <table>
-// set title='Updated Hello To' , constent='Rust'
-// where content='Java' ; 
-db.blogs.updateOne(
-    { "content": "Java" } , 
+db.students.updateOne(
+    { "age": 22 } , 
     { 
         $set: {
-            "title": "Updated Hello to" , 
-            "content": "Rust"
+            "year": "BE"
         }
     }
 ) ; 
 
 
 // Delete Operations
-// delete from blogs
-// where content='c++' ; 
-db.blogs.deleteOne( 
-    { "content": "c++" } 
+db.students.deleteOne( 
+    { "city": "Chandrapur" } 
 ) ; 
 // Drop Collection
 db.blog.drop();
@@ -97,27 +127,45 @@ db.blog.drop();
 
 // Counting Documents In A Collection
 // Precise count
-db.blogs.countDocuments() ;
+db.students.countDocuments() ;
 // Count based on collection metadata
-db.blogs.estimatedDocumentCount() ; 
+db.students.estimatedDocumentCount() ; 
 
 
 // Logical Operators
 // $and, $or, $not, $nor
-db.blogs.find( {
+db.students.find( {
     $and: [
-        { "title": "hello" } ,
-        { "num_likes" : 5 } , 
-        { "num_comments" : 2 } 
+        { "year": "TE" } ,
+        { "city" : "Pune" } , 
     ]
 } ) ;
 
 // Comparison Operators
 // $eq, $gt, $lt, $lte, $gte, $ne
-db.blogs.find( {
-    "num_likes": { 
-        $gt: 100
+db.students.find( {
+    "insem_marks": { 
+        $gt: 120
+    }
+} ) ; 
+db.students.find( {
+    "scores.jee": {
+        $gt: 95.0
+    }
+} ) ;
+
+// Membership operators
+// $in
+db.students.find( { 
+    "year": {
+        $in: [ "BE" , "TE "]
     }
 } ) ; 
 
-// Membership operators
+// Array Operators
+// $size, $all
+db.students.find( {
+    "technologies" : {
+        $size: 4
+    }
+}) ; 

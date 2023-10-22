@@ -1,10 +1,20 @@
-// Compute average INSEM and ENDSEM marks
+// Compute average INSEM and ENDSEM marks of all students
 db.students.aggregate( [
     {
         $group: {
             _id: null,
             avg_insem_marks: { $avg: "$insem_marks" } , 
             avg_endsem_marks: { $avg: "$endsem_marks" }
+        }
+    } 
+] ) ; 
+
+// Compute count of students in each department
+db.students.aggregate( [
+    {
+        $group: {
+            _id: "$department" , 
+            num_students: { $count: {} }
         }
     }
 ] ) ; 
@@ -21,11 +31,19 @@ db.students.aggregate( [
 ] ) ; 
 
 // Compute sum of INSEM and ENDSEM marks for each student
+// belonging to COMP branch and determine the topper
 db.students.aggregate( [
+    {
+        $match: {
+            "department": "COMP"
+        }
+    } , 
     {
         $group: {
             _id: {
                 name: "$name" , 
+                age: "$age" , 
+                city: "$city" , 
                 department: "$department"
             } , 
             total_marks: { 
@@ -39,5 +57,15 @@ db.students.aggregate( [
         $sort: {
             total_marks: -1
         }
+    } , 
+    {
+        $project: {
+            "name": 1 , 
+            "age": 1 , 
+            "city": 1
+        }
+    } , 
+    {
+        $limit: 1
     }
 ]) ;

@@ -1,0 +1,17 @@
+// Simple Index
+db.students.createIndex( {
+    name: 1
+} ) ; 
+
+// Compound Index
+db.students.createIndex( {
+    name: 1 , 
+    department: 1 , 
+    year: 1
+} ) ; 
+
+// Unique Index
+db.students.createIndex( {
+    name: 1 , 
+    city: 1 ,
+} , { unique: true } ) ;

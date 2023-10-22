@@ -50,7 +50,7 @@ db.students.insertMany( [
         "department": "COMP" , 
         "age": 20 , 
         "year": "BE" , 
-        "city": "Chadrapur" , 
+        "city": "Chandrapur" , 
         "insem_marks": 110 ,
         "endsem_marks": 180 
     } , 
