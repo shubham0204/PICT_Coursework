@@ -1,4 +1,5 @@
 import math
+import subprocess
 
 def decimal_to_binary( x: int ) -> list[int]:
     p = x
@@ -60,6 +61,15 @@ def iterate_over_subnet( starting_ip_octets: list[int] , n: int ) -> list[tuple[
                     output.append( ( c3 , c2 , c1 , c0 ) ) 
                     i += 1
     return output
+
+def run( command : str ) -> str:
+    p = subprocess.Popen( command , stdout=subprocess.PIPE , shell=True )
+    while True:
+        line = p.stdout.readline().decode( "utf-8" )
+        if not line:
+            break
+        else:
+            yield line
 
 
 input_ip_str = input( "Enter an IPv4 address: " ) 
@@ -132,8 +142,12 @@ while True:
             print( ip_addresses[i] , " - " , ip_addresses[i+num_hosts_per_subnet-1] ) 
             subnets.append( ip_addresses[ i : i+num_hosts_per_subnet ] )
 
-        self_ip = tuple( octets )
-        
+        while True:
+            input_command = input( "Command: " ) 
+            output_lines: list[str] = [ line for line in run( input_command ) ]
+            print( '\n'.join( output_lines ) )
+
+        """
         while True:
             input_dst_ip_str = input( "Command: " ) 
             dst_ip = tuple(map( int , input_dst_ip_str.split()[1].split( "." )))
@@ -150,3 +164,5 @@ while True:
                     break
             else:
                 print( "PING FAILED (Network is unreachable)" )
+        """
+        

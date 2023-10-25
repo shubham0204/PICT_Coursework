@@ -2,7 +2,7 @@ import socket
 
 HOST = "127.0.0.1"
 PORT = 8080
-BUFFER_SIZE = 4096 * 1024 * 1024
+BUFFER_SIZE = 4096
 
 with socket.socket( socket.AF_INET , socket.SOCK_DGRAM ) as server_socket:
     server_socket.bind( ( HOST , PORT ) )
