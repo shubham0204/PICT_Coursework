@@ -1,4 +1,3 @@
-db.createCollection( "students" ) ;
 db.students.insertOne( 
     {
         "name": "Shubham" , 

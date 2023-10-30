@@ -1,0 +1,11 @@
+db.students.mapReduce(
+    function() {
+        emit( this.department , this.insem_marks )
+    } , 
+    function( keys , values ) {
+        return Array.sum( values )
+    } , 
+    {
+        out: "total_marks"
+    }
+) ; 

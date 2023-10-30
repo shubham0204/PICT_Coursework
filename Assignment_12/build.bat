@@ -1,0 +1,2 @@
+javac -d build -classpath ".;src/main/resources/mongodb-driver-core-4.11.0.jar;src/main/resources/mongodb-driver-sync-4.11.0.jar;src/main/resources/bson-4.11.0.jar" src/main/java/database/Database.java src/main/java/models/Blog.java src/main/java/Main.java 
+java -classpath "build;src/main/resources/mongodb-driver-core-4.11.0.jar;src/main/resources/mongodb-driver-sync-4.11.0.jar;src/main/resources/bson-4.11.0.jar" Main
