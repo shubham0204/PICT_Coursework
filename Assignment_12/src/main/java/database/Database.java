@@ -5,6 +5,9 @@ import com.mongodb.client.*;
 import com.mongodb.*;
 import models.Blog;
 import java.util.*;
+
+import javax.swing.text.Document;
+
 import org.bson.*;
 import org.bson.types.*;
 import java.io.*;  
@@ -22,7 +25,7 @@ public class Database {
         this.client = MongoClients.create( CONNECTION_URL ) ; 
         this.database = client.getDatabase( "test-atlas-database" ) ;
         this.collection = this.database.getCollection( "test-collection" ) ; 
-        getAllBlogs() ; 
+        // getAllBlogs() ; 
 
     }
 
@@ -52,11 +55,19 @@ public class Database {
         while (cursor.hasNext()) {
             Document obj = (Document) cursor.next();
             Blog blog = new Blog() ; 
+            blog.id = obj.getInteger( "_id" ).toString() ; 
             blog.title = obj.getString( "title" ) ;
             blog.content = obj.getString( "content" ) ; 
             blogs.add( blog ) ;
         }
         return blogs;
+    }
+
+    public void updateBlog( Blog newBlog ) {
+        Document doc = new Document("_id", new ObjectId() );
+        doc.append( "title" , newBlog.title ) ;
+        doc.append( "content" , newBlog.content ) ; 
+        this.collection.updateOne( Filters.eq("color", "pink"); , doc ) ; 
     }
 
 
