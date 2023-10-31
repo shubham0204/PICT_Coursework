@@ -51,7 +51,7 @@ for i in range( 1 , len( source_tokens ) ):
             else:
                 parameter_name = parameter
                 num_pp += 1
-            pntab.append( parameter )
+            pntab.append( parameter_name )
    
         mntab_entry = MNTEntry()
         mntab_entry.macro_name = macro_name
@@ -101,11 +101,11 @@ for entry in mdtab:
 for param in kpdtab:
     print( param[0] , param[1] )
 
-with open( "mdtab.pkl" , "rb" ) as file:
+with open( "mdtab.pkl" , "wb" ) as file:
     pickle.dump( mdtab , file )
-with open( "kpdtab.pkl" , "rb" ) as file:
+with open( "kpdtab.pkl" , "wb" ) as file:
     pickle.dump( kpdtab , file )
-with open( "mntab.pkl" , "rb" ) as file:
+with open( "mntab.pkl" , "wb" ) as file:
     pickle.dump( mntab , file )
-with open( "pntab_map.pkl" , "rb" ) as file:
+with open( "pntab_map.pkl" , "wb" ) as file:
     pickle.dump( pntab_map , file )
