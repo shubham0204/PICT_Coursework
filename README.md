@@ -1,7 +1,7 @@
 # 🎓 PICT Coursework - Shubham Panchal
 > A collection of all assignments for computer engineering w.r.t. SPPU Pune
 
-User-friendly fork(s) of this repositories:
+User-friendly fork(s) of this repository:
 
 1. [Advait0801/SPPU-COMP-2019-Assignments](https://github.com/Advait0801/SPPU-COMP-2019-Assignments)
 
