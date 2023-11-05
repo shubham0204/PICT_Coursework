@@ -19,6 +19,6 @@ User-friendly fork(s) of this repository:
 ### Semester 3
 1. [DSL](https://github.com/shubham0204/PICT_Coursework/tree/dsl)
 2. [OOP](https://github.com/shubham0204/PICT_Coursework/tree/oop)
-3. [CG](https://github.com/shubham0204/PICT_Coursework/tree/cg)
+3. [CG](https://github.com/shubham0204/PICT_Coursework/tree/cg) ( [Basics of Qt Creator](https://youtube.com/playlist?list=PL-JEJutSHXDT2He7zBVSbgJN1Qievcseg&feature=shared) )
 
 
