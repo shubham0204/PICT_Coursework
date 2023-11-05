@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>mongodb_connectivity</name>
+	<name>mysql-jdbc-connectivity</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -16,7 +16,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1699178609909</id>
+			<id>1699178609922</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
