@@ -1,7 +1,6 @@
 package mongodb_connectivity;
 
 import org.bson.Document;
-import org.bson.types.ObjectId;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -24,7 +23,7 @@ public class Main {
 		while( true ) {
 			System.out.println( "1. Insert blog" ) ;
 			System.out.println( "2. Get all blogs" ) ;
-			System.out.println( "3. Update blog" ) s;
+			System.out.println( "3. Update blog" ) ;
 			System.out.println( "4. Delete blog" ) ;
 			
 			
@@ -88,7 +87,8 @@ public class Main {
 			}
 			
 		}
-		
+
+		scanner.close() ; 
 		client.close() ;
 	}
 

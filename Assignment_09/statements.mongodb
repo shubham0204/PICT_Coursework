@@ -1,171 +1,152 @@
-db.createCollection( "students" ) ;
+db.createCollection( "students" );
+// Options for createCollection
+// - capped: Create capped collection (fixed size, overwrites old entries)
+// - size: Size of collection in bytes
+// - max: Max number of docs in collection
+
+// Insertion
 db.students.insertOne( 
-    {
-        "name": "Shubham" , 
-        "department": "COMP" , 
-        "age": 19 , 
-        "year": "TE" , 
-        "city": "Pune" , 
-        "insem_marks": 130 ,
-        "endsem_marks": 280 ,
-        "scores": {
-            "mhtcet": 99.4 , 
-            "jee": 81.8
-        } , 
-        "technologies": [ "java" , "kotlin" , "python" , "rust" , "c++" ]
-    } , 
-) ; 
-db.students.insertMany( [  
-    {
-        "name": "Kaustubh" , 
-        "department": "IT" , 
-        "age": 23 , 
-        "year": "TE" , 
-        "city": "Jalgaon" , 
-        "insem_marks": 135 ,
-        "endsem_marks": 310 ,
-        "scores": {
-            "mhtcet": 93.4 , 
-            "jee": 86.8
-        } , 
-        "technologies": [ "python" , "c++" ]
-    } , 
-    {
-        "name": "Advait" , 
-        "department": "ENTC" , 
-        "age": 18 , 
-        "year": "TE" , 
-        "city": "Pune" , 
-        "insem_marks": 125 ,
-        "endsem_marks": 340 , 
-        "scores": {
-            "mhtcet": 89.4 , 
-            "jee": 95.8
-        } , 
-        "technologies": [ "java" , "kotlin" , "python" , "js" ]
-    } , 
-    {
-        "name": "Swaraj" , 
-        "department": "COMP" , 
-        "age": 22 , 
-        "year": "SE" , 
-        "city": "Pune" , 
-        "insem_marks": 145 ,
-        "endsem_marks": 320 , 
-        "scores": {
-            "mhtcet": 99.4 , 
-            "jee": 97.8
-        } , 
-        "technologies": [ "python" , "rust" , "c++" ]
-    } , 
-    {
-        "name": "Manthan" , 
-        "department": "IT" , 
-        "age": 21 , 
-        "year": "BE" , 
-        "city": "Pune" , 
-        "insem_marks": 150 ,
-        "endsem_marks": 150 , 
-        "scores": {
-            "mhtcet": 94.4 , 
-            "jee": 79.8
-        } , 
-        "technologies": [ "python" , "c++" ]
-    } , 
-    {
-        "name": "Ayush" , 
-        "department": "COMP" , 
-        "age": 20 , 
-        "year": "BE" , 
-        "city": "Chandrapur" , 
-        "insem_marks": 110 ,
-        "endsem_marks": 180 , 
-        "scores": {
-            "mhtcet": 91.4 , 
-            "jee": 95.7
-        } , 
-        "technologies": [ "java" , "c++" ]
-    } , 
-] ) ; 
+{
+	name: "Shubham Panchal" , 
+	age: 20,
+	attendance: 89,
+	place: "Pune",
+	department: "CE",
+	marks: {
+		insem: 123,
+		endsem: 320
+	},
+	skills: [ { name: "c++" , rating: 2.5 } , { name: "rust" , rating: 3.4 } ]
+} ) ; 
+db.students.insertMany( [
+{
+	name: "Kaustubh Netke" , 
+	age: 21,
+	attendance: 75,
+	place: "Jalgoan",
+	gender: "Male",
+	department: "CE",
+	marks: {
+		insem: 100,
+		endsem: 300
+	},
+	skills: [ { name: "dart" , rating: 1.5 } , { name: "python" , rating: 3.9 } ]
+} , 
+{
+	name: "Advait Naik" , 
+	age: 20,
+	attendance: 93,
+	place: "Mumbai",
+	gender: "Male",
+	department: "IT",
+	marks: {
+		insem: 149,
+		endsem: 330
+	},
+	skills: [ { name: "java" , rating: 4.5 } , { name: "rust" , rating: 2.4 } ]
+} , 
+{
+	name: "Pranali Naik" , 
+	age: 24,
+	attendance: 82,
+	place: "Pune",
+	gender: "Female",
+	department: "IT",
+	marks: {
+		insem: 90,
+		endsem: 310
+	},
+	skills: [ { name: "c" , rating: 2.1 } , { name: "assembly" , rating: 4.4 } ]
+} ] );
 
 
-// Read Operations
-db.students.find().pretty() ; 
-db.students.find( { 
-    "city": "Pune"
-} ); 
-// find with logical operators and projection
-db.students.find( 
-    {
-        $and: [
-            { "insem_marks": { $gt: 120 } } , 
-            { "endsem_marks": { $lt: 150 } }
-        ]
-    } , 
-    { "name": 1 , "year": 1 } // Projection
-) ;
-
-
-// Update Operations
+// Updation
+// Options
+// - upsert: Insert new document if no document found
+// - multi: Updates multiple documents
 db.students.updateOne(
-    { "age": 22 } , 
-    { 
-        $set: {
-            "year": "BE"
-        }
-    }
-) ; 
+	{
+		name: "Pranali Naik" , 
+	} ,
+	{ $set: { 
+		attendance: 92 , 
+		marks: {
+			insem: 100 , 
+			endsem: 320
+		}
+	} }
+) ;
+db.students.updateOne(
+	{
+		name: "Rahul Jadhav" , 
+	} ,
+	{ $set: { 
+		attendance: 92 , 
+		marks: {
+			insem: 100 , 
+			endsem: 320
+		}
+	} } , 
+	{
+		upsert: true
+	}
+) ;
+db.students.updateMany(
+	{
+		department: "CE"
+	} , 
+	{ $push: {
+		skills: { name: "kotlin" , rating: 3.3 }
+	  } }
+);
 
+// Reading
+db.students.find() ; 
+db.students.find().pretty() ; 
 
-// Delete Operations
-db.students.deleteOne( 
-    { "city": "Chandrapur" } 
-) ; 
-// Drop Collection
-db.blog.drop();
-
-
-// Counting Documents In A Collection
-// Precise count
-db.students.countDocuments() ;
-// Count based on collection metadata
-db.students.estimatedDocumentCount() ; 
-
-
-// Logical Operators
-// $and, $or, $not, $nor
-db.students.find( {
-    $and: [
-        { "year": "TE" } ,
-        { "city" : "Pune" } , 
-    ]
+db.students.find(
+{
+	department: { $eq: "CE" } , 
+	"marks.insem": { $gt: 120 }
+} ) ;
+db.students.find(
+{
+	$and: [ 
+		{ $or: [ { department: { $eq: "CE" } } , { department: { $eq: "IT" } } ] }, 
+		{ "marks.insem": { $gt: 120 } }
+	]
+} ) ; 
+db.students.find(
+{
+	place: { $in: [ "Pune" , "Mumbai" ] }
+} ) ;
+db.students.find(
+{
+	"skills.name": "java" ,
+	"skills.rating": { $gt: 4 }
+} );
+db.students.find(
+{
+	"skills.rating": { $all: { $lt: 3 } }
+} );
+db.students.find(
+{
+	"skills.name": { $all: [ "c" , "assembly" ] }
 } ) ;
 
-// Comparison Operators
-// $eq, $gt, $lt, $lte, $gte, $ne
-db.students.find( {
-    "insem_marks": { 
-        $gt: 120
-    }
-} ) ; 
-db.students.find( {
-    "scores.jee": {
-        $gt: 95.0
-    }
-} ) ;
+// Deleting
+db.students.deleteOne(
+{
+	"name": { $eq: "Pranali Naik" }
+} );
+db.students.drop();
 
-// Membership operators
-// $in
-db.students.find( { 
-    "year": {
-        $in: [ "BE" , "TE "]
-    }
-} ) ; 
+// Indexes
+// createIndex options:
+// unique: Unique indexes do not store duplicate values of the indexed field
+// sparse: Sparse indexes include only those documents which have the indexed field
 
-// Array Operators
-// $size, $all
-db.students.find( {
-    "technologies" : {
-        $size: 4
-    }
-}) ; 
+db.students.find( { attendance: { $gt : 90 } } ).hint( "attendance_1" ).explain( "executionStats" ) ;
+
+db.students.createIndex( { "attendance": 1 } ) ; 
+db.students.createIndex( { "place": 1, "attendance": 1 } , { unique: true } ) ;

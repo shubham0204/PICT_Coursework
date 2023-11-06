@@ -1,0 +1,86 @@
+db.createCollection( "students" );
+
+db.students.insertOne( 
+{
+	name: "Shubham Panchal" , 
+	age: 20,
+	attendance: 89,
+	place: "Pune",
+	department: "CE",
+	marks: {
+		insem: 123,
+		endsem: 320
+	},
+	skills: [ { name: "c++" , rating: 2.5 } , { name: "rust" , rating: 3.4 } ]
+} ) ; 
+db.students.insertMany( [
+{
+	name: "Kaustubh Netke" , 
+	age: 21,
+	attendance: 75,
+	place: "Jalgoan",
+	gender: "Male",
+	department: "CE",
+	marks: {
+		insem: 100,
+		endsem: 300
+	},
+	skills: [ { name: "dart" , rating: 1.5 } , { name: "python" , rating: 3.9 } ]
+} , 
+{
+	name: "Advait Naik" , 
+	age: 20,
+	attendance: 93,
+	place: "Mumbai",
+	gender: "Male",
+	department: "IT",
+	marks: {
+		insem: 149,
+		endsem: 330
+	},
+	skills: [ { name: "java" , rating: 4.5 } , { name: "rust" , rating: 2.4 } ]
+} , 
+{
+	name: "Pranali Naik" , 
+	age: 24,
+	attendance: 82,
+	place: "Pune",
+	gender: "Female",
+	department: "IT",
+	marks: {
+		insem: 90,
+		endsem: 310
+	},
+	skills: [ { name: "c" , rating: 2.1 } , { name: "assembly" , rating: 4.4 } ]
+} ] );
+
+
+db.students.mapReduce(
+    function() {
+        emit( this.department , this.marks.insem )
+    } , 
+    function( keys , values ) {
+        return Array.sum( values )
+    } , 
+    {
+        out: "insem_total"
+    }
+) ; 
+
+db.students.mapReduce(
+    function() {
+        emit( this.department , this.marks.endsem )
+    } , 
+    function( keys , values ) {
+        return Array.avg( values )
+    } , 
+    {
+        out: "endsem_avg" , 
+        query: {
+            "attendance": { $gt: 75 }
+        }
+    }
+) ; 
+
+db.insem_total.find();
+db.endsem_avg.find();
