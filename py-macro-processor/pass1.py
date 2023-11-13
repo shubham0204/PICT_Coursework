@@ -1,5 +1,3 @@
-import pickle
-
 class MNTEntry:
 
     def __init__( self ):
@@ -37,7 +35,6 @@ for i in range( 1 , len( source_tokens ) ):
     line_tokens = source_tokens[i]
 
     if source_tokens[i-1][0] == "MACRO":
-        # TODO: Process macro header
         macro_name: str = line_tokens[0]
         parameters: str = line_tokens[1:]
         pntab: list[str] = []
@@ -91,21 +88,31 @@ for i in range( 1 , len( source_tokens ) ):
         mdtab_entry.mnemonic = "MEND"
         mdtab.append( mdtab_entry )
 
-            
+print( "------------ MNTAB ----------------")   
+print( "Name".ljust( 10 ) , "#PP".ljust( 5 ) , "#KP".ljust( 5 ) , "KPDTAB_PTR".ljust( 10 ) , "MDTAB_PTR".ljust( 10 ) )  
 for entry in mntab:
-    print( entry.macro_name , entry.num_pp , entry.num_kpd , entry.kpdtab_ptr , entry.mdtab_ptr )
+    print( 
+        entry.macro_name.ljust( 10 ) , 
+        str(entry.num_pp).ljust( 5 ) , 
+        str(entry.num_kpd).ljust( 5 ) , 
+        str(entry.kpdtab_ptr).ljust( 10 ) , 
+        str(entry.mdtab_ptr).ljust( 10 )
+    )
 
+print( "------------ MDTAB ----------------")   
 for entry in mdtab:
-    print( entry.mnemonic , entry.operand1 , entry.operand2 )
-
+    print( 
+        entry.mnemonic.ljust( 10 ) , 
+        (entry.operand1 if entry.operand1_index == -1 else f"(P,{entry.operand1_index})").ljust(10) , 
+        (entry.operand2 if entry.operand2_index == -1 else f"(P,{entry.operand2_index})").ljust(10) ,  
+    )
+print( "------------ KPDTAB ----------------")   
+print( "Name".ljust( 10 ) , "Default Value".ljust( 15 ) )
 for param in kpdtab:
-    print( param[0] , param[1] )
+    print( param[0].ljust( 10 ) , param[1].ljust( 15 ) )
 
-with open( "mdtab.pkl" , "wb" ) as file:
-    pickle.dump( mdtab , file )
-with open( "kpdtab.pkl" , "wb" ) as file:
-    pickle.dump( kpdtab , file )
-with open( "mntab.pkl" , "wb" ) as file:
-    pickle.dump( mntab , file )
-with open( "pntab_map.pkl" , "wb" ) as file:
-    pickle.dump( pntab_map , file )
+print( "------------- PNTAB -----------------")
+for ( macro_name , pntab ) in pntab_map.items():
+    print( "PNTAB for macro" , macro_name ) 
+    for param in pntab:
+        print( param )
