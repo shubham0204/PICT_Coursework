@@ -88,7 +88,7 @@ for i , param in enumerate(actual_params):
     else:
         aptab[ pntab[i] ] = param
 
-
+print( "--------------- EXPANDED CODE -------------------" )
 curr_entry = mdtab[ mdtab_ptr ]
 while curr_entry.mnemonic != "MEND":
 
@@ -104,7 +104,12 @@ while curr_entry.mnemonic != "MEND":
     else:
         op2 = curr_entry.operand2
 
-    print( curr_entry.mnemonic , op1 , op2 )
+    print( 
+        " + " , 
+        curr_entry.mnemonic.ljust( 10 ) , 
+        op1.ljust(10) , 
+        op2.ljust(10) ,  
+    )
 
     mdtab_ptr += 1
     curr_entry = mdtab[ mdtab_ptr ]

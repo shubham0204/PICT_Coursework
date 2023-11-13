@@ -106,6 +106,7 @@ for entry in mdtab:
         (entry.operand1 if entry.operand1_index == -1 else f"(P,{entry.operand1_index})").ljust(10) , 
         (entry.operand2 if entry.operand2_index == -1 else f"(P,{entry.operand2_index})").ljust(10) ,  
     )
+    
 print( "------------ KPDTAB ----------------")   
 print( "Name".ljust( 10 ) , "Default Value".ljust( 15 ) )
 for param in kpdtab:
