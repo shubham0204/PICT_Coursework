@@ -6,108 +6,136 @@ using std::vector, std::deque, std::cout, std::cin, std::find ;
 
 class PageReplacement {
 
-    vector<int> pageNumbers ; 
-    int maxNumFrames ;
+    vector<int> pageReferences ; 
+    int memorySize ;
 
     public:
 
     PageReplacement( 
-        const vector<int>& pageNumbers , 
+        const vector<int>& pageReferences , 
         const int& maxNumFrames
         ) {
-        this -> pageNumbers = pageNumbers ;
-        this -> maxNumFrames = maxNumFrames ; 
+        this -> pageReferences = pageReferences ;
+        this -> memorySize = maxNumFrames ; 
     }
     
     float firstInFirstOut() {
-        deque<int> q; 
+        deque<int> memory; 
         int pageFaultCount = 0;
-        for( int i = 0 ; i < pageNumbers.size() ; i++ ) {
-            for( int page : q ) { cout << page << " " ; }
+        for( int i = 0 ; i < pageReferences.size() ; i++ ) {
+
+            for( int page : memory ) { cout << page << " " ; }
             cout << "\n" ; 
-            if( find( q.begin() , q.end() , pageNumbers[i] ) == q.end() ) {
+            if( find( memory.begin() , memory.end() , pageReferences[i] ) == memory.end() ) {
                 // Page fault occurred
                 pageFaultCount++ ; 
-                if( q.size() == maxNumFrames ) { q.pop_front() ; }
-                q.push_back( pageNumbers[i] ) ; 
+                if( memory.size() == memorySize ) { memory.pop_front() ; }
+                memory.push_back( pageReferences[i] ) ; 
             }
+            
         }
-        return ((float) pageFaultCount) / (float)pageNumbers.size() ; 
+        return ((float) pageFaultCount) / (float)pageReferences.size() ; 
     }
 
     float leastRecentlyUsed() {
-        vector<int> v; 
+        vector<int> memory; 
         vector<int> ages;
         int pageFaultCount = 0;
 
-        for( int i = 0 ; i < pageNumbers.size() ; i++ ) {
-            for( int page : v ) { cout << page << " " ; }
+        for( int i = 0 ; i < pageReferences.size() ; i++ ) {
+            for( int page : memory ) { cout << page << " " ; }
             cout << "\n" ; 
 
             std::for_each( ages.begin() , ages.end() , []( int& element ) {
                 element++ ; 
             } ) ; 
 
-            if( find( v.begin() , v.end() , pageNumbers[i] ) == v.end() ) {
+            if( find( memory.begin() , memory.end() , pageReferences[i] ) == memory.end() ) {
+
                 // Page fault occurred
                 pageFaultCount++ ; 
-                if( v.size() == maxNumFrames ) {
-                    int maxElementIndex = std::max_element( ages.begin() , ages.end() ) - ages.begin() ; 
-                    ages.erase( ages.begin() + maxElementIndex ) ; 
-                    v.erase( v.begin() + maxElementIndex ) ; 
-                    v.insert( v.begin() + maxElementIndex , pageNumbers[i] ) ; 
-                    ages.insert( ages.begin() + maxElementIndex , 0 ) ; 
+
+                if( memory.size() == memorySize ) {
+
+                    // maxAgeIndex refers to the index of the element 
+                    // which was least recently accessed by the CPU
+                    int maxAgeIndex = std::max_element( ages.begin() , ages.end() ) - ages.begin() ; 
+
+                    // Reset age
+                    ages.erase( ages.begin() + maxAgeIndex ) ; 
+                    ages.insert( ages.begin() + maxAgeIndex , 0 ) ; 
+
+                    // Swap in pageReferences[i] at position maxAgeIndex
+                    memory.erase( memory.begin() + maxAgeIndex ) ; 
+                    memory.insert( memory.begin() + maxAgeIndex , pageReferences[i] ) ; 
                 }
                 else {
-                    v.insert( v.begin() , pageNumbers[i] ) ; 
+                    memory.insert( memory.begin() , pageReferences[i] ) ; 
                     ages.insert( ages.begin() , 0 ) ;
                 }
+
             }
             else {
                 // Reset age of currently accessed page 
-                int index = find( v.begin() , v.end() , pageNumbers[i] ) - v.begin() ;
+                int index = find( memory.begin() , memory.end() , pageReferences[i] ) - memory.begin() ;
                 ages[ index ] = 0 ; 
             }
         }
-        return ((float) pageFaultCount) / pageNumbers.size() ; 
+        return ((float) pageFaultCount) / pageReferences.size() ; 
     }
 
     float optimal() {
-        vector<int> v; 
+
+        vector<int> memory; 
         int pageFaultCount = 0;
-        for( int i = 0 ; i < pageNumbers.size() ; i++ ) {
-            for( int page : v ) { cout << page << " " ; }
+
+        for( int i = 0 ; i < pageReferences.size() ; i++ ) {
+
+            // Display all pages
+            for( int page : memory ) { cout << page << " " ; }
             cout << "\n" ; 
-            if( find( v.begin() , v.end() , pageNumbers[i] ) == v.end() ) {
+
+            // Check if page is in memory
+            if( find( memory.begin() , memory.end() , pageReferences[i] ) == memory.end() ) {
+
+                // Page is not in memory
                 // Page fault occurred
                 pageFaultCount++ ; 
-                if( v.size() == maxNumFrames ) {
+                if( memory.size() == memorySize ) {
                     int maxUsageGap = -1 ; 
                     int maxUsageGapIndex = 0 ;
-                    for( int p = 0 ; p < maxNumFrames ; p++ ) {
+
+                    for( int frameIndex = 0 ; frameIndex < memorySize ; frameIndex++ ) {
                         bool isFound = false ; 
-                        for( int j = i + 1 ; j < pageNumbers.size() ; j++ ) {
-                            if( pageNumbers[j] == v[p] ) {
+                        for( int refIndex = i + 1 ; refIndex < pageReferences.size() ; refIndex++ ) {
+                            if( pageReferences[refIndex] == memory[frameIndex] ) {
                                 isFound = true;
-                                if( (j-i) > maxUsageGap ) {
-                                    maxUsageGap = j - i ; 
-                                    maxUsageGapIndex = p ; 
+                                if( (refIndex-i) > maxUsageGap ) {
+                                    maxUsageGap = refIndex - i ; 
+                                    maxUsageGapIndex = frameIndex ; 
                                 }
                             }
                         }
                         if( !isFound ) {
-                            maxUsageGapIndex = p ; 
+                            // If page at frameIndex i.e. memory[frameIndex] was never
+                            // referred in the future, swap out this page
+                            // and break loop, as we need search for any other candidates
+                            maxUsageGapIndex = frameIndex ; 
                             break;
                         }
                     }
-                    v[ maxUsageGapIndex ] = pageNumbers[i] ; 
+                    memory[ maxUsageGapIndex ] = pageReferences[i] ; 
+
                 }
                 else {
-                    v.push_back( pageNumbers[i] ) ; 
+
+                    memory.push_back( pageReferences[i] ) ; 
+
                 }
             }
+
         }
-        return ((float) pageFaultCount) / (float)pageNumbers.size() ; 
+        return ((float) pageFaultCount) / (float)pageReferences.size() ; 
     }
 
 } ; 
