@@ -38,12 +38,12 @@ mnemonics: dict[ str , tuple[ str , int ] ] = {
 } 
 
 
-symbol_table: list[ tuple[ str , int ] ] = []
+symtab: list[ tuple[ str , int ] ] = []
 def find_symbol( symbol_name: str ) -> tuple[int,int]:
     # Find symbol with name `symbol_name` and
     # return its index and address if found
     # else -1 for both
-    for i , ( s , addr ) in enumerate(symbol_table):
+    for i , ( s , addr ) in enumerate(symtab):
         if s == symbol_name: return i+1 , addr
     return -1 , -1
 
@@ -51,40 +51,33 @@ def update_symbol( symbol_name: str , addr: int ) -> int:
     # Add symbol with name `symbol_name` and address `addr`
     # if addr == -1, add a new symbol
     # else, update the address of the symbol
-    for i , ( s , _ ) in enumerate( symbol_table ):
+    # and return the index of the symbol from the table
+    for i , ( s , _ ) in enumerate( symtab ):
         if s == symbol_name:
             if addr != -1:
-                symbol_table[ i ] = ( s , addr )
+                symtab[ i ] = ( s , addr )
             return i
-    symbol_table.append( ( symbol_name , addr ) )
-    return len( symbol_table )
+    symtab.append( ( symbol_name , addr ) )
+    return len( symtab )
 
-
-
-literal_table: list[ tuple[ str , int ]  ] = []
-pool_table: list[int] = []
+# Allocate littab and pooltab with 10 empty entries
+littab: list[ tuple[ str , int ]  ] = [ ( '' , -1 ) for _ in range(10) ]
+pooltab: list[int] = [ -1 for _ in range(10) ]
+littab_ptr: int = 0
 pooltab_ptr: int = 0
-def update_literal( literal_name: str , addr: int ) -> int:
-    for i , ( l , _ ) in enumerate( literal_table[ pooltab_ptr: ] ):
-        if l == literal_name:
-            literal_table[ i ] = ( l , addr )
-            return i
-    literal_table.append( ( literal_name , addr ) )
-    return len( literal_table )
+pooltab[pooltab_ptr] = 0
 
-def init_literals( lc: int ):
-    global pooltab_ptr
-    pool_table.append( pooltab_ptr )
-    for i , ( l , _ ) in enumerate( literal_table[ pooltab_ptr: ] ):
-        literal_table[ i ] = ( l , lc )
-        lc += 1
-    pooltab_ptr = len( literal_table )
-
+def init_literals():
+    global pooltab_ptr , location_cntr
+    for i in range( pooltab[pooltab_ptr] , littab_ptr ):
+        littab[i] = ( littab[i][0] , location_cntr )
+        location_cntr += 1
+    pooltab_ptr += 1
+    pooltab[ pooltab_ptr ] = littab_ptr
 
 source_file_path: str = input( "Enter source code file path: " ) 
 with open( source_file_path , "r" ) as file:
     source_contents: str = file.read()
-
 source_lines: list[str] = source_contents.split( "\n" ) 
 source_line_tokens: list[list[str]] = [ line.split() for line in source_lines ]
 
@@ -128,9 +121,17 @@ for line_tokens in source_line_tokens:
     ic_line: str = "({},{}) ".format( mnemonic_class , mnemonic_opcode )
     ic_line = "{} ".format( location_cntr if mnemonic_class != "AD" else "   " ) + ic_line
 
+    # Case 1: Label present
     if mnemonic_class != "DL" and label != "":
         update_symbol( label , location_cntr )
-    
+
+
+    # Case 2: LTORG present
+    if mnemonic_str == "LTORG":
+        init_literals()
+
+
+    # Case 3: START or ORIGIN
     if mnemonic_str == "START":
         location_cntr = int( operand1 )
         ic_line += "(C,{})".format( location_cntr )
@@ -155,9 +156,8 @@ for line_tokens in source_line_tokens:
                 location_cntr = symbol_addr
                 ic_line += "(S,{})".format( symbol_index )
 
-    if mnemonic_str == "LTORG":
-        init_literals( location_cntr )
-            
+
+    # Case 4: EQU present            
     if mnemonic_str == "EQU":
         if "+" in operand1 or "-" in operand1:
             # Assuming format is,
@@ -180,30 +180,9 @@ for line_tokens in source_line_tokens:
             else:
                 updated_val = symbol_addr
             update_symbol( label , updated_val )
-            
 
-    if mnemonics[ mnemonic_str ][0] == "IS":
-        if mnemonic_str == "READ" or mnemonic_str == "PRINT":
-            symbol_index = update_symbol( operand1 , -1 )
-            ic_line += "(S,{})".format( symbol_index )
-        elif mnemonic_str == "BC":
-            symbol_index = update_symbol( operand2 , -1 )
-            ic_line += "({}) ".format( condition_codes[operand1] )
-            ic_line += "(S,{})".format( symbol_index )
-        elif mnemonic_str == "STOP":
-            pass
-        else:
-            if "=" in operand2:
-                # operand2 is a literal (contains '=')
-                literval_val = operand2.split( "=" )[1]
-                literal_index = update_literal( literval_val , -1 )
-                ic_line += "({}) (L,{})".format( register_codes[operand1] , literal_index )
-            else:
-                # operand2 is a symbol
-                symbol_index = update_symbol( operand2 , -1 )
-                ic_line += "({}) (S,{})".format( register_codes[operand1] , symbol_index )
-        location_cntr += 1
 
+    # Case 5: Data declaration statements (DC/DS statements)
     if mnemonics[ mnemonic_str ][0] == "DL":
         symbol_index = update_symbol( label , location_cntr )
         if mnemonic_str == "DC":
@@ -212,23 +191,59 @@ for line_tokens in source_line_tokens:
             location_cntr += int( operand1 )   
         ic_line += "(S,{}) (C,{})".format( symbol_index , operand1 )
 
+
+    # Case 6: Imperative statements
+    if mnemonics[ mnemonic_str ][0] == "IS":
+
+        if mnemonic_str == "READ" or mnemonic_str == "PRINT":
+            # READ and PRINT have a single operand
+            symbol_index = update_symbol( operand1 , -1 )
+            ic_line += "(S,{})".format( symbol_index )
+
+        elif mnemonic_str == "BC":
+            # BC has 
+            # operand1 -> conditional_code
+            # operand2 -> symbol
+            symbol_index = update_symbol( operand2 , -1 )
+            ic_line += "({}) ".format( condition_codes[operand1] )
+            ic_line += "(S,{})".format( symbol_index )
+
+        elif mnemonic_str == "STOP":
+            pass
+        else:
+            # All other imperative mnemonics having two operands where,
+            # operand1 -> register
+            # operand2 -> literal OR symbol
+            if "=" in operand2:
+                # operand2 is a literal (contains '=')
+                literval_val = operand2.split( "=" )[1]
+                ic_line += "({}) (L,{})".format( register_codes[operand1] , littab_ptr )
+                littab[littab_ptr] = ( literval_val , -1 )
+                littab_ptr += 1
+            else:
+                # operand2 is a symbol
+                symbol_index = update_symbol( operand2 , -1 )
+                ic_line += "({}) (S,{})".format( register_codes[operand1] , symbol_index )
+        location_cntr += 1
+
     ic_lines.append( ic_line )
 
-# Initialize literals at the end of program (if any)
-init_literals( location_cntr )
+
+# Perform case 2 (LTORG)
+init_literals()
     
 print( "-------------- INTERMEDIATE CODE----------------" )
 for line in ic_lines:
     print( line )
 
 print( "--------- SYMBOL TABLE -------------" )
-for ( s , addr ) in symbol_table:
+for ( s , addr ) in symtab:
     print( s , addr )
 
 print( "--------- LITERAL TABLE -------------" )
-for ( l , addr ) in literal_table:
+for ( l , addr ) in littab[ : littab_ptr ]:
     print( l , addr )
 
 print( "---------- POOL TABLE --------------- " )
-for i in pool_table:
+for i in pooltab[ : pooltab_ptr ]:
     print( i )

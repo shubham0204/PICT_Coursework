@@ -30,6 +30,7 @@ with open( source_path , "r" ) as file:
 mdtab_ptr: int = 0
 kpdtab_ptr: int = 0
 curr_macro_name: str = ""
+is_macro_reading: bool = False
 
 for i in range( 1 , len( source_tokens ) ):
     line_tokens = source_tokens[i]
@@ -62,8 +63,10 @@ for i in range( 1 , len( source_tokens ) ):
         curr_macro_name = macro_name
 
         mntab.append( mntab_entry )
+
+        is_macro_reading = True
         
-    elif line_tokens[0] != "MEND" and line_tokens[0] != "MACRO":
+    elif is_macro_reading and line_tokens[0] != "MEND" and line_tokens[0] != "MACRO":
 
         mdtab_entry = MDTEntry()
         mnemonic = line_tokens[0]
@@ -87,6 +90,7 @@ for i in range( 1 , len( source_tokens ) ):
         mdtab_entry = MDTEntry()
         mdtab_entry.mnemonic = "MEND"
         mdtab.append( mdtab_entry )
+        is_macro_reading = False
 
 print( "------------ MNTAB ----------------")   
 print( "Name".ljust( 10 ) , "#PP".ljust( 5 ) , "#KP".ljust( 5 ) , "KPDTAB_PTR".ljust( 10 ) , "MDTAB_PTR".ljust( 10 ) )  
