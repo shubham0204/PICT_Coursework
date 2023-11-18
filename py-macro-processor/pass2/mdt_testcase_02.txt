@@ -1,0 +1,10 @@
+MOVER      (P,2)      (P,0)
+ADD        (P,2)      ='1'
+MOVER      (P,3)      (P,1)
+ADD        (P,2)      ='5'
+MEND
+MOVER      (P,2)      (P,0)
+MOVER      (P,3)      (P,1)
+ADD        (P,2)      ='15'
+ADD        (P,3)      ='10'
+MEND

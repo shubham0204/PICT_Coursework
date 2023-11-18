@@ -1,0 +1,3 @@
+MOVER      (P,2)      ='2'
+MOVER      (P,3)      (P,1)
+MEND

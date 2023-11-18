@@ -1,0 +1,12 @@
+MOVER      (P,2)      (P,0)     
+ADD        (P,2)      (P,1)     
+MOVEM      (P,2)      (P,0)     
+MEND
+MOVER      (P,2)      (P,0)     
+ADD        (P,2)      (P,1)     
+MOVEM      (P,2)      (P,0)     
+MEND
+MOVER      (P,2)      (P,0)     
+ADD        (P,2)      (P,1)     
+MOVEM      (P,2)      (P,0)     
+MEND
