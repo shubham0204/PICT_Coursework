@@ -21,10 +21,12 @@ class ShortestJobFirst:
 
         while n_completed_proc < len( processes ):
 
+            # 1. Add processes to ready_queue if any has arrived
             for proc in processes:
                 if proc.at == time:
                     ready_queue.append( proc )
 
+            # 2. Check for completion of current process
             if is_proc_exec and curr_proc_bt == 0:
                 curr_proc.ct = time
                 curr_proc.bt = burst_times[ curr_proc.id ]
@@ -33,6 +35,7 @@ class ShortestJobFirst:
                 n_completed_proc += 1
                 is_proc_exec = False
 
+            # 3. Check if current process can be preempted
             if is_proc_exec and len( ready_queue ) > 0:
                 min_bt_proc = min( ready_queue , key=lambda proc: proc.bt ) 
                 if min_bt_proc.bt < curr_proc_bt:
@@ -42,7 +45,8 @@ class ShortestJobFirst:
                     curr_proc = min_bt_proc
                     curr_proc_bt = curr_proc.bt
                     ready_queue.remove( min_bt_proc )
-            
+
+            # 4. Schedule a process from ready_queue if CPU is idle
             if not is_proc_exec and len( ready_queue ) > 0:
                 min_bt_proc = min( ready_queue , key=lambda proc: proc.bt ) 
                 ready_queue.remove( min_bt_proc )

@@ -14,10 +14,12 @@ class FirstComeFirstServe:
 
         while n_completed_proc < len( processes ):
 
+            # 1. Add processes to ready_queue if any has arrived
             for proc in processes:
                 if proc.at == time:
                     ready_queue.append( proc )
 
+            # 2. Check for completion of current process
             if is_proc_exec and time == (curr_proc.rt + curr_proc.bt):
                 # curr_proc execution completed, calculate parameters
                 # and add it to schedule
@@ -28,6 +30,7 @@ class FirstComeFirstServe:
                 n_completed_proc += 1
                 is_proc_exec = False
 
+            # 3. Schedule process if CPU is idle (is_proc_exec=False)
             if not is_proc_exec and len( ready_queue ) > 0:
                 # Start execution of first process from 
                 # ready queue

@@ -16,10 +16,12 @@ class PriorityScheduling:
 
         while n_completed_proc < len( processes ):
 
+            # 1. Add processes to ready_queue if any has arrived
             for proc in processes:
                 if proc.at == time:
                     ready_queue.append( proc )
 
+            # 2. Check if current process has completed execution
             if is_proc_exec and curr_proc.rt + curr_proc.bt == time:
                 # Process execution completed
                 curr_proc.rt -= curr_proc.at
@@ -29,6 +31,7 @@ class PriorityScheduling:
                 is_proc_exec = False
                 schedule.append( curr_proc )
 
+            # 3. Schedule process from ready queue if CPU is idle
             if not is_proc_exec and len( ready_queue ) > 0:
                 # Schedule the process with highest priority
                 # Lower the number, higher is the priority
