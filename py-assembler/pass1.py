@@ -44,7 +44,7 @@ def find_symbol( symbol_name: str ) -> tuple[int,int]:
     # return its index and address if found
     # else -1 for both
     for i , ( s , addr ) in enumerate(symtab):
-        if s == symbol_name: return i+1 , addr
+        if s == symbol_name: return i , addr
     return -1 , -1
 
 def update_symbol( symbol_name: str , addr: int ) -> int:
@@ -58,7 +58,7 @@ def update_symbol( symbol_name: str , addr: int ) -> int:
                 symtab[ i ] = ( s , addr )
             return i
     symtab.append( ( symbol_name , addr ) )
-    return len( symtab )
+    return len( symtab ) - 1
 
 # Allocate littab and pooltab with 10 empty entries
 littab: list[ tuple[ str , int ]  ] = [ ( '' , -1 ) for _ in range(10) ]
@@ -247,3 +247,7 @@ for ( l , addr ) in littab[ : littab_ptr ]:
 print( "---------- POOL TABLE --------------- " )
 for i in pooltab[ : pooltab_ptr ]:
     print( i )
+
+with open( "ic.txt" , "w" ) as file:
+    for line in ic_lines:
+        file.write( line + '\n' )
