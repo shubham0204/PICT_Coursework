@@ -28,14 +28,9 @@ def least_recently_used( refs: list[int] , memory_size: int ):
             # Page fault occurs
             # swap out least recently accessed page and swap in `ref` if memory is full
             if len( memory ) == memory_size:
-                access_gaps: list[int] = []
                 # Iterate through each page in memory
                 # and check which one was least recently accessed
-                for memory_index , memory_ref in enumerate( memory ):
-                    j: int = ref_index - 1
-                    while refs[j] != memory_ref and j >= 0:
-                        j -= 1
-                    access_gaps.append( ref_index-j )
+                access_gaps: list[int] = [ refs[ ref_index - 1 :: -1 ].index(memory_ref) for memory_ref in memory]
                 lru_frame_index = access_gaps.index( max( access_gaps ) )
                 memory[ lru_frame_index ] = ref
             else:
@@ -57,11 +52,11 @@ def optimal( refs: list[int] , memory_size: int ):
                 access_gaps: list[int] = []
                 # Iterate through each page in memory
                 # and check which one was least recently accessed
-                for memory_index , memory_ref in enumerate( memory ):
-                    j: int = ref_index + 1
-                    while j < len( refs ) and refs[j] != memory_ref:
-                        j += 1
-                    access_gaps.append( j - (ref_index + 1) )
+                for memory_ref in memory:
+                    try:
+                        access_gaps.append( refs[ ref_index + 1 : ].index( memory_ref ) - (ref_index+1) )
+                    except:
+                        access_gaps.append( 1e+3 ) 
                 max_gap_index = access_gaps.index( max( access_gaps ) )
                 memory[ max_gap_index ] = ref
             else:
