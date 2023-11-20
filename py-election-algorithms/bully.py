@@ -1,51 +1,42 @@
-from process import Process
-import random
+class Bully:
 
-Process.ACTIVE_PROB = float( input( "Enter active process probability: " ) )
+    def __init__( self , num_processes: int ):
+        self.num_processes = num_processes
+        self.alive_status: list[True] = [ True for _ in range( num_processes ) ]
 
-def send_message( message: str , sender: Process , receiver: Process ) -> str:
-    return receiver.process_message( sender_identifier=sender.identifier , incoming_message=message )
+    def kill_process( self , id: int ):
+        self.alive_status[ id ] = False
 
-# Initialize a pool of processes and choose a 
-# coordinator randomly
-process_pool_size = int( input( "Enter process pool size: " ) )
-process_pool: list[Process] = []
-for i in range( process_pool_size ):
-    process_pool.append( Process( i ) )
-random.choice( process_pool ).coordinate = True
+    def start_process( self , id: int ):
+        self.alive_status[ id ] = True
 
-# Simulate a pool of processes
-# where each process is sending messages to some other process
-# If one of the processes is a coordinator, and it fails to respond
-# an election is held
-num_iterations = 100
-for _ in range( num_iterations ):
-    p1_index = random.randint( 0 , process_pool_size - 1 )
-    p2_index = random.randint( 0 , process_pool_size - 1 )
+    def election( self , initiator_id: int ):
+        if initiator_id > self.num_processes - 1:
+            return
 
-    if p1_index == p2_index:
-        continue
+        if not self.alive_status[ initiator_id ]:
+            print( f"Process {initiator_id} cannot hold election as it is down. " )
+            return
 
-    p1 = process_pool[ p1_index ]
-    p2 = process_pool[ p2_index ]
-    response = send_message( "hello_world" , p1 , p2 )
-    print( "{} {} talking...".format( p1 , p2 ) )
-    if response == Process.MESSAGE_NOT_OK and p2.coordinate:
-        print( "Coordinator {} not responding. Holding election...".format( p2 ) )
+        print( f"Election started by process {initiator_id}" )
 
-        # Hold election
-        # 1. Send ELECTION messages to all higher processes
-        # 2. If any one of them responds with OK, select that process as coordinator
+        for i in range( initiator_id + 1 , self.num_processes ):
+            print( f"ELECTION message sent to process {i} by process {initiator_id}")
 
-        higher_processes = process_pool[ p1_index + 1 : ]
-        for process in higher_processes:
-            print( "Sent ELECTION message to {}".format( process ) ) 
-            response = send_message( Process.MESSAGE_ELECTION , p2 , process )
-            if response == Process.MESSAGE_OK:
-                print( "New coordinator chosen as {}".format( process ) ) 
-                process.coordinate = True
-                break
-            else:
-                print( "Negative response from {}".format( process ) )
-                
-        p2.coordinate = False
+        for i in range( initiator_id + 1 , self.num_processes ):
+            if self.alive_status[ i ]:
+                print( f"Process {i} responded OK to ELECTION" )
+
+        for i in range( initiator_id + 1 , self.num_processes ):
+            if self.alive_status[ i ]:
+                self.election( i )
+                return
+
+        bully_process = max( id for id in range( self.num_processes ) if self.alive_status[ id ] )
+        print( f"New coordinator is process {bully_process}")
+        print( f"process {bully_process} informs everyone that it is the new coordinator" )
+
+algo = Bully( num_processes=5 )
+algo.kill_process( 4 )
+algo.kill_process( 1 )
+algo.election( 0 )
