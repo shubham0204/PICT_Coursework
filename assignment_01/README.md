@@ -11,7 +11,6 @@ Feature Type: `Categorical, Integer`
 Instances: `48842`
 Number of features: `14`
 
-
 ### Citation
 
 ```

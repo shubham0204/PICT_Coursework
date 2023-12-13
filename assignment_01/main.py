@@ -10,12 +10,13 @@ cols = [
 ]
 ds = pd.read_csv( "dataset/adult.data" , header=None , skipinitialspace=True ) 
 ds.columns = cols
+
+# Change dtypes from `object` to `str`
 ds = ds.astype( { 
     "workclass": 'string' , "education": 'string' , "marital-status": 'string' , "occupation": 'string' , 
     "relationship": 'string' ,
     "race": 'string' , "sex": 'string' , "native-country": 'string' , "income": 'string'
 } )
-ds[ "workclass" ] = ds[ "workclass" ].astype( 'string' )
 
 print( "Data-types of all columns" )
 print( ds.dtypes )
