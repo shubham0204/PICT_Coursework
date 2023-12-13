@@ -7,6 +7,10 @@ User-friendly fork(s) of this repository:
 
 ## 📑 Subjects
 
+### Semester 6
+
+1. [DSBDL](https://github.com/shubham0204/PICT_Coursework/tree/dsbdl)
+
 ### Semester 5
 1. [LP 01](https://github.com/shubham0204/PICT_Coursework/tree/lp-1)
 2. [DBSL](https://github.com/shubham0204/PICT_Coursework/tree/dbmsl)
