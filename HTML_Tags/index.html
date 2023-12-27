@@ -1,0 +1,165 @@
+<html>
+
+<head>
+    <title>Demo for all HTML tags</title>
+</head>
+
+<body>
+
+    <!-- Heading tags (h1 to h6) -->
+    <h1>This is a h1 heading</h1>
+    <h2>This is a h2 heading</h2>
+    <h3>This is a h3 heading</h3>
+    <h4>This is a h4 heading</h4>
+    <h5>This is a h5 heading</h5>
+    <h6>This is a h6 heading</h6>
+
+    <!-- Spacing elements -->
+    <a id="section1" name="section1"></a>
+    C is an imperative, procedural language in the ALGOL tradition. 
+    It has a static type system. In C, all executable code is contained within subroutines (also called "functions", 
+    though not in the sense of functional programming). <br> Function parameters are passed by value, although arrays are
+     passed as pointers, i.e. the address of the first item in the array. Pass-by-reference is simulated in C by explicitly 
+     passing pointers to the thing being referenced. <br> C program source text is free-form code. Semicolons terminate statements, 
+    while curly braces are used to group statements into blocks.
+
+    <pre>
+        The origin of C is closely tied to the development of the Unix operating system, originally implemented in
+         assembly language on a PDP-7 by Dennis Ritchie and Ken Thompson, incorporating several ideas from colleagues. 
+         Eventually, they decided to port the operating system to a PDP-11. 
+        The original PDP-11 version of Unix was also developed in assembly language.
+    </pre>
+
+    <!-- Formatting Text Phrases -->
+    <span style="font-style:italic">This is italic</span> <br>
+    <strong>This is strong 💪</strong> <br>
+    <b>This is bold</b>
+
+    <!-- Horizontal Ruler -->
+    <hr>
+
+    <!-- Image element -->
+    <img 
+        src="torvolds.png"
+        alt="Linus Torvolds"
+        height="480"
+        width="65%"
+        style="border: 5px solid #e66465;"/>
+    <br>
+
+    <!-- Link element / Anchor -->
+    <br>
+    <a href="https://en.wikipedia.org/wiki/C_(programming_language)">
+        Wikipedia article for the C programming language
+    </a>
+    <br>
+    <a href="#section1">Go to the description of C programming language</a>
+    <br>
+
+    <!-- Lists -->
+    <!-- Unordered, ordered, definition -->
+    My favourite programming languages: <br>
+    <ul style="list-style-type: square">
+        <li>Python</li>
+        <li>Kotlin</li>
+        <li>C and C++</li>
+        <li>Rust</li>
+    </ul>
+
+    Features of Rust: <br>
+    <ol type="I">
+        <li>Borrow checking</li>
+        <li>No garbage collection</li>
+        <li>Package manager - Cargo</li>
+    </ol>
+
+    <dl>
+        <dt> Compiled languages </dt>
+        <dd> C and C++ </dd>
+        <dd> Java </dd>
+        <dd> Rust </dd>
+        <dt> Interpreted languages </dt>
+        <dd> JavaScript </dd>
+        <dd> Python </dd> 
+    </dl>
+
+    <!-- Frames -->
+    <iframe 
+        src="frame.html" 
+        width="300" 
+        height="200" 
+        title="x86_64 Information">
+    </iframe>
+    <br>
+
+    <!-- Forms -->
+    <form>
+
+        <label for="first_name">First Name</label>
+        <input
+            id="first_name"
+            value="Your first name..." 
+            type="text">
+        <br>
+
+        <label for="last_name">Last Name</label>
+        <input
+            id="last_name"
+            value="Your last name..." 
+            type="text">
+        <br>
+        <br>
+
+        Favourite Language <br>
+        <label for="python">Python</label>
+        <input 
+            type="radio" 
+            id="python"
+            name="fav-lang"
+            checked>
+        <br> 
+        <label for="c++">C++</label>
+        <input 
+            type="radio" 
+            id="c++"
+            name="fav-lang">
+        <br> 
+        <label for="java">Java</label>
+        <input 
+            type="radio" 
+            id="java"
+            name="fav-lang">
+        <br> 
+        Favourite Features <br>
+        <input 
+            type="checkbox"
+            id="feature-1"
+            name="features"
+            >
+        <label for="feature-1">Garbage Collection</label>
+        <br>
+        <input 
+            type="checkbox"
+            id="feature-2"
+            name="features"
+            >
+        <label for="feature-2">Static Typing</label>
+        <br>
+        <input 
+            type="checkbox"
+            id="feature-3"
+            name="features"
+            >
+        <label for="feature-3">Builtin concurrency</label>
+        <br>
+
+        <label for="text-area-1">Describe your favourite language</label> <br>
+        <textarea id="text-area-1"></textarea>
+        <input type="submit"> <br>
+        <input type="button" value="Run!"> <br>
+
+    </form>
+
+</body>
+
+</html>
