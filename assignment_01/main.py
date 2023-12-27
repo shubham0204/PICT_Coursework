@@ -26,3 +26,4 @@ print( ds.describe() )
 
 print( "Check for missing values in all columns of the dataset" )
 print( ds.isin( [ "?" ] ).sum()  )
+pd.Series.value_counts(self)
