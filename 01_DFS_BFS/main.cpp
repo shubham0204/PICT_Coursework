@@ -22,7 +22,7 @@ class Graph {
 
     void _add_edge(
         std::string node_a , 
-        std::string node_b
+        std::string node_b 
     ) {
         if( head == nullptr ) {
             head = new( ListNode ) ; 
@@ -32,31 +32,39 @@ class Graph {
             num_nodes += 1 ; 
         }
         else {
-            ListNode* curr_node_down = head ; 
-            ListNode* curr_node_prev = nullptr ; 
-            bool is_found = false ; 
-            while( curr_node_down != nullptr ) {
-                if( curr_node_down -> name == node_a ) {
-                    ListNode* curr_node = curr_node_down ; 
-                    while( curr_node -> next != nullptr ) {
-                        curr_node = curr_node -> next ; 
-                    }
-                    curr_node -> next = new( ListNode ) ; 
-                    curr_node -> next -> name = node_b ; 
-                    is_found = true ; 
-                    break ;
+            ListNode* node = find_node( node_a ) ; 
+            if( node != nullptr ) {
+                while( node -> next != nullptr ) {
+                    node = node -> next ; 
                 }
-                curr_node_prev = curr_node_down ; 
-                curr_node_down = curr_node_down -> down ; 
+                node -> next = new( ListNode ) ; 
+                node -> next -> name = node_b ; 
             }
-            if( !is_found ) {
-                curr_node_prev -> down = new( ListNode ) ; 
-                curr_node_prev -> down -> name = node_a ; 
-                curr_node_prev -> down -> next = new( ListNode ) ; 
-                curr_node_prev -> down -> next -> name = node_b ; 
+            else {
+                node = head ; 
+                while( node -> down != nullptr ) {
+                    node = node -> down ; 
+                }
+                node -> down = new( ListNode ) ; 
+                node -> down -> name = node_a ; 
+                node -> down -> next = new( ListNode ) ; 
+                node -> down -> next -> name = node_b ; 
                 num_nodes += 1 ; 
-            }
+            }    
         }
+    }
+
+    ListNode* find_node(
+        std::string name
+    ) {
+        ListNode* current_node = head ; 
+        while( current_node != nullptr ) {
+            if( current_node -> name == name ) {
+                return current_node ; 
+            }
+            current_node = current_node -> down ; 
+        }
+        return nullptr ; 
     }
 
     public:
@@ -99,19 +107,15 @@ class Graph {
         if( node == nullptr ) return ; 
         std::cout << node -> name << " " ; 
         visited.push_back( node -> name ) ;
-        ListNode* curr_node_down = head ; 
-        while( curr_node_down != nullptr ) {
-            if( curr_node_down -> name == node -> name ) {
-                ListNode* neighbor = curr_node_down -> next ; 
-                while( neighbor != nullptr ) {
-                    if( std::find( visited.begin() , visited.end() , neighbor -> name ) == visited.end() ) {
-                        stack_neighbors( neighbor , visited ) ; 
-                    }
-                    neighbor = neighbor -> next ; 
-                } 
-                break ; 
-            }
-            curr_node_down = curr_node_down -> down ; 
+        ListNode* n = find_node( node -> name ) ;
+        if( n != nullptr ) {
+            ListNode* neighbor = n -> next ; 
+            while( neighbor != nullptr ) {
+                if( std::find( visited.begin() , visited.end() , neighbor -> name ) == visited.end() ) {
+                    stack_neighbors( neighbor , visited ) ; 
+                }
+                neighbor = neighbor -> next ; 
+            } 
         }
     }
 
@@ -128,21 +132,17 @@ class Graph {
             visited.push_back( curr_node_name ) ;  
             s.pop() ;
 
-            ListNode* curr_node_down = head ; 
-            while( curr_node_down != nullptr ) {
-                if( curr_node_down -> name == curr_node_name ) {
-                    ListNode* curr_node = curr_node_down -> next ; 
-                    while( curr_node != nullptr ) {
-                        if( std::find( visited.begin() , visited.end() , curr_node -> name ) == visited.end() ) {
-                            s.push( curr_node -> name ) ; 
-                        }
-                        curr_node = curr_node -> next ; 
-                    } 
-                    break ; 
+            ListNode* node = find_node( curr_node_name ) ; 
+            if( node != nullptr ) {
+                ListNode* curr_node = node -> next ; 
+                while( curr_node != nullptr ) {
+                    if( std::find( visited.begin() , visited.end() , curr_node -> name ) == visited.end() ) {
+                        s.push( curr_node -> name ) ; 
+                    }
+                    curr_node = curr_node -> next ; 
                 }
-                curr_node_down = curr_node_down -> down ; 
             }
-           
+
         }
         std::cout << LBR ; 
     }
@@ -164,19 +164,16 @@ class Graph {
         std::cout << curr_node_name << " " ; 
         queue.pop() ; 
         visited.push_back( curr_node_name ) ;
-        ListNode* curr_node_down = head ; 
-        while( curr_node_down != nullptr ) {
-            if( curr_node_down -> name == curr_node_name ) {
-                ListNode* neighbor = curr_node_down -> next ; 
-                while( neighbor != nullptr ) {
-                    if( std::find( visited.begin() , visited.end() , neighbor -> name ) == visited.end() ) {
-                        queue.push( neighbor -> name ) ; 
-                    }
-                    neighbor = neighbor -> next ; 
-                } 
-                break ; 
+
+        ListNode* node = find_node( curr_node_name ) ; 
+        if( node != nullptr ) {
+            ListNode* neighbor = node -> next ; 
+            while( neighbor != nullptr ) {
+                if( std::find( visited.begin() , visited.end() , neighbor -> name ) == visited.end() ) {
+                    queue.push( neighbor -> name ) ; 
+                }
+                neighbor = neighbor -> next ; 
             }
-            curr_node_down = curr_node_down -> down ; 
         }
         queue_neighbors( queue , visited ) ; 
     }
@@ -193,21 +190,17 @@ class Graph {
             visited.push_back( curr_node_name ) ;  
             q.pop() ;
 
-            ListNode* curr_node_down = head ; 
-            while( curr_node_down != nullptr ) {
-                if( curr_node_down -> name == curr_node_name ) {
-                    ListNode* curr_node = curr_node_down -> next ; 
-                    while( curr_node != nullptr ) {
-                        if( std::find( visited.begin() , visited.end() , curr_node -> name ) == visited.end() ) {
-                            q.push( curr_node -> name ) ; 
-                        }
-                        curr_node = curr_node -> next ; 
-                    } 
-                    break ; 
-                }
-                curr_node_down = curr_node_down -> down ; 
+            ListNode* node = find_node( curr_node_name ) ;
+            if( node != nullptr ) {
+                ListNode* curr_node = node -> next ; 
+                while( curr_node != nullptr ) {
+                    if( std::find( visited.begin() , visited.end() , curr_node -> name ) == visited.end() ) {
+                        q.push( curr_node -> name ) ; 
+                    }
+                    curr_node = curr_node -> next ; 
+                } 
             }
-           
+
         }
         std::cout << LBR ;
     }
