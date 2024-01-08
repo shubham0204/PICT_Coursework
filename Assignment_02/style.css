@@ -1,0 +1,51 @@
+body {
+    background-color: white;
+}
+
+h1 {
+	font-family: Calibri;
+}
+
+.banner {
+	object-fit: cover;
+	object-position: 0% 40%;
+}
+
+.photo-gallery {
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: separate;
+	border-spacing: 10px;
+}
+
+.gallery-img {
+	width: 100%;
+	height: 500px;
+	object-fit: cover;
+	object-position: 0% 0%;
+}
+
+.input-textbox {
+	height: 50px;
+	border-color: lightgray;
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 8px;
+	padding: 30px;
+	font-size: 14;
+}
+
+.menu {
+	border-spacing: 30px;
+}
+
+.appbar {
+	background-color: whitesmoke;
+	width: 100%;
+}
+.appbar h1 {
+	width: 100%;
+	text-align: center;
+	padding: 10px;
+	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
