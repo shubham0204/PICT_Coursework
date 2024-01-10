@@ -35,6 +35,14 @@ h1 {
 	font-size: 14;
 }
 
+.button {
+	background-color: blueviolet;
+	width: 100px;
+	height: 40px;
+	border-radius: 8px;
+	color: white;
+}
+
 .menu {
 	border-spacing: 30px;
 }
@@ -48,4 +56,11 @@ h1 {
 	text-align: center;
 	padding: 10px;
 	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.description {
+	padding-left: 60px;
+	padding-right: 60px;
+	text-align: justify;
+	font-style: italic;
 }

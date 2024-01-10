@@ -28,12 +28,65 @@
         - number of guests
         - contact number
     -->
+    <h1>
+        Tell us about yourself
+    </h1>
+
     <form>
+
+        <h3>Personal Details</h3>
         <input
             class="input-textbox"
-            type="email"
+            type="email"    
             placeholder="Your email..."
             id="enq-email"/>
+        <p></p>
+
+        <input
+            class="input-textbox"
+            type="tel"
+            placeholder="Your phone number..."
+            pattern="[0-9]{10}"
+            id="enq-phone"/>
+
+        <p></p>
+
+        <input
+            class="input-textbox"
+            placeholder="First Name"
+            id="enq-first-name"/>
+
+        <input 
+            class="input-textbox"
+            placeholder="Last Name"
+            id="enq-last-name"/>
+
+
+        <h3>Nationality</h3>
+        <input type="radio" name="enq-nation"> Indian <br>
+        <input type="radio" name="enq-nation"> Nepalese <br>
+        <input type="radio" name="enq-nation"> Other <br>
+
+        <h3>Services</h3>
+        <input type="checkbox" name="enq-service">Food<br>
+        <input type="checkbox" name="enq-service">Trekking<br>
+        <input type="checkbox" name="enq-service">Room Service<br>
+        <input type="checkbox" name="enq-service">Meditation Centre<br>
+        <input type="checkbox" name="enq-service">Body Care<br>
+        <p></p>
+
+        Expected date of arrival <input type="date" name="enq-date">
+        <p></p>
+
+        <input 
+            class="button"
+            type="submit" 
+            value="Send enquiry"/>
+        <input 
+            class="button"
+            type="reset" 
+            value="Refill form"/>
+
     </form>
     
 </body>
