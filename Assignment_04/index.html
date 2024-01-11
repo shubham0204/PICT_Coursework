@@ -1,0 +1,61 @@
+<html>
+
+    <head>
+        <title>Calculator</title>
+        <script type="text/javascript" src="operations.js"></script>
+    </head>
+
+    <body>
+
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="style.css"/>
+
+        <form>
+            
+            <input type="text" id="num1">
+            <br>
+
+            <input type="text" id="num2">
+            <br>
+
+            <table>
+                <tr>
+                    <td>
+                        <input 
+                            type="button" 
+                            onclick="compute(this)"
+                            value="+">
+                    </td>
+                    <td>
+                        <input 
+                            type="button" 
+                            onclick="compute(this)"
+                            value="-">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input 
+                            type="button" 
+                            onclick="compute(this)"
+                            value="*">
+                    </td>
+                    <td>
+                        <input 
+                            type="button" 
+                            onclick="compute(this)"
+                            value="/">
+                    </td>
+                </tr>
+            </table>
+            
+            <input type="reset" value="Clear All">
+            <br>
+
+        </form>
+    </body>
+
+
+</html>
