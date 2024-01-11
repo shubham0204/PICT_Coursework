@@ -7,13 +7,13 @@
     metadata-complete="true">
 
     <servlet>
-        <servlet-name>AddServlet</servlet-name>
-        <servlet-class>assignment_05.AddServlet</servlet-class>
+        <servlet-name>Books</servlet-name>
+        <servlet-class>assignment_05.ServletBooks</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>AddServlet</servlet-name>
-        <url-pattern>/add</url-pattern>
+        <servlet-name>Books</servlet-name>
+        <url-pattern>/books</url-pattern>
     </servlet-mapping>
 
 </web-app>

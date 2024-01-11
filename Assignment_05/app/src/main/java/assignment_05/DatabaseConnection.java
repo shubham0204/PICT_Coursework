@@ -6,9 +6,10 @@ import java.sql.SQLException;
 
 public class DatabaseConnection {
 
-    public static Connection initializeDatabase() throws SQLException {
+    public static Connection initializeDatabase() throws SQLException , ClassNotFoundException {
+        Class.forName("org.mariadb.jdbc.Driver");
         Connection connection = DriverManager.getConnection( 
-            "jdbc:mysql://localhost:3306/wtl_05", 
+            "jdbc:mariadb://localhost:3306/wtl_05", 
             "root", 
             "root"
         ) ; 
