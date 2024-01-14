@@ -9,11 +9,11 @@
 class ListNode {
     public:
 
-    std::string name = "";
-    ListNode* next = nullptr ;
-    ListNode* down = nullptr ;
+        std::string name = "";
+        ListNode* next = nullptr ;
+        ListNode* down = nullptr ;
 
-    friend class Graph ; 
+        friend class Graph ; 
 } ;  
 
 class Graph {
@@ -21,9 +21,9 @@ class Graph {
     ListNode* head = nullptr ;
 
     void _add_edge(
-        std::string node_a , 
-        std::string node_b 
-    ) {
+            std::string node_a , 
+            std::string node_b 
+            ) {
         if( head == nullptr ) {
             head = new( ListNode ) ; 
             head -> name = node_a ; 
@@ -55,8 +55,8 @@ class Graph {
     }
 
     ListNode* find_node(
-        std::string name
-    ) {
+            std::string name
+            ) {
         ListNode* current_node = head ; 
         while( current_node != nullptr ) {
             if( current_node -> name == name ) {
@@ -86,9 +86,9 @@ class Graph {
     }
 
     void add_edge(
-        std::string node_a , 
-        std::string node_b
-    ) {
+            std::string node_a , 
+            std::string node_b
+            ) {
         _add_edge( node_a , node_b ) ;
         _add_edge( node_b , node_a ) ;
         num_edges += 1 ; 
@@ -101,9 +101,9 @@ class Graph {
     }
 
     void stack_neighbors(
-        ListNode* node , 
-        std::vector<std::string>& visited
-    ) {
+            ListNode* node , 
+            std::vector<std::string>& visited
+            ) {
         if( node == nullptr ) return ; 
         std::cout << node -> name << " " ; 
         visited.push_back( node -> name ) ;
@@ -119,32 +119,55 @@ class Graph {
         }
     }
 
-    void dfs_iterative() {
+    bool goal_test(
+            ListNode* node , 
+            std::string dst_node
+            ) {
+        return node -> name == dst_node ; 
+    }
 
-        std::stack<std::string> s ; 
-        std::vector<std::string> visited ; 
-        s.push( head -> name ) ; 
 
-        while( !s.empty() ) {
+    ListNode* dfs_iterative(
+            std::string dst_node
+            ) {
+        // Initial state of the problem -> head node
+        ListNode* node = head ; 
 
-            std::string curr_node_name = s.top() ; 
-            std::cout << curr_node_name << " " ;
-            visited.push_back( curr_node_name ) ;  
-            s.pop() ;
+        if( goal_test( node , dst_node ) ) return node ; 
 
-            ListNode* node = find_node( curr_node_name ) ; 
-            if( node != nullptr ) {
-                ListNode* curr_node = node -> next ; 
-                while( curr_node != nullptr ) {
-                    if( std::find( visited.begin() , visited.end() , curr_node -> name ) == visited.end() ) {
-                        s.push( curr_node -> name ) ; 
-                    }
-                    curr_node = curr_node -> next ; 
+        // Frontier/open-list containing nodes which have to
+        // expanded
+        std::stack<ListNode*> frontier ;
+
+        // closed-list/explored-list containing nodes which have
+        // been traversed 
+        std::vector<ListNode*> explored ; 
+        frontier.push( node ) ; 
+
+        while( true ) {
+
+            if( frontier.empty() ) return nullptr;
+
+            node = frontier.top() ;
+            frontier.pop() ;  
+            explored.push_back( node ) ;  
+
+            // Expand the frontier by adding
+            // nodes/states achieved by performing all possible actions 
+            // on the current node (or state)
+            // i.e. add all neighbors of the current node to the stack
+            ListNode* curr_node = node -> next ; 
+            while( curr_node != nullptr ) {
+                if( std::find( explored.begin() , explored.end() , curr_node ) == explored.end() ) {
+                    if( goal_test( curr_node , dst_node ) ) return curr_node ; 
+                    frontier.push( curr_node )  ; 
                 }
+                curr_node = curr_node -> next ; 
             }
 
         }
-        std::cout << LBR ; 
+
+        return nullptr ;  
     }
 
     void bfs_recursive() {
@@ -156,9 +179,9 @@ class Graph {
     }
 
     void queue_neighbors(
-        std::queue<std::string>& queue , 
-        std::vector<std::string> visited 
-    ) {
+            std::queue<std::string>& queue , 
+            std::vector<std::string> visited 
+            ) {
         if( queue.empty() ) return ; 
         std::string curr_node_name = queue.front() ; 
         std::cout << curr_node_name << " " ; 
@@ -178,31 +201,44 @@ class Graph {
         queue_neighbors( queue , visited ) ; 
     }
 
-    void bfs_iterative() {
-        std::queue<std::string> q ; 
-        std::vector<std::string> visited ; 
-        q.push( head -> name ) ; 
+    ListNode* bfs_iterative(
+            std::string dst_node_name        
+            ) {
 
-        while( !q.empty() ) {
+        // Initial state of the problem
+        ListNode* node = head ; 
 
-            std::string curr_node_name = q.front() ; 
-            std::cout << curr_node_name << " " ;
-            visited.push_back( curr_node_name ) ;  
-            q.pop() ;
+        if( goal_test( node , dst_node_name ) ) return node ; 
 
-            ListNode* node = find_node( curr_node_name ) ;
-            if( node != nullptr ) {
-                ListNode* curr_node = node -> next ; 
-                while( curr_node != nullptr ) {
-                    if( std::find( visited.begin() , visited.end() , curr_node -> name ) == visited.end() ) {
-                        q.push( curr_node -> name ) ; 
-                    }
-                    curr_node = curr_node -> next ; 
-                } 
-            }
+        // Frontier, containing all states which will
+        // be expanded
+        std::queue<ListNode*> frontier ;
+
+        // explored-list, containing all states which
+        // have been expanded 
+        std::vector<ListNode*> explored ; 
+        frontier.push( node ) ;  
+
+        while( true ) {
+
+            if( frontier.empty() ) return nullptr ; 
+
+            node = frontier.front() ;
+            frontier.pop() ;  
+            explored.push_back( node ) ;  
+
+            // Expand the frontier
+            ListNode* curr_node = node -> next ; 
+            while( curr_node != nullptr ) {
+                if( std::find( explored.begin() , explored.end() , curr_node ) == explored.end() ) {
+                    if( goal_test( curr_node , dst_node_name )) return curr_node ; 
+                    frontier.push( curr_node ) ;
+                }
+                curr_node = curr_node -> next ; 
+            } 
 
         }
-        std::cout << LBR ;
+     
     }
 
 } ;
@@ -220,17 +256,24 @@ int main( int argc , char* argv[] ) {
     std::cout << "Adjacency List" << LBR ; 
     g.print() ; 
 
-    std::cout << "DFS Iterative" << LBR ; 
-    g.dfs_iterative() ;
+    std::string dst_node_name ; 
+    std::cout << "Enter node name to search: " << LBR ; 
+    std::cin >> dst_node_name ; 
+    ListNode* solution = g.dfs_iterative( dst_node_name ) ; 
+    if( solution ) {
+        std::cout << "Node found -> " << solution << LBR ; 
+    }
+    else {
+        std::cout << "Node not found" << LBR ; 
+    }
 
-    std::cout << "DFS Recursive" << LBR ; 
-    g.dfs_recursive() ; 
-    
-    std::cout << "BFS Iterative" << LBR ; 
-    g.bfs_iterative() ; 
-
-    std::cout << "BFS Recursive" << LBR ;  
-    g.bfs_recursive() ; 
+    solution = g.bfs_iterative( dst_node_name ) ; 
+    if( solution ) {
+        std::cout << "Node found -> " << solution << LBR ; 
+    }
+    else {
+        std::cout << "Node not found" << LBR ; 
+    }
 
     return 0 ; 
 }
