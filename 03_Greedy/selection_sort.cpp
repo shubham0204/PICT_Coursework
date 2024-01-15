@@ -4,13 +4,13 @@
 void selection_sort(
     std::vector<int>& input
 ) {
-    for( int i = 0 ; i < input.size() ; i++ ) {
+    for( size_t i = 0 ; i < input.size() ; i++ ) {
         // At position `i`, the best element that can placed
         // is the `i`th smallest element in the array
         // See: https://www2.seas.gwu.edu/~ayoussef/cs6212/greedy.html
         int min_element = input[ i ] ; 
-        int min_element_index = i ; 
-        for( int j = i + 1 ; j < input.size() ; j++ ) {
+        size_t min_element_index = i ; 
+        for( size_t j = i + 1 ; j < input.size() ; j++ ) {
             if( input[j] < min_element ) {
                 min_element = input[j] ; 
                 min_element_index = j ; 

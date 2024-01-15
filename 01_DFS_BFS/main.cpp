@@ -162,7 +162,7 @@ class Graph {
                     if( goal_test( curr_node , dst_node ) ) return curr_node ; 
                     frontier.push( curr_node )  ; 
                 }
-                curr_node = curr_node -> next ; 
+                curr_node = curr_node -> next ;   
             }
 
         }
