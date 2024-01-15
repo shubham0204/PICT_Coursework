@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My Servlet</title>
+    <title>Book Store</title>
+    <script type="text/javascript" src="books.js"></script>
 </head>
 <body>
 <form action="books" method="post">
@@ -12,5 +13,18 @@
     Quantity <input type="text" name="quantity"> <br>
     <input type="submit" value="Submit!">
 </form>
+
+<button type="button" onclick="displayBooks()">Get all books!</button>
+<br>
+
+<table id="table-books">
+    <thead>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Price</th>
+        <th>Quantity</th>
+    </thead>
+</table>
+
 </body>
 </html>
