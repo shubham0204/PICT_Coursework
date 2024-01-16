@@ -20,12 +20,18 @@ void selection_sort(
     }
 }
 
-int main( int argc , char* argv[] ) {
-    std::vector<int> nums = { 2 , 3 , 1 , 7 , 5 , 2 , 3 , 0 } ; 
-    selection_sort( nums ) ; 
-    for( const int& num : nums ) {
+void print_array(
+    std::vector<int>& input
+) {
+    for( const int& num: input ) {
         std::cout << num << " " ; 
     }
     std::cout << '\n' ;
+}
+
+int main( int argc , char* argv[] ) {
+    std::vector<int> nums = { 2 , 3 , 1 , 7 , 5 , 2 , 3 , 0 } ; 
+    selection_sort( nums ) ; 
+    print_array( nums ) ; 
     return 0;
 }
