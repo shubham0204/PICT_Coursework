@@ -25,15 +25,6 @@ h1 {
 	object-position: 0% 0%;
 }
 
-.input-textbox {
-	height: 50px;
-	border-color: lightgray;
-	border-width: 1px;
-	border-style: solid;
-	border-radius: 8px;
-	padding: 30px;
-	font-size: 14;
-}
 
 .button {
 	background-color: blueviolet;
