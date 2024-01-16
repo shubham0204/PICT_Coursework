@@ -14,22 +14,32 @@
 
         <form>
             
-            <input type="text" id="num1">
+            <input
+                placeholder="First number ..." 
+                class="input-textbox" 
+                type="text" 
+                id="num1">
             <br>
 
-            <input type="text" id="num2">
+            <input
+                placeholder="Second number ..." 
+                class="input-textbox" 
+                type="text" 
+                id="num2">
             <br>
 
-            <table>
-                <tr>
+            <table style="margin: 20px;">
+                 <tr>
                     <td>
-                        <input 
+                        <input
+                            class="button-operator" 
                             type="button" 
                             onclick="compute(this)"
                             value="+">
                     </td>
                     <td>
-                        <input 
+                        <input
+                            class="button-operator" 
                             type="button" 
                             onclick="compute(this)"
                             value="-">
@@ -37,13 +47,15 @@
                 </tr>
                 <tr>
                     <td>
-                        <input 
+                        <input
+                            class="button-operator" 
                             type="button" 
                             onclick="compute(this)"
                             value="*">
                     </td>
                     <td>
-                        <input 
+                        <input
+                            class="button-operator" 
                             type="button" 
                             onclick="compute(this)"
                             value="/">
@@ -51,7 +63,16 @@
                 </tr>
             </table>
             
-            <input type="reset" value="Clear All">
+            <input
+                style="width: 200px; 
+                height: 80px; 
+                background-color: red; 
+                border-radius: 16px;
+                color: black;
+                font-size: 20px;
+                margin: 30px;
+                font-weight: bold;" 
+                type="reset" value="Clear All">
             <br>
 
         </form>
