@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE database SYSTEM "students.dtd">
+<?xml-stylesheet type = "text/xsl" href = "students.xsl"?>   
+<database>
+    <student>
+        <name>Shubham Panchal</name>
+        <department>Comp</department>
+        <age>21</age>
+        <gender>Male</gender>
+        <city>Pune</city>
+    </student>
+    <student>
+        <name>Kaustubh Netke</name>
+        <department>Comp</department>
+        <age>22</age>
+        <gender>Male</gender>
+        <city>Jalgaon</city>
+    </student>
+    <student>
+        <name>Shrutika Malve</name>
+        <department>Comp</department>
+        <age>21</age>
+        <gender>Female</gender>
+        <city>Pune</city>
+    </student>
+</database>
