@@ -3,7 +3,7 @@
 <xsl:template match="/">
     <html>
         <body>
-            <h1>Student's Database</h1>
+            <h1>Employee(s) Database</h1>
             <table>
                 <tr>
                     <th>Name</th>
@@ -12,7 +12,7 @@
                     <th>Gender</th>
                     <th>City</th>
                 </tr>
-                <xsl:for-each select="database/student">
+                <xsl:for-each select="database/employee">
                     <tr>
                         <td><xsl:value-of select="name"/></td>
                         <td><xsl:value-of select="department"/></td>

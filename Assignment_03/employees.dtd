@@ -1,5 +1,5 @@
-<!ELEMENT database (student+)>
-<!ELEMENT student (name,department,age,gender,city)>
+<!ELEMENT database (employee+)>
+<!ELEMENT employee (name,department,age,gender,city)>
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT department (#PCDATA)>
 <!ELEMENT age (#PCDATA)>
