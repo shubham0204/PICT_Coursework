@@ -1,14 +1,11 @@
 <html>
-
     <head>
         <title>JDBC Connectivity with JSP</title>
     </head>
-
     <% 
         java.sql.Connection connection = java.sql.DriverManager.getConnection( "jdbc:mariadb://localhost:3306/students_db" , "root" , "root" ) ; 
         java.sql.ResultSet results = connection.createStatement().executeQuery( "select * from students" ) ; 
     %>
-
      <table>
         <tr>
            <th>Student ID</th>
@@ -28,7 +25,5 @@
         <% } %>
         <% connection.close() ; %>
      </table>
-     
     </body>
-
 </html>
