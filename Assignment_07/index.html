@@ -8,12 +8,38 @@
 <body>
 
     <div>
-        <h1>Insert Items</h1>
+        <h1>Insert Item</h1>
         <form action="insert_data.php" method="get">
             Name: <input type="text" name="name"> <br>
             Quantity: <input type="number" name="quantity"> <br>
             Price: <input type="number" name="price"> <br> <br>
             <input type="submit" value="Insert Item"> <br>
+        </form>
+    </div>
+
+    <div>
+        <h1>Update Item</h1>
+        <form action="update_data.php" method="get">
+            ID: <input type="number" name="id"> <br>
+            Name: <input type="text" name="name"> <br>
+            Quantity: <input type="number" name="quantity"> <br>
+            Price: <input type="number" name="price"> <br> <br>
+            <input type="submit" value="Update Item"> <br>
+        </form>
+    </div>
+
+    <div>
+        <h1>Read Items</h1>
+        <form action="read_data.php" method="get">
+            <input type="submit" value="Read Items"> <br>
+        </form>
+    </div>
+    
+    <div>
+        <h1>Delete Item</h1>
+        <form action="delete_data.php" method="get">
+            ID: <input type="number" name="id"> <br> <br>
+            <input type="submit" value="Delete Item"> <br>
         </form>
     </div>
 
