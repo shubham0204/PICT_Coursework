@@ -30,9 +30,15 @@
 
     <div>
         <h1>Read Items</h1>
-        <form action="read_data.php" method="get">
-            <input type="submit" value="Read Items"> <br>
-        </form>
+        <table id="items_table">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+        </table>
+        <button onclick="onReadItemsClick()">Read items</button>
     </div>
     
     <div>

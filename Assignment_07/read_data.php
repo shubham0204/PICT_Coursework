@@ -16,11 +16,10 @@ $sql = "SELECT id, name, quantity, price FROM items";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
-  while($row = $result->fetch_assoc()) {
-    echo "* " . $row["id"]. " - " . $row["name"]. " - " . $row["quantity"]. " - " . $row["price"] . "<br>";
-  }
+  $rows = $result -> fetch_all() ;
+  echo json_encode( $rows ) ; 
 } else {
-  echo "0 results";
+  echo json_encode( '[]' );
 }
 $conn->close();
 
