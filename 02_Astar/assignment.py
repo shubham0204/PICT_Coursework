@@ -15,10 +15,9 @@ class Puzzle:
         self,
         elements: list[list[int]],
     ) -> None:
-        assert (
-            len(elements) == len(elements[0]),
-            "Puzzle must have equal rows and columns",
-        )
+        assert len(elements) == len(
+            elements[0]
+        ), "Puzzle must have equal rows and columns"
         self.board = elements
         self.n_dims = len(elements)
         for i in range(self.n_dims):
@@ -70,9 +69,8 @@ def heuristic(init_puzzle: Puzzle, goal_puzzle: Puzzle) -> int:
     by comparing `init_puzzle` with `goal_puzzle`
     """
     assert (
-        init_puzzle.n_dims == goal_puzzle.n_dims,
-        "Puzzles must have equal dimensions",
-    )
+        init_puzzle.n_dims == goal_puzzle.n_dims
+    ), "Puzzles must have equal dimensions"
     count_misplaced = 0
     for i in range(init_puzzle.n_dims):
         for j in range(init_puzzle.n_dims):
@@ -86,9 +84,8 @@ def is_goal(curr_puzzle: Puzzle, goal_puzzle: Puzzle) -> int:
     Goal-test function which checks if all elements are aligned
     """
     assert (
-        curr_puzzle.n_dims == goal_puzzle.n_dims,
-        "Puzzles must have equal dimensions",
-    )
+        curr_puzzle.n_dims == goal_puzzle.n_dims
+    ), "Puzzles must have equal dimensions"
     for i in range(curr_puzzle.n_dims):
         for j in range(curr_puzzle.n_dims):
             if curr_puzzle.board[i][j] != goal_puzzle.board[i][j]:
@@ -104,6 +101,8 @@ goal_puzzle = Puzzle([[1, 2, 3], [4, 5, 6], [7, 8, 0]])
 print("Goal state:")
 goal_puzzle.print()
 
+print("-----------------------------")
+
 # The set of nodes which have to expanded
 # AKA frontier or fringe
 open_set: list[Puzzle] = [init_puzzle]
@@ -118,10 +117,13 @@ g_score[init_puzzle] = 0
 f_score: dict[Puzzle, int] = {}
 f_score[init_puzzle] = heuristic(init_puzzle, goal_puzzle)
 
-print("Steps: ")
+num_step = 1
 while len(open_set) != 0:
     # Find the node with smallest f_score
     # in the open_set
+
+    print(f">> Step {num_step}: ")
+
     min_f_score_node = open_set[0]
     min_f_score = f_score.get(min_f_score_node, INFINITY)
     for node in open_set:
@@ -130,15 +132,18 @@ while len(open_set) != 0:
             min_f_score = score
             min_f_score_node = node
 
+    print(">> Selected state from frontier: ")
     current = min_f_score_node
-    print("-----------------------------")
     current.print()
+
+    num_step += 1
 
     # Perform goal test
     if is_goal(current, goal_puzzle):
         print("Done")
         break
 
+    print(">> Possible states: ")
     open_set.remove(current)
     for neighbor in move(current):
         tent_g_score = g_score.get(current, INFINITY) + 1
@@ -149,6 +154,9 @@ while len(open_set) != 0:
             f_score[neighbor] = tent_g_score + heuristic(neighbor, goal_puzzle)
             if neighbor not in open_set:
                 open_set.append(neighbor)
-                print(heuristic(neighbor, goal_puzzle))
-                print(f_score[neighbor])
-                print(g_score[neighbor])
+                neighbor.print()
+                print(f"h(n) for above state is {heuristic(neighbor, goal_puzzle)}")
+                print(f"g(n) for above state is {g_score[neighbor]}")
+                print(f"f(n) for above state is {f_score[neighbor]}")
+
+    print("-----------------------------")
