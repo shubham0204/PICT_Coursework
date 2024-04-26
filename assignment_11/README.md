@@ -1,15 +1,20 @@
-# Assignment 11: Hadoop Map-Reduce
+# Assignment 11: Hadoop MapReduce
+
+Hadoop UI available on `localhost:9870`
 
 ```
+su - hadoop
+ssh localhost
+
 cd hadoop-3.3.5/sbin
 start-dfs.sh
 start-yarn.sh
 jps
 
 hdfs dfs -mkdir /input
-hdfs dfs -mkdir /output
 hdfs dfs -put passage.txt /input
 
+[OPTIONAL] export HADOOP_CLASSPATH=/usr/lib/jvm/java-8-openjdk-amd64/lib/tools.jar
 hadoop com.sun.tools.javac.Main WordCount.java
 jar cf wc.jar WordCount*.class
 hadoop jar wc.jar WordCount /input/passage.txt /output
