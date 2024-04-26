@@ -1,5 +1,7 @@
 # PICT Coursework - Shubham Panchal
 
+[![Hits](https://hits.sh/github.com/shubham0204/PICT_Coursework.svg?label=Views&color=1131cc)](https://hits.sh/github.com/shubham0204/PICT_Coursework/)
+
 ## Subjects
 
 ### Semester 6
