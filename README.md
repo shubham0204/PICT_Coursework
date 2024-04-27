@@ -53,3 +53,29 @@ ds = ds.astype( {
 } )
 ds.head()
 ```
+
+### 6. Renaming columns of a Dataframe
+
+```python
+ds = ds.rename( columns={
+    "race/ethnicity": "race" , 
+    "parental level of education": "parent_edu" , 
+    "test preparation course": "course_completed" , 
+    "math score": "score_math" , 
+    "reading score": "score_reading" , 
+    "writing score": "score_writing"
+} )
+ds.head()
+```
+
+### 7. Remove outliers with `1.5 * IQR` Rule
+
+```python
+def remove_outliers(feature):
+    global ds
+    q3 , q1 = np.percentile( ds[feature] , [ 75 , 25 ] )
+    iqr = q3 - q1
+    ds = ds[ (ds[feature] >= q1 - 1.5 * iqr) & (ds[feature] <= q3 + 1.5 * iqr) ]
+    
+remove_outliers( "score_writing" )
+```
