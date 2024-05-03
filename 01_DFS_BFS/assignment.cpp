@@ -1,279 +1,137 @@
 #include <iostream>
+#include <vector>
 #include <queue>
+#include <map>
 #include <string>
-#include <stack>
 #include <algorithm>
+#include <utility>
+using namespace std;
 
 #define LBR '\n'
 
-class ListNode {
-    public:
-
-        std::string name = "";
-        ListNode* next = nullptr ;
-        ListNode* down = nullptr ;
-
-        friend class Graph ; 
-} ;  
-
 class Graph {
 
-    ListNode* head = nullptr ;
-
-    void _add_edge(
-            std::string node_a , 
-            std::string node_b 
-            ) {
-        if( head == nullptr ) {
-            head = new( ListNode ) ; 
-            head -> name = node_a ; 
-            head -> next = new( ListNode ) ; 
-            head -> next -> name = node_b ; 
-            num_nodes += 1 ; 
-        }
-        else {
-            ListNode* node = find_node( node_a ) ; 
-            if( node != nullptr ) {
-                while( node -> next != nullptr ) {
-                    node = node -> next ; 
-                }
-                node -> next = new( ListNode ) ; 
-                node -> next -> name = node_b ; 
-            }
-            else {
-                node = head ; 
-                while( node -> down != nullptr ) {
-                    node = node -> down ; 
-                }
-                node -> down = new( ListNode ) ; 
-                node -> down -> name = node_a ; 
-                node -> down -> next = new( ListNode ) ; 
-                node -> down -> next -> name = node_b ; 
-                num_nodes += 1 ; 
-            }    
-        }
-    }
-
-    ListNode* find_node(
-            std::string name
-            ) {
-        ListNode* current_node = head ; 
-        while( current_node != nullptr ) {
-            if( current_node -> name == name ) {
-                return current_node ; 
-            }
-            current_node = current_node -> down ; 
-        }
-        return nullptr ; 
-    }
+    map<string,vector<string>> adjacency_list;
+    size_t n_nodes ; 
+    size_t n_edges ; 
 
     public:
 
-    size_t num_nodes = 0; 
-    size_t num_edges = 0;
+    void add_edge( 
+        const string& node1 , 
+        const string& node2 
+    ) {
+        if (adjacency_list.count(node1) != 0) {
+            adjacency_list[node1].push_back( node2 ) ; 
+        }
+        else {
+            vector<string> node_list ; 
+            node_list.push_back( node2 ) ; 
+            adjacency_list[node1] = node_list;
+        }
+        if (adjacency_list.count(node2) != 0) {
+            adjacency_list[node2].push_back( node1 ) ; 
+        }
+        else {
+            vector<string> node_list ; 
+            node_list.push_back( node1 ) ; 
+            adjacency_list[node2] = node_list;
+        }
+    }
 
     void print() {
-        ListNode* curr_node_down = head ; 
-        while( curr_node_down != nullptr ) {
-            ListNode* curr_node = curr_node_down ; 
-            while( curr_node != nullptr ) {
-                std::cout << curr_node -> name << " " ;
-                curr_node = curr_node -> next ; 
+        for (const pair<string,vector<string>>& node_list: adjacency_list ) {
+            cout << node_list.first << " : " ; 
+            for (const string& neighbor: node_list.second ) {
+                cout << neighbor << " " ; 
             }
-            std::cout << LBR ; 
-            curr_node_down = curr_node_down -> down ; 
+            cout << LBR ; 
         }
     }
 
-    void add_edge(
-            std::string node_a , 
-            std::string node_b
-            ) {
-        _add_edge( node_a , node_b ) ;
-        _add_edge( node_b , node_a ) ;
-        num_edges += 1 ; 
+    void depth_search(
+        const string& key , 
+        const string& start_node 
+    ) {
+        vector<string> visited ; 
+        depth_search_impl( start_node , key , visited ) ;
     }
 
-    void dfs_recursive() {
-        std::vector<std::string> visited ; 
-        stack_neighbors( head , visited ) ;
-        std::cout << LBR ; 
-    }
-
-    void stack_neighbors(
-            ListNode* node , 
-            std::vector<std::string>& visited
-            ) {
-        if( node == nullptr ) return ; 
-        std::cout << node -> name << " " ; 
-        visited.push_back( node -> name ) ;
-        ListNode* n = find_node( node -> name ) ;
-        if( n != nullptr ) {
-            ListNode* neighbor = n -> next ; 
-            while( neighbor != nullptr ) {
-                if( std::find( visited.begin() , visited.end() , neighbor -> name ) == visited.end() ) {
-                    stack_neighbors( neighbor , visited ) ; 
-                }
-                neighbor = neighbor -> next ; 
-            } 
+    void depth_search_impl( 
+        const string& node , 
+        const string& key , 
+        vector<string>& visited 
+    ) {
+        cout << "[DFS] Visited " << node << LBR ; 
+        if (node == key) {
+            cout << key << " found in the graph!" << LBR ; 
         }
-    }
-
-    bool goal_test(
-            ListNode* node , 
-            std::string dst_node
-            ) {
-        return node -> name == dst_node ; 
-    }
-
-
-    ListNode* dfs_iterative(
-            std::string dst_node
-            ) {
-        // Initial state of the problem -> head node
-        ListNode* node = head ; 
-
-        if( goal_test( node , dst_node ) ) return node ; 
-
-        // Frontier/open-list containing nodes which have to
-        // expanded
-        std::stack<ListNode*> frontier ;
-
-        // closed-list/explored-list containing nodes which have
-        // been traversed 
-        std::vector<ListNode*> explored ; 
-        frontier.push( node ) ; 
-
-        while( true ) {
-
-            if( frontier.empty() ) return nullptr;
-
-            node = frontier.top() ;
-            frontier.pop() ;  
-            explored.push_back( node ) ;  
-
-            // Expand the frontier by adding
-            // nodes/states achieved by performing all possible actions 
-            // on the current node (or state)
-            // i.e. add all neighbors of the current node to the stack
-            ListNode* curr_node = node -> next ; 
-            while( curr_node != nullptr ) {
-                if( std::find( explored.begin() , explored.end() , curr_node ) == explored.end() ) {
-                    if( goal_test( curr_node , dst_node ) ) return curr_node ; 
-                    frontier.push( curr_node )  ; 
-                }
-                curr_node = curr_node -> next ;   
-            }
-
-        }
-
-        return nullptr ;  
-    }
-
-    void bfs_recursive() {
-        std::queue<std::string> queue ; 
-        std::vector<std::string> visited ; 
-        queue.push( head -> name ) ;
-        queue_neighbors( queue , visited ) ;
-        std::cout << LBR ; 
-    }
-
-    void queue_neighbors(
-            std::queue<std::string>& queue , 
-            std::vector<std::string> visited 
-            ) {
-        if( queue.empty() ) return ; 
-        std::string curr_node_name = queue.front() ; 
-        std::cout << curr_node_name << " " ; 
-        queue.pop() ; 
-        visited.push_back( curr_node_name ) ;
-
-        ListNode* node = find_node( curr_node_name ) ; 
-        if( node != nullptr ) {
-            ListNode* neighbor = node -> next ; 
-            while( neighbor != nullptr ) {
-                if( std::find( visited.begin() , visited.end() , neighbor -> name ) == visited.end() ) {
-                    queue.push( neighbor -> name ) ; 
-                }
-                neighbor = neighbor -> next ; 
+        visited.push_back( node ) ; 
+        vector<string> neighbors = adjacency_list[node] ; 
+        for (const string& neighbor: neighbors) {
+            if ( find( visited.begin() , visited.end() , neighbor) == visited.end() ) {
+                depth_search_impl( neighbor , key , visited ) ;  
             }
         }
-        queue_neighbors( queue , visited ) ; 
     }
 
-    ListNode* bfs_iterative(
-            std::string dst_node_name        
-            ) {
+    void breadth_search(
+        const string& key , 
+        const string& start_node 
+    ) {
+        vector<string> visited ; 
+        queue<string> frontier ; 
+        frontier.push( start_node ) ;
+        breadth_search_impl( frontier , key , visited ) ;
+    }
 
-        // Initial state of the problem
-        ListNode* node = head ; 
-
-        if( goal_test( node , dst_node_name ) ) return node ; 
-
-        // Frontier, containing all states which will
-        // be expanded
-        std::queue<ListNode*> frontier ;
-
-        // explored-list, containing all states which
-        // have been expanded 
-        std::vector<ListNode*> explored ; 
-        frontier.push( node ) ;  
-
-        while( true ) {
-
-            if( frontier.empty() ) return nullptr ; 
-
-            node = frontier.front() ;
-            frontier.pop() ;  
-            explored.push_back( node ) ;  
-
-            // Expand the frontier
-            ListNode* curr_node = node -> next ; 
-            while( curr_node != nullptr ) {
-                if( std::find( explored.begin() , explored.end() , curr_node ) == explored.end() ) {
-                    if( goal_test( curr_node , dst_node_name )) return curr_node ; 
-                    frontier.push( curr_node ) ;
-                }
-                curr_node = curr_node -> next ; 
-            } 
-
+    void breadth_search_impl( 
+        queue<string>& frontier , 
+        const string& key , 
+        vector<string>& visited 
+    ) {
+        if (frontier.size() == 0) return ;
+        string node = frontier.front() ;
+        cout << "[BFS] Visited " << node << LBR ;  
+        frontier.pop() ; 
+        if (node == key) {
+            cout << key << " found in the graph!" << LBR ; 
         }
-     
+        visited.push_back( node ) ; 
+        vector<string> neighbors = adjacency_list[node] ; 
+        for (const string& neighbor: neighbors) {
+            if ( find( visited.begin() , visited.end() , neighbor) == visited.end() ) {
+                frontier.push( neighbor ) ; 
+            }
+        }
+        breadth_search_impl( frontier , key , visited ) ;  
     }
+
 
 } ;
 
+string input( string message ) {
+    cout << message << LBR ; 
+    string line ;
+    cin >> line ; 
+    return line ;
+} ; 
+
 int main( int argc , char* argv[] ) {
-
-    Graph g ; 
-    g.add_edge( "a" , "b" ) ; 
-    g.add_edge( "a" , "c" ) ; 
-    g.add_edge( "b" , "d" ) ; 
-
-    std::cout << "Number of nodes: " << g.num_nodes << LBR ; 
-    std::cout << "Number of edges: " << g.num_edges << LBR ; 
-
-    std::cout << "Adjacency List" << LBR ; 
-    g.print() ; 
-
-    std::string dst_node_name ; 
-    std::cout << "Enter node name to search: " << LBR ; 
-    std::cin >> dst_node_name ; 
-    ListNode* solution = g.dfs_iterative( dst_node_name ) ; 
-    if( solution ) {
-        std::cout << "Node found -> " << solution << LBR ; 
+    Graph graph ; 
+    cout << "Enter node-pairs:" << LBR ; 
+    while (true) {
+        string node1 = input( "Node 1" ) ; 
+        string node2 = input( "Node 2" ) ;  
+        if (node1 == "-" && node2 == "-") {
+            break ;
+        }
+        graph.add_edge( node1 , node2 ) ;
+        cout << "[Edge from " << node1 << " to " << node2 << " added]" << LBR ; 
     }
-    else {
-        std::cout << "Node not found" << LBR ; 
-    }
-
-    solution = g.bfs_iterative( dst_node_name ) ; 
-    if( solution ) {
-        std::cout << "Node found -> " << solution << LBR ; 
-    }
-    else {
-        std::cout << "Node not found" << LBR ; 
-    }
-
-    return 0 ; 
+    string key = input( "Enter key: " ) ;
+    string start_node = input( "Enter start node: " ) ; 
+    graph.depth_search( key , start_node ) ; 
+    graph.breadth_search( key , start_node ) ; 
+    graph.print() ; 
 }
