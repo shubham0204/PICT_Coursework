@@ -54,25 +54,29 @@ class Graph {
         const string& start_node 
     ) {
         vector<string> visited ; 
-        depth_search_impl( start_node , key , visited ) ;
+        depth_search_impl( start_node , key , visited , 0 ) ;
     }
 
-    void depth_search_impl( 
+    bool depth_search_impl( 
         const string& node , 
         const string& key , 
-        vector<string>& visited 
+        vector<string>& visited ,
+        size_t level
     ) {
-        cout << "[DFS] Visited " << node << LBR ; 
+        cout << "[DFS] Visited " << node << " , level = " << level << LBR ; 
         if (node == key) {
             cout << key << " found in the graph!" << LBR ; 
+            return true;
         }
         visited.push_back( node ) ; 
         vector<string> neighbors = adjacency_list[node] ; 
         for (const string& neighbor: neighbors) {
             if ( find( visited.begin() , visited.end() , neighbor) == visited.end() ) {
-                depth_search_impl( neighbor , key , visited ) ;  
+                bool found = depth_search_impl( neighbor , key , visited , level + 1 ) ;  
+                if (found) return true; 
             }
         }
+        return false; 
     }
 
     void breadth_search(
@@ -81,19 +85,24 @@ class Graph {
     ) {
         vector<string> visited ; 
         queue<string> frontier ; 
+        queue<size_t> frontier_levels ; 
         frontier.push( start_node ) ;
-        breadth_search_impl( frontier , key , visited ) ;
+        frontier_levels.push( 0 ) ; 
+        breadth_search_impl( frontier , frontier_levels , key , visited ) ;
     }
 
     void breadth_search_impl( 
         queue<string>& frontier , 
+        queue<size_t>& frontier_levels , 
         const string& key , 
         vector<string>& visited 
     ) {
         if (frontier.size() == 0) return ;
         string node = frontier.front() ;
-        cout << "[BFS] Visited " << node << LBR ;  
+        size_t level = frontier_levels.front() ; 
+        cout << "[BFS] Visited " << node << " , level = " << level << LBR ;  
         frontier.pop() ; 
+        frontier_levels.pop() ; 
         if (node == key) {
             cout << key << " found in the graph!" << LBR ; 
         }
@@ -102,9 +111,10 @@ class Graph {
         for (const string& neighbor: neighbors) {
             if ( find( visited.begin() , visited.end() , neighbor) == visited.end() ) {
                 frontier.push( neighbor ) ; 
+                frontier_levels.push( level + 1 ) ;
             }
         }
-        breadth_search_impl( frontier , key , visited ) ;  
+        breadth_search_impl( frontier , frontier_levels , key , visited ) ;  
     }
 
 
