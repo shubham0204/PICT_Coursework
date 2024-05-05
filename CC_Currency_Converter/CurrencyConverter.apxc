@@ -1,0 +1,27 @@
+/*
+Double usdAmount = 100.0 ; 
+Double inrAmount = CurrencyConverter.convert(
+    	usdAmount , 
+        CurrencyConverter.CURR_USD , 
+        CurrencyConverter.CURR_INR
+    ) ; 
+System.debug( inrAmount ) ; 
+*/
+
+public class CurrencyConverter {
+    
+    public static Double CURR_INR = 0.012 ; 
+    public static Double CURR_EUR = 1.08 ; 
+    public static Double CURR_GBP = 1.2536 ; 
+    public static Double CURR_CNY = 0.138 ; 
+    public static Double CURR_USD = 1.0 ; 
+    
+    public static Double convert(
+    	Double amount , 
+        Double fromCurr , 
+        Double toCurr 
+    ) {
+    	return (amount / toCurr) * fromCurr ; 
+    }
+
+}
