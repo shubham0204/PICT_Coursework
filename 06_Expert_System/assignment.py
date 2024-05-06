@@ -57,13 +57,25 @@ print("Expert System for diagnosing ailments")
 
 if diagnose_allergies():
     print("You have allergies")
+else:
+    print("You don't have allergies")
 if diagnose_fever():
     print("You have fever")
-if diagnose_cold()():
+else:
+    print("You don't have fever")
+if diagnose_cold():
     print("You have cold")
+else:
+    print("You don't have cold")
 if diagnose_strep_throat():
     print("You have strep throat")
+else:
+    print("You don't have strep throat")
 if diagnose_food_poisoning():
     print("You have food poisoning")
+else:
+    print("You don't have food poisoning")
 if diagnose_appendicitis():
     print("You have appendicitis")
+else:
+    print("You don't have appendicitis")
