@@ -63,7 +63,7 @@ def solve_n_queens(config: list[int], col: int) -> bool:
         # Check if [ X_1 , X_2 , ... , X_{col}=i ] is
         # a valid configuration for the problem
         if validate_config(config, i, col):
-            # if valid, place a queen at (i,config)
+            # if valid, place a queen at (i,col)
             # and repeat the entire process for a partial assignment of
             # [ X_1 , X_2 , ... , X_col ]
             config[i][col] = 1
