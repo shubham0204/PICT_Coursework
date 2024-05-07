@@ -43,7 +43,7 @@ def min_spanning_tree(graph: Graph):
     min_cost = 0
     visited: list[str] = [curr_node]
     spanning_tree: Graph = Graph()
-    while tree_num_edges < graph_num_nodes - 1:
+    while tree_num_edges <= graph_num_nodes - 1:
         min_weight_edge = min(
             [
                 neighbor
