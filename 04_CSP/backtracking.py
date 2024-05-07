@@ -1,14 +1,16 @@
 """
 N-queens as a CSP (Constraint Satisfaction Problem)
 and solving it with backtracking
-References:
-https://www.cs.toronto.edu/~fbacchus/Presentations/CSP-BasicIntro.pdf
-https://www.cs.auckland.ac.nz/courses/compsci369s1c/lectures/GG-notes/CS369-Backtrack-BB.pdf
+Backtracking: DFS + Pruning
 
 With backtracking
 * The search space is can be very large
 * It is an exhaustive search
 * Worst case complexity is exponential
+
+References:
+https://www.cs.toronto.edu/~fbacchus/Presentations/CSP-BasicIntro.pdf
+https://www.cs.auckland.ac.nz/courses/compsci369s1c/lectures/GG-notes/CS369-Backtrack-BB.pdf
 """
 
 
@@ -22,14 +24,14 @@ def validate_config(config: list[list[int]], row: int, col: int) -> bool:
         if config[row][x] == 1:
             return False
         x += 1
-    # Check diagonally going upper-left
+    # Check diagonally going towards top-left
     x, y = row, col
     while x >= 0 and y >= 0:
         if config[x][y] == 1:
             return False
         x -= 1
         y -= 1
-    # Check diagonally going upper-right
+    # Check diagonally going towards bottom-right
     x, y = row, col
     while x < N and y >= 0:
         if config[x][y] == 1:
@@ -85,7 +87,7 @@ def solve_n_queens(config: list[int], col: int) -> bool:
 
 # Size of the chess board
 # also, the number of variables in the CSP
-N = input("Enter value of N: ")
+N = int(input("Enter value of N: "))
 
 # Initial configuration
 # A N * N 2D array with all zeros
