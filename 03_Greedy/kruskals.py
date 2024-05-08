@@ -18,8 +18,7 @@ class Graph:
         queue = [src]
         visited = [src]
         while len(queue) != 0:
-            front = queue[0]
-            del queue[0]
+            front = queue.pop(0)
             if front == dst:
                 return True
             neighbors = self.adj_list[front]
