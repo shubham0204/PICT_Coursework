@@ -74,6 +74,13 @@ def single_source_shortest_path( graph: Graph , src: str ) -> dict[str,int]:
             if alt < dist[v]:
                 dist[v] = alt
                 prev[v] = u
+    for node in prev.keys():
+        path = [ node ]
+        path_node = prev[node]
+        while path_node is not None:
+            path.append( path_node )
+            path_node = prev[path_node]
+        print( f"Path for {node} is {path}" )
     return dist , prev
 
 graph = Graph()
