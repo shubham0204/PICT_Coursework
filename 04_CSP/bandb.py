@@ -13,7 +13,7 @@ def objective( board ):
     cost = 0
     for i in range(N):
         for j in range( i+1 , N):
-            if board[i] == board[j] or abs( board[j] - board[i] ) == j - 1:
+            if board[i] == board[j] or abs( board[j] - board[i] ) == j - i:
                 cost += 1
     return cost
 
