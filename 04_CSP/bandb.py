@@ -1,11 +1,11 @@
 from heapq import heappush , heappop
 import copy
 
-N = 4
+N = 3
 
 def is_valid( board , row , col ):
     for i in range( row ):
-        if board[i] == col or abs( board[i] - col ) == abs( board[i] - row ):
+        if board[i] == col or abs( board[i] - col ) == abs( i - row ):
             return False
     return True
 
@@ -36,6 +36,7 @@ def solve( initial_state ):
 
         if row == N:
             print( curr_board )
+            return True
 
         for col in range(N):
             if is_valid(curr_board, row, col):
@@ -44,6 +45,7 @@ def solve( initial_state ):
                 print( new_board )
                 new_cost = objective(new_board)
                 heappush(queue, ( new_cost , new_board) )
+    return False
 
-solve( [ -1 for _ in range(N) ] )
+print( solve( [ -1 for _ in range(N) ] ) )
 
