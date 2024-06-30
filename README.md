@@ -2,6 +2,11 @@
 
 ## Subjects
 
+### Semester 7
+
+1. [LP 03](https://github.com/shubham0204/PICT_Coursework/tree/lp-3)
+2. [LP 04](https://github.com/shubham0204/PICT_Coursework/tree/lp-4)
+
 ### Semester 6
 
 1. [DSBDL](https://github.com/shubham0204/PICT_Coursework/tree/dsbdl)
