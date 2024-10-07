@@ -13,7 +13,6 @@ def create_links(text):
     for i, si in enumerate(sentence_words):
         links[i] = []
         for j, sj in enumerate(sentence_words):
-            print(si.intersection(sj))
             if len(si.intersection(sj)) > 0:
                 links[i].append(j)
     for i in range(len(sentence_words)):
@@ -57,5 +56,12 @@ for rank, sentence in zip(ranks, sentences):
     print(rank, " : ", sentence)
 
 print("Score for each sentence sorted by rank (descending): ")
-for rank, sentence in sorted(zip(ranks, sentences), key=lambda x: x[0], reverse=True):
+rank_sorted_sentences = list(sorted(zip(ranks, sentences), key=lambda x: x[0], reverse=True))
+for rank, sentence in rank_sorted_sentences:
     print(rank, " : ", sentence)
+
+print("Summarized document: \n\n")
+
+k = int(len(rank_sorted_sentences) * 0.7)
+print(". ".join([ s[1] for s in rank_sorted_sentences[0:k]]))
+print("\n\n")
