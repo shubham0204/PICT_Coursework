@@ -1,52 +1,48 @@
 import copy
 
+"""
+Board representation:
+[X_0, X_1, X_2, ..., X_{N-1}]
+X_i represents the row where the queen is placed in the ith row
+X_i = -1 indicates no queen has been placed yet
 
-# Check if the queen positions are valid
-# in the current board (configuration)
-# Check if board[row] = X_i is valid
-def validate_board(board, row, X_i):
-    for i in range(row):
-        if board[i] == X_i or abs(board[i] - X_i) == abs(i - row):
+Initial board configuration:
+[-1 -1 -1 ... -1]
+"""
+
+
+def validate_board(board, i, X_i):
+    for j in range(i):
+        if board[j] == X_i or abs(board[j] - X_i) == abs(j - i):
             return False
     return True
 
 
 def print_board(board):
     global N
-    board_2d = [["." for _ in range(N)] for _ in range(N)]
+    board_2d = [[" . " for _ in range(N)] for _ in range(N)]
     for i in range(N):
         if board[i] != -1:
-            board_2d[i][board[i]] = "Q"
+            board_2d[i][board[i]] = " Q "
     for row in board_2d:
         print(" ".join(row))
-    print()
 
 
-def solve_n_queens(board):
+def solve_n_queens(board, i):
     global N
-    print_board(board)
-    i = 0
-    while i < N and board[i] != -1:
-        i += 1
     if i == N:
+        print("solved")
         print_board(board)
-        print("Solved!")
         return True
-
-    # iterate through possible value
-    # of X_i and check for valid boards
     for X_i in range(N):
         if validate_board(board, i, X_i):
-            # If configuration board[i] = X_i was valid
-            # create a deep copy and pass it to solve_n_queens
             child_board = copy.deepcopy(board)
-            child_board[i] = X_i
-            if solve_n_queens(child_board):
+            board[i] = X_i
+            if solve_n_queens(board, i + 1):
                 return True
     return False
 
 
-N = 4  #
+N = 4
 board = [-1 for _ in range(N)]
-print_board(board)
-print(solve_n_queens(board))
+solve_n_queens(board, 0)
