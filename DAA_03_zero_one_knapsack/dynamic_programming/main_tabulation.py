@@ -3,53 +3,41 @@ Solving the 0/1 knapsack problem using dynamic programming (tabulation method)
 Reference:
 https://youtu.be/nLmhmB6NzcM?feature=shared
 """
+# zero-one knap-sack problem
+weights = [2, 3, 4, 5]
+profits = [1, 2, 5, 6]
+M = 8
+N = len(weights)
 
-from dataclasses import dataclass
+# maintain a table `dp` with dims N * M
+# dp[i][j] = profit by selecting 'i' weighing 'j'
+# j is the weight of the knapsack containing items 0..i
+dp = [[0 for _ in range(M + 1)] for _ in range(N + 1)]
 
-
-@dataclass
-class KnapSack:
-    weight: int
-    profit: int
-
-
-def solve(items: list[KnapSack], target_weight: int) -> tuple[int, list[KnapSack]]:
-    # dp[i][w] = maximum profit that can be obtained with weight <= w using items[0:i]
-    N = len(items)
-    dp = [[0 for _ in range(target_weight + 1)] for _ in range(N + 1)]
+def solve():
     for i in range(1, N + 1):
-        for w in range(1, target_weight + 1):
-            if items[i - 1].weight <= w:
-                dp[i][w] = max(
-                    dp[i - 1][w],  # not selecting the item
-                    dp[i - 1][w - items[i - 1].weight]
-                    + items[i - 1].profit,  # selecting the item
+        for j in range(1, M + 1):
+            curr_item_weight = weights[i - 1]
+            curr_item_profit = profits[i - 1]
+            if curr_item_weight <= j:
+                dp[i][j] = max(
+                    dp[i - 1][j],                                  # current item not selected
+                    dp[i - 1][j - curr_item_weight] + curr_item_profit # current item selected
                 )
             else:
-                dp[i][w] = dp[i - 1][w]
-    net_profit = dp[N][target_weight]
-
-    # backtracking to find selected items
+                dp[i][j] = dp[i - 1][j]
+    
+    total_max_profit = dp[N][M]
     selected_items = []
-    i, w = N, target_weight
-    while i > 0 and w > 0:
-        if dp[i][w] != dp[i - 1][w]:
-            selected_items.append(items[i - 1])
-            w -= items[i - 1].weight
+    i, j = N, M
+    while i > 0 and j > 0:
+        if dp[i][j] != dp[i - 1][j]:
+            selected_items.append((weights[i - 1], profits[i - 1]))
+            j -= weights[i - 1]
         i -= 1
 
-    return net_profit, selected_items
+    return selected_items, total_max_profit
 
-
-items = [
-    KnapSack(weight=10, profit=60),
-    KnapSack(weight=20, profit=100),
-    KnapSack(weight=30, profit=120),
-]
-target_weight = 50
-
-net_profit, selected_items = solve(items, target_weight)
-print(f"Totat profit: {net_profit}")
-print("Selected items were: ")
-for item in selected_items:
-    print(item)
+selected_items, total_max_profit = solve()
+print(selected_items)
+print(total_max_profit)
