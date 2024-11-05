@@ -50,13 +50,14 @@ def randomized_quick_sort_partition(arr, left, right):
     # select an element randomly as pivot from arr[left..right]
     pivot_index = random.randint(left, right)
     pivot = arr[pivot_index]
+    arr[pivot_index], arr[right] = arr[right], arr[pivot_index]
     i = left - 1
     for j in range(left, right):
         if arr[j] < pivot:
             i += 1
             arr[i], arr[j] = arr[j], arr[i]
         n2 += 1
-    arr[i + 1], arr[pivot_index] = arr[pivot_index], arr[i + 1]
+    arr[i + 1], arr[right] = arr[right], arr[i + 1]
     return i + 1
 
 
