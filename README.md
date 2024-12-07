@@ -2,6 +2,68 @@
 
 ## Greedy strategy
 
+### Zero-One Knapsack
+
+```c
+function ZeroOneKnapSack(O, n, m) {
+    sort objects O in decreasing order of profit-to-weight ratio
+    W := 0
+    P := 0
+    knapsack := {}
+    for i := 0 to n - 1 {
+        if W + O[i].weight > m {
+            break
+        }
+        knapsack += { O[i] }
+        W += O[i].weight
+        P += O[i].profit
+    }
+    
+    print knapsack
+    print P
+}
+```
+
+### Job Scheduling
+
+```c
+function JobScheduling(J, n) {
+    sort jobs 'J' in decreasing order of their profits
+    
+    slots := [false] * n
+    schedule := [null] * n
+    profit := 0
+    
+    for i := 0 to (n - 1) {
+        for k := 0 to (J[i].deadline - 1) {
+            if not slots[k] {
+                schedule[k] = J[i]
+                profit += J[i].profit
+                slots[k] = true
+            }
+        }
+    }
+    
+    return schedule, profit
+}
+```
+
+### Activity Selection Problem
+
+```c
+function ActivitySelection(A, n) {
+    sort activities 'A' in increasing order of their finish times
+    S := { A[0] }
+    f := A[0].finish_time
+    for i := 0 to (n - 1) {
+        if A[i].start_time >= f {
+            S += { A[i] }
+            f = A[i].finish_time
+        }
+    }
+    print S
+}
+```
 
 ## Dynamic Programming
 
