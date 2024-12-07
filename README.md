@@ -10,7 +10,7 @@
 
 ### [N-Queens](backtracking/n_queens.py)
 
-```
+```c
 function isSafe(i, k) {
     for j := 0 to i - 1 {
         if X[j] == k || (abs(X[j] - k)) == abs(j - i)) {
@@ -41,7 +41,7 @@ NQueens(0, n , X)
 
 ### [Graph Coloring](backtracking/graph_coloring.py)
 
-```
+```c
 function isSafe(v, c) {
     for each neighbor 'n' of 'v' in graph {
         if colors[n] == c {
@@ -74,7 +74,7 @@ GraphColoring(0, 2, 4)
 
 ### [Subset Sum](backtracking/subset_sum.py)
 
-```
+```c
 function SubSetSum(i, C, CS, n, m) {
     if CS == m {
         print C             // solution
