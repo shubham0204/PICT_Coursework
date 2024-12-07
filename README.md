@@ -2,7 +2,7 @@
 
 ## Greedy strategy
 
-### Zero-One Knapsack
+### [Zero-One Knapsack](greedy/zero_one_knapsack.py)
 
 ```c
 function ZeroOneKnapSack(O, n, m) {
@@ -24,7 +24,7 @@ function ZeroOneKnapSack(O, n, m) {
 }
 ```
 
-### Job Scheduling
+### [Job Scheduling](greedy/job_scheduling.py)
 
 ```c
 function JobScheduling(J, n) {
@@ -48,7 +48,7 @@ function JobScheduling(J, n) {
 }
 ```
 
-### Activity Selection Problem
+### [Activity Selection Problem](greedy/activity_selection.py)
 
 ```c
 function ActivitySelection(A, n) {
