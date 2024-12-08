@@ -67,6 +67,46 @@ function ActivitySelection(A, n) {
 
 ## Dynamic Programming
 
+### [Binomial Coefficients](dynamic_programming/binomial_coefficient.py)
+
+```c
+function BinomialCoefficient(n, k) {
+    if k > n {
+        return 0
+    }
+    if k == 0 || k == n {
+        return 1
+    }
+    return BinomialCoefficient(n - 1, k - 1) + BinomialCoefficient(n - 1, k)
+}
+```
+
+### [Zero-One Knapsack](dynamic_programming/zero_one_knapsack.py)
+
+```c
+function ZeroOneKnapsack(P, W, n, m, dp) {
+    for i := 1 to n {
+        for j := 1 to m {
+            if W[i - 1] <= j {
+                dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - W[i - 1]] + P[i - 1])
+            }
+            else {
+                dp[i][j] = dp[i - 1][j]
+            }
+        }
+    }
+    return dp[n][m]
+}
+
+W = [2, 3, 4, 5]
+P = [1, 2, 5, 6]
+m = 8
+n = 4
+dp := zero-matrix with size n * m
+
+max_profit = ZeroOneKnapsack(P, W, n, m, dp)
+print max_profit
+```
 
 ## Backtracking
 
