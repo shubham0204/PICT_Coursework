@@ -2,6 +2,11 @@
 
 ## Subjects
 
+### Semester 8
+
+- [LP 05](https://github.com/shubham0204/PICT_Coursework/tree/lp-5)
+- [LP 06](https://github.com/shubham0204/PICT_Coursework/tree/lp-6)
+
 ### Semester 7
 
 - [LP 03](https://github.com/shubham0204/PICT_Coursework/tree/lp-3)
