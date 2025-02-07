@@ -1,0 +1,4 @@
+__pycache__
+.venv
+07_Character_Classification\letter+recognition
+08_Fashion_MNIST\fashion_mnist
