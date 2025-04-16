@@ -27,24 +27,22 @@ $ g++ par_reduction.cpp -fopenmp
 $ ./a.out
 */
 
+#include <iostream>
 #include <omp.h>
 #include <vector>
-#include <iostream>
 
-template <typename E>
-E parallelSum(const std::vector<E>& arr) {
+template <typename E> E parallelSum(const std::vector<E>& arr) {
     E sum = 0;
-    #pragma omp parallel for reduction(+:sum)
+#pragma omp parallel for reduction(+ : sum)
     for (size_t i = 0; i < arr.size(); i++) {
         sum += arr[i];
     }
     return sum;
 }
 
-template <typename E>
-E parallelMin(const std::vector<E>& arr) {
+template <typename E> E parallelMin(const std::vector<E>& arr) {
     E minElement = 0;
-    #pragma omp parallel for reduction(min: minElement)
+#pragma omp parallel for reduction(min : minElement)
     for (size_t i = 0; i < arr.size(); i++) {
         if (minElement > arr[i]) {
             minElement = arr[i];
@@ -53,10 +51,9 @@ E parallelMin(const std::vector<E>& arr) {
     return minElement;
 }
 
-template <typename E>
-E parallelMax(const std::vector<E>& arr) {
+template <typename E> E parallelMax(const std::vector<E>& arr) {
     E maxElement = 0;
-    #pragma omp parallel for reduction(max: maxElement)
+#pragma omp parallel for reduction(max : maxElement)
     for (size_t i = 0; i < arr.size(); i++) {
         if (maxElement < arr[i]) {
             maxElement = arr[i];
@@ -65,8 +62,7 @@ E parallelMax(const std::vector<E>& arr) {
     return maxElement;
 }
 
-template <typename E>
-E parallelMean(const std::vector<E>& arr) {
+template <typename E> E parallelMean(const std::vector<E>& arr) {
     E sum = parallelSum(arr);
     return sum / arr.size();
 }

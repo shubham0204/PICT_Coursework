@@ -1,5 +1,6 @@
-#include <iostream>
 #include <cuda_runtime.h>
+#include <iostream>
+
 
 /*
 cudaMalloc ( void** devPtr, size_t size )
@@ -22,13 +23,10 @@ and stores the sum in another vector
 can be called from either CPU or GPU memory, but executes
 on the GPU always
 */
-__global__ void vec_item_add(
-    const float* vec1, 
-    const float* vec2,
-    float* sum
-) {
+__global__ void vec_item_add(const float* vec1, const float* vec2, float* sum) {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
-    if (i < N) sum[i] = vec1[i] + vec2[i];
+    if (i < N)
+        sum[i] = vec1[i] + vec2[i];
 }
 
 int main() {
@@ -36,9 +34,9 @@ int main() {
     int vec_size_bytes = N * sizeof(float);
 
     // (1) initialize three vecs in host (CPU) memory
-    float* vec1 = (float*) malloc(vec_size_bytes);
-    float* vec2 = (float*) malloc(vec_size_bytes);
-    float* sum = (float*) malloc(vec_size_bytes);
+    float* vec1 = (float*)malloc(vec_size_bytes);
+    float* vec2 = (float*)malloc(vec_size_bytes);
+    float* sum = (float*)malloc(vec_size_bytes);
     for (int i = 0; i < N; i++) {
         vec1[i] = 2.9f;
         vec2[i] = -3.4f;
@@ -57,7 +55,7 @@ int main() {
     cudaMemcpy(gpu_vec1, vec1, vec_size_bytes, cudaMemcpyHostToDevice);
     cudaMemcpy(gpu_vec2, vec2, vec_size_bytes, cudaMemcpyHostToDevice);
 
-    // (4) execute the kernel on the GPU device with given no. of blocks 
+    // (4) execute the kernel on the GPU device with given no. of blocks
     //     and threads; also copy the contents of the sum vector from the GPU
     //     memory to the sum vector present in the CPU memory
     int n_threads = 16;

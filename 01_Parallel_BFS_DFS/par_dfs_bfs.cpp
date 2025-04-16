@@ -16,19 +16,18 @@ $ ./a.out
 #include <vector>
 
 class TreeNode {
-public:
+  public:
     int id;
     TreeNode* left = nullptr;
     TreeNode* right = nullptr;
-    
+
     TreeNode(int _id) : id(_id), left(nullptr), right(nullptr){};
 };
 
 class BinaryTree {
-
     TreeNode* _rootNode = nullptr;
 
-public:
+  public:
     BinaryTree(const std::vector<int>& nodeIds) {
         if (nodeIds.empty()) {
             throw std::invalid_argument("nodes cannot be empty");
@@ -84,17 +83,16 @@ public:
         omp_set_num_threads(numThreads);
         while (!frontier.empty()) {
             size_t frontierSize = frontier.size();
-            // process all nodes in the frontier parallelly
-            #pragma omp parallel for
+// process all nodes in the frontier parallelly
+#pragma omp parallel for
             for (size_t i = 0; i < frontierSize; i++) {
                 // shared read-access to the frontier by all threads
                 TreeNode* node = frontier[i];
-                // write-access needs to be atomic for the frontier
-                // hence, we start a critical section
-                #pragma omp critical
+// write-access needs to be atomic for the frontier
+// hence, we start a critical section
+#pragma omp critical
                 {
-                    std::cout << "node " << node->id << " traversed by thread "
-                              << omp_get_thread_num() << '\n';
+                    std::cout << "node " << node->id << " traversed by thread " << omp_get_thread_num() << '\n';
                     if (node->left != nullptr) {
                         frontier.push_back(node->left);
                     }
@@ -108,54 +106,54 @@ public:
         }
     }
 
- void parallelDFS(int numThreads) {
-    if (_rootNode == nullptr)
-        return;
-    std::stack<TreeNode*> s;
-    s.push(_rootNode);
-    omp_set_num_threads(numThreads);
-    #pragma omp parallel
-    {
-        TreeNode* currentNode = nullptr;
-        #pragma omp critical
+    void parallelDFS(int numThreads) {
+        if (_rootNode == nullptr)
+            return;
+        std::stack<TreeNode*> s;
+        s.push(_rootNode);
+        omp_set_num_threads(numThreads);
+#pragma omp parallel
         {
-            // pop a new node from the stack (frontier)
-            // for expansion
-            if (!s.empty()) {
-                currentNode = s.top();
-                s.pop();
-            }
-        }
-        while (currentNode != nullptr) {
-            std::cout << "node " << currentNode->id << " visited by thread " << omp_get_thread_num() << '\n';
-            if (currentNode->right != nullptr) {
-                #pragma omp critical
-                {
-                    // right child-node for currentNode
-                    // will be picked up by another thread
-                    // for further expansion
-                    s.push(currentNode->right);
+            TreeNode* currentNode = nullptr;
+#pragma omp critical
+            {
+                // pop a new node from the stack (frontier)
+                // for expansion
+                if (!s.empty()) {
+                    currentNode = s.top();
+                    s.pop();
                 }
             }
-            if (currentNode->left != nullptr) {
-                // the current thread keeps moving
-                // down the tree, in a depth-first manner
-                // extending the frontier of nodes
-                currentNode = currentNode->left;
-            } else {
-                #pragma omp critical
-                {
-                    if (!s.empty()) {
-                        currentNode = s.top();
-                        s.pop();
-                    } else {
-                        currentNode = nullptr;
+            while (currentNode != nullptr) {
+                std::cout << "node " << currentNode->id << " visited by thread " << omp_get_thread_num() << '\n';
+                if (currentNode->right != nullptr) {
+#pragma omp critical
+                    {
+                        // right child-node for currentNode
+                        // will be picked up by another thread
+                        // for further expansion
+                        s.push(currentNode->right);
+                    }
+                }
+                if (currentNode->left != nullptr) {
+                    // the current thread keeps moving
+                    // down the tree, in a depth-first manner
+                    // extending the frontier of nodes
+                    currentNode = currentNode->left;
+                } else {
+#pragma omp critical
+                    {
+                        if (!s.empty()) {
+                            currentNode = s.top();
+                            s.pop();
+                        } else {
+                            currentNode = nullptr;
+                        }
                     }
                 }
             }
         }
     }
-}
 };
 
 int main(int argc, char* argv[]) {
@@ -163,8 +161,7 @@ int main(int argc, char* argv[]) {
     // the following sequence is breadth-first representation
     // of the binary tree
     std::vector<int> nodeIds = {1, 4, 5, 6, -1, -1, 7, -1, 8, 9, -1};
-    std::unique_ptr<BinaryTree> binaryTree =
-        std::make_unique<BinaryTree>(nodeIds);
+    std::unique_ptr<BinaryTree> binaryTree = std::make_unique<BinaryTree>(nodeIds);
 
     int numThreads = 4;
     binaryTree->parallelBFS(numThreads);
