@@ -84,11 +84,11 @@ void parallelMergeSort(std::vector<int>& arr, int low, int high, int depth = 0) 
     if (low < high) {
         int mid = (low + high) / 2;
         if (depth < N_CPU_CORES) {
-#pragma omp parallel sections
+            #pragma omp parallel sections
             {
-#pragma omp section
+                #pragma omp section
                 { parallelMergeSort(arr, low, mid, depth + 1); }
-#pragma omp section
+                #pragma omp section
                 { parallelMergeSort(arr, mid + 1, high, depth + 1); }
             }
         } else {

@@ -18,12 +18,12 @@ Usage:
 
 The differences in the `real` or wall-time should be significant.
 */
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <omp.h>
 #include <utility>
 #include <vector>
-#include <ctime>
-#include <cstdlib>
 
 #define TEST_ARR_SIZE 100000
 
@@ -46,15 +46,15 @@ void parallelBubbleSort(std::vector<int>& arr) {
         // spawn a new thread for each iteration of the loop
         #pragma omp parallel for reduction(&&: localSorted)
         for (int i = 0; i < arr.size(); i += 2) {
-            if (arr[i] > arr[i+1]) {
-                std::swap(arr[i], arr[i+1]);
+            if (arr[i] > arr[i + 1]) {
+                std::swap(arr[i], arr[i + 1]);
                 localSorted = false;
             }
         }
         #pragma omp parallel for reduction(&&: localSorted)
         for (int i = 1; i < arr.size(); i += 2) {
-            if (arr[i] > arr[i+1]) {
-                std::swap(arr[i], arr[i+1]);
+            if (arr[i] > arr[i + 1]) {
+                std::swap(arr[i], arr[i + 1]);
                 localSorted = false;
             }
         }

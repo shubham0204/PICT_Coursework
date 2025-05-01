@@ -33,7 +33,7 @@ $ ./a.out
 
 template <typename E> E parallelSum(const std::vector<E>& arr) {
     E sum = 0;
-#pragma omp parallel for reduction(+ : sum)
+    #pragma omp parallel for reduction(+ : sum)
     for (size_t i = 0; i < arr.size(); i++) {
         sum += arr[i];
     }
@@ -42,7 +42,7 @@ template <typename E> E parallelSum(const std::vector<E>& arr) {
 
 template <typename E> E parallelMin(const std::vector<E>& arr) {
     E minElement = 0;
-#pragma omp parallel for reduction(min : minElement)
+    #pragma omp parallel for reduction(min : minElement)
     for (size_t i = 0; i < arr.size(); i++) {
         if (minElement > arr[i]) {
             minElement = arr[i];
@@ -53,7 +53,7 @@ template <typename E> E parallelMin(const std::vector<E>& arr) {
 
 template <typename E> E parallelMax(const std::vector<E>& arr) {
     E maxElement = 0;
-#pragma omp parallel for reduction(max : maxElement)
+    #pragma omp parallel for reduction(max : maxElement)
     for (size_t i = 0; i < arr.size(); i++) {
         if (maxElement < arr[i]) {
             maxElement = arr[i];

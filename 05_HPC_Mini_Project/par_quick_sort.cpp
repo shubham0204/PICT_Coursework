@@ -64,9 +64,9 @@ void parallelQuickSortImpl(std::vector<int>& arr, int low, int high, int depth =
             // executed in parallel with the code outside the task region. The task
             // pragma can be useful for parallelizing irregular algorithms such as
             // pointer chasing or recursive algorithms.
-#pragma omp task
+            #pragma omp task
             { parallelQuickSortImpl(arr, low, partitionIndex - 1, depth + 1); }
-#pragma omp task
+            #pragma omp task
             { parallelQuickSortImpl(arr, partitionIndex + 1, high, depth + 1); }
         } else {
             parallelQuickSortImpl(arr, low, partitionIndex - 1, depth + 1);
@@ -76,13 +76,13 @@ void parallelQuickSortImpl(std::vector<int>& arr, int low, int high, int depth =
 }
 
 void parallelQuickSort(std::vector<int>& arr) {
-// The omp parallel directive explicitly instructs the compiler to parallelize
-// the chosen block of code.
-#pragma omp parallel
+    // The omp parallel directive explicitly instructs the compiler to parallelize
+    // the chosen block of code.
+    #pragma omp parallel
     {
-// The omp single directive identifies a section of code that must be run by a
-// single available thread.
-#pragma omp single nowait
+        // The omp single directive identifies a section of code that must be run by a
+        // single available thread.
+        #pragma omp single nowait
         { parallelQuickSortImpl(arr, 0, arr.size() - 1); }
     }
 }
