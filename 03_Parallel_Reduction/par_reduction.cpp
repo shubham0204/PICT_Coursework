@@ -24,15 +24,50 @@ using the `+` operator.
 
 Compilation:
 $ g++ par_reduction.cpp -fopenmp
-$ ./a.out
+$ time ./a.out par
+$ time ./a.out seq
 */
 
+#include <algorithm>
+#include <climits>
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <omp.h>
 #include <vector>
 
-template <typename E> E parallelSum(const std::vector<E>& arr) {
-    E sum = 0;
+#define N_CPU_CORES 4
+#define TEST_ARR_SIZE 10000000
+#define LOG(str1, str2) std::cout << str1 << ' ' << str2 << '\n'
+
+int sequentialSum(const std::vector<int>& arr) {
+    int sum = 0;
+    for (size_t i = 0; i < arr.size(); i++) {
+        sum += arr[i];
+    }
+    return sum;
+}
+
+int sequentialMax(const std::vector<int>& arr) {
+    int max = INT_MIN;
+    for (size_t i = 0; i < arr.size(); i++) {
+        max = std::max(max, arr[i]);
+    }
+    return max;
+}
+
+int sequentialMin(const std::vector<int>& arr) {
+    int min = INT_MAX;
+    for (size_t i = 0; i < arr.size(); i++) {
+        min = std::min(min, arr[i]);
+    }
+    return min;
+}
+
+int sequentialMean(const std::vector<int>& arr) { return sequentialSum(arr) / arr.size(); }
+
+int parallelSum(const std::vector<int>& arr) {
+    int sum = 0;
     #pragma omp parallel for reduction(+ : sum)
     for (size_t i = 0; i < arr.size(); i++) {
         sum += arr[i];
@@ -40,8 +75,8 @@ template <typename E> E parallelSum(const std::vector<E>& arr) {
     return sum;
 }
 
-template <typename E> E parallelMin(const std::vector<E>& arr) {
-    E minElement = 0;
+int parallelMin(const std::vector<int>& arr) {
+    int minElement = 0;
     #pragma omp parallel for reduction(min : minElement)
     for (size_t i = 0; i < arr.size(); i++) {
         if (minElement > arr[i]) {
@@ -51,8 +86,8 @@ template <typename E> E parallelMin(const std::vector<E>& arr) {
     return minElement;
 }
 
-template <typename E> E parallelMax(const std::vector<E>& arr) {
-    E maxElement = 0;
+int parallelMax(const std::vector<int>& arr) {
+    int maxElement = 0;
     #pragma omp parallel for reduction(max : maxElement)
     for (size_t i = 0; i < arr.size(); i++) {
         if (maxElement < arr[i]) {
@@ -62,20 +97,48 @@ template <typename E> E parallelMax(const std::vector<E>& arr) {
     return maxElement;
 }
 
-template <typename E> E parallelMean(const std::vector<E>& arr) {
-    E sum = parallelSum(arr);
+int parallelMean(const std::vector<int>& arr) {
+    int sum = parallelSum(arr);
     return sum / arr.size();
 }
 
+std::vector<int> generateRandomArray(long size) {
+    std::vector<int> arr(size);
+    for (int i = 0; i < size; i++) {
+        arr[i] = rand() % 100 + 1;
+    }
+    return arr;
+};
+
 int main(int argc, char* argv[]) {
-    std::vector<int> arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    int sum = parallelSum(arr);
-    std::cout << "sum is " << sum << '\n';
-    int max = parallelMax(arr);
-    std::cout << "max is " << max << '\n';
-    int min = parallelMin(arr);
-    std::cout << "min is " << min << '\n';
-    int mean = parallelMean(arr);
-    std::cout << "mean is " << mean << '\n';
+    srand(time(nullptr));
+    omp_set_num_threads(N_CPU_CORES);
+
+    LOG("N_CPU_CORES", N_CPU_CORES);
+    LOG("TEST_ARR_SIZE", TEST_ARR_SIZE);
+    std::vector<int> arr = generateRandomArray(TEST_ARR_SIZE);
+
+    if (std::string(argv[1]) == "seq") {
+        std::cout << "executing sequential operations ..." << '\n';
+        int sum = sequentialSum(arr);
+        int max = sequentialMax(arr);
+        int min = sequentialMin(arr);
+        int mean = sequentialMean(arr);
+        LOG("sum", sum);
+        LOG("max", max);
+        LOG("min", min);
+        LOG("mean", mean);
+    } else {
+        std::cout << "executing parallel operations ..." << '\n';
+        int sum = parallelSum(arr);
+        int max = parallelMax(arr);
+        int min = parallelMin(arr);
+        int mean = parallelMean(arr);
+        LOG("sum", sum);
+        LOG("max", max);
+        LOG("min", min);
+        LOG("mean", mean);
+    }
+
     return 0;
 }
