@@ -1,0 +1,18 @@
+---
+BasedOnStyle: LLVM
+Language: Cpp
+IndentWidth: 4
+UseTab: Never
+PointerAlignment: Left
+ReferenceAlignment: Left
+AlwaysBreakAfterReturnType: None
+PenaltyReturnTypeOnItsOwnLine: 1000000
+SpaceBeforeParens: ControlStatements
+IndentPPDirectives: None
+BreakBeforeBraces: Attach
+ColumnLimit: 120
+IndentCaseLabels: false
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 1
+SortIncludes: true
+IndentWrappedFunctionNames: false
