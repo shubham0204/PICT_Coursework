@@ -40,7 +40,7 @@ void merge(std::vector<int>& arr, int low, int mid, int high) {
         arr1[i] = arr[low + i];
     }
     for (int i = 0; i < n2; i++) {
-        arr2[i] = arr[mid + i];
+        arr2[i] = arr[mid + i + 1];
     }
 
     // merge two sorted arrays, arr1 and arr2
@@ -108,7 +108,7 @@ std::vector<int> generateRandomArray(int size) {
 };
 
 int main(int argc, char* argv[]) {
-    srand(time(nullptr));
+    srand(123);
     std::vector<int> nums = generateRandomArray(TEST_ARR_SIZE);
     if (std::string(argv[1]) == "seq") {
         std::cout << "executing sequential merge-sort ..." << '\n';
