@@ -1,5 +1,8 @@
 # PICT Coursework - Shubham Panchal
 
+> [!IMPORTANT]
+> This repository has been archived as of May 2025. Starting in April 2022, this repository has helped many students with their assignments, serving as a reference which they can study and analyze. As I graduate now, this repository will not maintained. The repository will remain visible on GitHub till December 2025.
+
 ## Subjects
 
 ### Semester 8
