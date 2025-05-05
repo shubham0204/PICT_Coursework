@@ -63,18 +63,18 @@ int main() {
     vec_item_add<<<n_blocks, n_threads>>>(gpu_vec1, gpu_vec2, gpu_sum);
     cudaMemcpy(sum, gpu_sum, vec_size_bytes, cudaMemcpyDeviceToHost);
 
-    // (5) deallocate memory from CPU and GPU devices
+    // (5) print the contents of the sum vector present in the host memory
+    for (int i = 0; i < N; i++) {
+        printf("%f ", sum[i]);
+    }
+    printf("\n");
+
+    // (6) deallocate memory from CPU and GPU devices
     free(vec1);
     free(vec2);
     free(sum);
     cudaFree(gpu_vec1);
     cudaFree(gpu_vec2);
-    cudaFree(gpu_sum);
-
-    // (6) print the contents of the sum vector present in the host memory
-    for (int i = 0; i < N; i++) {
-        printf("%f ", sum[i]);
-    }
-    printf("\n");
+    cudaFree(gpu_sum);    
     return 0;
 }
