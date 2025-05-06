@@ -54,18 +54,18 @@ int main(void) {
     matmul<<<num_blocks, thread_block_size>>>(gpu_mat1, gpu_mat2, gpu_prod);
     cudaMemcpy(prod, gpu_prod, SIZE_PROD, cudaMemcpyDeviceToHost);
 
-    free(mat1);
-    free(mat2);
-    free(prod);
-    cudaFree(gpu_mat1);
-    cudaFree(gpu_mat2);
-    cudaFree(gpu_prod);
-
     for (int i = 0; i < M; i++) {
         for (int j = 0; j < N; j++) {
             printf("%f ", prod[i * N + j]);
         }
         printf("\n");
     }
+
+    free(mat1);
+    free(mat2);
+    free(prod);
+    cudaFree(gpu_mat1);
+    cudaFree(gpu_mat2);
+    cudaFree(gpu_prod);
     return 0;
 }
